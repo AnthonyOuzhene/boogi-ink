@@ -1,0 +1,330 @@
+// =============================================================================
+// Direction "Néon nocturne" — styles globaux
+// Les couleurs et tailles sont des variables CSS (--cyan…) : utilisables dans
+// tous les fichiers .scss sans import, et modifiables à un seul endroit.
+// =============================================================================
+
+:root {
+  --bg: #070a0c;          // fond quasi noir
+  --surface: #0d1316;     // cartes, champs
+  --line: #1e2a2f;        // séparateurs
+  --line-strong: #3a4a50;
+  --text: #e6f4f6;
+  --muted: #a9bcc1;       // texte secondaire (contraste AA sur --bg)
+  --cyan: #22d3ee;        // couleur de marque
+  --cyan-light: #67e8f9;
+  --ink: #041014;         // texte posé sur du cyan
+  --danger: #fda4af;
+
+  --font-display: 'Anton', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --container: 1280px;
+  --gutter: 48px;         // marges latérales
+  --section: 200px;       // espace entre les grandes sections
+  --band-padding: 160px;  // marge intérieure des bandeaux sur fond clair (artiste, FAQ)
+  --radius: 8px;
+  --header-height: 124px;
+
+  @media (max-width: 900px) {
+    --gutter: 24px;
+    --section: 120px;
+    --band-padding: 96px;
+    --header-height: 88px;
+  }
+}
+
+// --- Base -------------------------------------------------------------------
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--cyan);
+  &:hover {
+    color: var(--cyan-light);
+  }
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+ul {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-main {
+  flex: 1;
+
+  // Pages autres que l'accueil : on laisse la place au menu fixe
+  &--offset {
+    padding-top: var(--header-height);
+  }
+}
+
+// --- Mise en page --------------------------------------------------------------
+// Cible d'une ancre (/#faq) : on la décale sous le menu fixe
+[id] {
+  scroll-margin-top: calc(var(--header-height) + 24px);
+}
+
+.container {
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-top: var(--section);
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 72px;
+
+  @media (max-width: 900px) {
+    margin-bottom: 40px;
+  }
+}
+
+// --- Typographie -----------------------------------------------------------------
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+}
+
+.section-title {
+  @extend .display;
+  font-size: clamp(52px, 7vw, 88px);
+}
+
+.text-cyan {
+  color: var(--cyan);
+}
+
+.glow {
+  color: var(--cyan);
+  text-shadow: 0 0 40px rgba(34, 211, 238, 0.55);
+}
+
+.eyebrow {
+  color: var(--cyan);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.link-arrow {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+// --- Boutons ------------------------------------------------------------------
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 16px 30px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font: 600 16px/1.2 var(--font-body);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+  &--primary {
+    background: var(--cyan);
+    color: var(--ink);
+    &:hover {
+      background: var(--cyan-light);
+      color: var(--ink);
+      box-shadow: 0 0 30px rgba(34, 211, 238, 0.45);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: rgba(230, 244, 246, 0.5);
+    &:hover {
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+}
+
+// --- En-tête de page (toutes les pages sauf l'accueil) ---------------------------
+.page-hero {
+  padding-block: 96px 72px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__title {
+    @extend .display;
+    font-size: clamp(56px, 9vw, 120px);
+  }
+
+  &__lead {
+    max-width: 680px;
+    color: var(--muted);
+    font-size: 19px;
+  }
+
+  @media (max-width: 900px) {
+    padding-block: 64px 48px;
+  }
+}
+
+// --- Formulaires ----------------------------------------------------------------
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    font: 400 17px/1.5 var(--font-body);
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &::placeholder {
+      color: #6f8187;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+    }
+  }
+
+  input[type='date'] {
+    color-scheme: dark;
+  }
+
+  textarea {
+    min-height: 180px;
+    resize: vertical;
+  }
+
+  &__error {
+    color: var(--danger);
+    font-size: 15px;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+
+  @media (max-width: 700px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Carte encadrée de cyan (formulaires, livre d'or…)
+.neon-card {
+  border: 1px solid var(--cyan);
+  border-radius: 16px;
+  padding: 72px;
+  box-shadow: 0 0 60px rgba(34, 211, 238, 0.12);
+
+  @media (max-width: 900px) {
+    padding: 40px 24px;
+  }
+}
+
+// --- Notifications react-toastify aux couleurs du site -----------------------------
+.Toastify__toast {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-body);
+}

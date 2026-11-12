@@ -1,0 +1,333 @@
+// Styles partagés par les pages
+
+.section--tight {
+  padding-top: 96px;
+
+  @media (max-width: 900px) {
+    padding-top: 56px;
+  }
+}
+
+.detail-actions {
+  margin-top: 56px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+// --- Deux colonnes : intro (titre, texte, bouton) + liste ---
+.split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 48px 120px;
+
+  &__intro {
+    flex: 1 1 340px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+
+    // L'intro reste visible pendant qu'on fait défiler une longue liste (ordinateur)
+    @media (min-width: 901px) {
+      position: sticky;
+      top: calc(var(--header-height) + 40px);
+    }
+  }
+
+  &__list {
+    flex: 2 1 560px;
+    min-width: 0;
+
+    .service-list__item:first-child {
+      padding-top: 0;
+    }
+  }
+}
+
+// --- Réalisations : filtres ---
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+
+  button {
+    min-height: 44px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text);
+    font: 500 15px var(--font-body);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    &[aria-pressed='true'] {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: var(--ink);
+    }
+  }
+}
+
+// --- Détail d'une réalisation ---
+.photo-stack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 340px;
+  grid-auto-flow: dense;
+  gap: 28px;
+
+  a {
+    position: relative;
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .is-main {
+    grid-column: span 2;
+    grid-row: span 2;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 2px var(--cyan);
+    }
+  }
+
+  @media (max-width: 700px) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 320px;
+
+    .is-main {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+}
+
+// --- Livre d'or ---
+.comments {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: 28px;
+}
+
+.comment {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: border-color 0.3s;
+
+  &:hover {
+    border-color: var(--cyan);
+  }
+
+  &__mark {
+    font-family: var(--font-display);
+    font-size: 72px;
+    line-height: 0.5;
+    color: var(--cyan);
+  }
+
+  &__title {
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  &__message {
+    flex: 1;
+    color: var(--muted);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+}
+
+.cta-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
+.form-title {
+  margin-bottom: 16px;
+}
+
+.form-intro {
+  margin-bottom: 40px;
+}
+
+// --- Connexion / inscription ---
+.auth {
+  padding-block: 96px 0;
+  display: flex;
+  justify-content: center;
+
+  &__card {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .form {
+      margin-top: 16px;
+    }
+  }
+
+  &__switch {
+    margin-top: 8px;
+  }
+
+  @media (max-width: 900px) {
+    padding-top: 48px;
+  }
+}
+
+// --- Mon compte ---
+.account-info {
+  margin: 0;
+  display: grid;
+  gap: 24px;
+
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dt {
+    min-width: 120px;
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 20px;
+  }
+}
+
+// --- Contact ---
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 120px;
+
+  &__info {
+    flex: 1 1 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    font-size: 20px;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+
+  &__social {
+    display: flex;
+    gap: 24px;
+  }
+
+  &__form {
+    flex: 2 1 520px;
+    min-width: 0;
+  }
+
+  &__map {
+    width: 100%;
+    height: 480px;
+    border: 0;
+    border-radius: 16px;
+    // Carte Google passée en mode sombre pour coller au site
+    filter: grayscale(1) invert(0.92) contrast(0.9);
+  }
+
+  @media (max-width: 900px) {
+    gap: 64px;
+  }
+}
+
+// --- 404 ---
+.not-found {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 80px;
+
+  &__text {
+    flex: 1 1 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+  }
+
+  &__code {
+    font-family: var(--font-display);
+    font-size: clamp(120px, 18vw, 220px);
+    line-height: 0.8;
+  }
+
+  &__img {
+    flex: 1 1 360px;
+    min-width: 0;
+    max-height: 560px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    filter: grayscale(1);
+    box-shadow: inset 0 0 0 2px var(--cyan);
+  }
+}

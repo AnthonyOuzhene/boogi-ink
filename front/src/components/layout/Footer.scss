@@ -1,0 +1,40 @@
+.site-footer {
+  margin-top: var(--section);
+  border-top: 1px solid var(--line);
+
+  &__inner {
+    padding-block: 80px 96px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 48px;
+  }
+
+  &__salon {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  &__brand {
+    font-family: var(--font-display);
+    font-size: 44px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-size: 15px;
+
+    a {
+      text-decoration: none;
+    }
+  }
+}

@@ -1,0 +1,123 @@
+// Section pleine largeur, sur un fond légèrement plus clair pour la détacher du reste
+.artist-section {
+  background: var(--surface);
+  border-block: 1px solid var(--line);
+  padding-block: var(--band-padding);
+  overflow: hidden;
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 120px;
+  }
+
+  // --- Photo : proportions d'origine + cadre cyan décalé derrière ---
+  &__photo {
+    flex: 0 1 460px;
+    min-width: 0;
+    position: relative;
+    margin: 0 24px 24px 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 24px -24px -24px 24px;
+      border: 2px solid var(--cyan);
+      border-radius: var(--radius);
+      box-shadow: 0 0 50px rgba(34, 211, 238, 0.25);
+    }
+
+    img {
+      position: relative;
+      width: 100%;
+      height: auto; // aucune découpe : tout le visage reste visible
+      border-radius: var(--radius);
+      filter: grayscale(1) contrast(1.05);
+    }
+  }
+
+  // --- Texte ---
+  &__text {
+    flex: 1 1 480px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  &__name {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(56px, 7vw, 104px);
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+
+  &__quote {
+    margin: 0;
+    padding-left: 28px;
+    border-left: 3px solid var(--cyan);
+    font-size: clamp(22px, 2.4vw, 28px);
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  &__bio {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.75;
+    white-space: pre-line;
+  }
+
+  &__styles {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    a {
+      display: inline-block;
+      padding: 8px 18px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+
+      &:hover {
+        border-color: var(--cyan);
+        color: var(--cyan);
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 900px) {
+    &__inner {
+      gap: 72px;
+    }
+
+    &__photo {
+      flex-basis: 100%;
+      max-width: 420px;
+    }
+  }
+}
+
+// Juste sous le bandeau cyan des styles : pas de double trait
+.category-band + .artist-section {
+  border-top: 0;
+}

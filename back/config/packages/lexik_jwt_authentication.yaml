@@ -1,0 +1,10 @@
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+    # Ajoute POST /api/login dans la documentation Swagger
+    # (la route est gérée par le pare-feu, API Platform ne la connaît pas sinon)
+    api_platform:
+        check_path: /api/login
+        username_path: email
+        password_path: password

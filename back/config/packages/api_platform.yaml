@@ -1,0 +1,20 @@
+api_platform:
+    title: "Boogi'ink API"
+    version: 1.0.0
+    # Formats de réponse acceptés (choisi via l'en-tête Accept de la requête) :
+    # - jsonld : JSON enrichi (@id, @type, pagination hydra) — format par défaut d'API Platform
+    # - json   : JSON simple, le plus pratique pour le front React
+    formats:
+        jsonld: ['application/ld+json']
+        json: ['application/json']
+    defaults:
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']
+    # Bouton "Authorize" dans Swagger (/api/docs) : on y colle le jeton JWT,
+    # Swagger l'envoie ensuite dans l'en-tête "Authorization: Bearer <jeton>"
+    swagger:
+        http_auth:
+            JWT:
+                scheme: bearer
+                bearerFormat: JWT

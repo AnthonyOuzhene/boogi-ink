@@ -1,0 +1,94 @@
+// --- Hero : photo noir et blanc teintée de bleu nuit ---
+.hero {
+  position: relative;
+  height: 860px;
+  max-height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+
+  &__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.15);
+  }
+
+  // Deux calques : un bleu pétrole en "multiply" (duotone) + un voile sombre pour la lisibilité
+  &__tint {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 10, 12, 0.45);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #06343c;
+      mix-blend-mode: multiply;
+      opacity: 0.85;
+    }
+  }
+
+  &__content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 40px;
+    padding-bottom: 128px;
+  }
+
+  &__title {
+    font-size: clamp(64px, 10vw, 148px);
+    line-height: 0.9;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  @media (max-width: 900px) {
+    &__content {
+      gap: 28px;
+      padding-bottom: 72px;
+    }
+  }
+}
+
+// --- Citation du livre d'or ---
+.quote {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  &__mark {
+    font-family: var(--font-display);
+    font-size: 120px;
+    line-height: 0.6;
+    color: var(--cyan);
+  }
+
+  &__text {
+    margin: 0;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1.35;
+    font-weight: 500;
+    max-width: 900px;
+  }
+
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+}
