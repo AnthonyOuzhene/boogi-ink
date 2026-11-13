@@ -6,6 +6,7 @@ import SalonCards from '../components/SalonCards';
 import GalleryGrid from '../components/GalleryGrid';
 import ServiceList from '../components/ServiceList';
 import ArtistSection from '../components/ArtistSection';
+import Scribble from '../components/Scribble';
 import FaqSection from '../components/FaqSection';
 import SessionSteps from '../components/SessionSteps';
 import { FlashGrid } from '../components/FlashGallery';
@@ -64,6 +65,8 @@ const HomePage = () => {
           <div className="hero__actions">
             <Link to="/contact" className="btn btn--primary">Parle-nous de ton projet</Link>
             <Link to="/realisations" className="btn btn--ghost">Voir les réalisations</Link>
+            {/* Annotation au feutre (masquée sur téléphone, où les boutons sont empilés) */}
+            <Scribble arrow="left" className="hero__scribble">c'est par ici !</Scribble>
           </div>
         </div>
       </section>
@@ -101,7 +104,8 @@ const HomePage = () => {
               <div className="stack">
                 <p className="eyebrow">Prêts à tatouer</p>
                 <h2 className="section-title">Flashs <span className="text-cyan">disponibles</span></h2>
-                <p className="muted lead-text">Des motifs dessinés par {artists?.[0]?.firstName ?? "l'artiste"}, tatoués une seule fois. Premier arrivé, premier servi.</p>
+                <p className="muted lead-text">Des motifs dessinés par {artists?.[0]?.firstName ?? "l'artiste"}, tatoués une seule fois.</p>
+                <Scribble arrow="down">premier arrivé, premier servi !</Scribble>
               </div>
               <Link to="/flashs" className="link-arrow">Tous les flashs →</Link>
             </div>

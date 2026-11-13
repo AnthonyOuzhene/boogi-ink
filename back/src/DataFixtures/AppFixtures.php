@@ -154,6 +154,8 @@ class AppFixtures extends Fixture
                 ->setName($name)
                 // Démo du curseur "du dessin à la peau" sur la première réalisation
                 ->setSketch('Portrait sketch' === $name ? $this->copyImage('tattoo4.jpg') : null)
+                // Démo de l'annotation "coup de cœur ♥"
+                ->setIsFavorite('Fleur fine line' === $name)
                 ->setDescription("[Texte de démo] Le projet du client, la zone tatouée, le nombre de séances.\n\n[Un mot sur le style ou la technique utilisée.]")
                 ->setMainPicture($this->copyImage($mainPicture))
                 ->setCategory($categories[$category])

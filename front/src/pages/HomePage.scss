@@ -68,7 +68,19 @@
   &__actions {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 16px;
+  }
+
+  // "c'est par ici !" au feutre, flèche vers les boutons
+  &__scribble {
+    margin-left: 8px;
+    font-size: 22px;
+
+    // Téléphone : boutons empilés, pas la place pour l'annotation
+    @media (max-width: 700px) {
+      display: none;
+    }
   }
 
   // ===========================================================================

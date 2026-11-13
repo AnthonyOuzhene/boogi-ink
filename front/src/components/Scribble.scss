@@ -1,0 +1,38 @@
+// Annotation "au feutre" : police Permanent Marker (--font-marker), couleur d'accent
+// (cyan vif sur fond sombre, bleu pétrole sur les zones papier), légèrement de travers
+.scribble {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cyan);
+  font-family: var(--font-marker);
+  font-size: 20px;
+  line-height: 1.1;
+  white-space: nowrap;
+  transform: rotate(-4deg);
+  pointer-events: none;
+
+  &__arrow {
+    flex-shrink: 0;
+    width: 56px;
+    height: 36px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  // La flèche est dessinée vers la droite : on la retourne / pivote selon la direction
+  &--left &__arrow {
+    transform: scaleX(-1);
+  }
+
+  &--down &__arrow {
+    transform: rotate(70deg);
+  }
+
+  &--down-left &__arrow {
+    transform: scaleX(-1) rotate(55deg);
+  }
+}

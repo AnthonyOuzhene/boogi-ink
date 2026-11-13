@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -78,6 +79,10 @@ class Gallery
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sketch = null;
+
+    /** Coup de cœur de l'artiste : annotation "coup de cœur ♥" écrite au feutre sur le site */
+    #[ORM\Column(options: ['default' => false])]
+    private bool $isFavorite = false;
 
     public function __construct()
     {
@@ -217,6 +222,21 @@ class Gallery
     public function setSketch(?string $sketch): static
     {
         $this->sketch = $sketch;
+
+        return $this;
+    }
+
+    // Le getter s'appelle isFavorite() : sans SerializedName, le JSON l'exposerait sous le nom "favorite"
+    #[Groups(['gallery:read'])]
+    #[SerializedName('isFavorite')]
+    public function isFavorite(): bool
+    {
+        return $this->isFavorite;
+    }
+
+    public function setIsFavorite(?bool $isFavorite): static
+    {
+        $this->isFavorite = (bool) $isFavorite;
 
         return $this;
     }

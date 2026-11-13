@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
@@ -51,6 +52,9 @@ class GalleryCrudController extends AbstractCrudController
             ->hideOnIndex();
         yield TextField::new('name', 'Titre');
         yield AssociationField::new('category', 'Catégorie');
+        yield BooleanField::new('isFavorite', 'Coup de cœur')
+            ->renderAsSwitch(false) // dans la liste : simple pastille oui / non
+            ->setHelp('Ajoute l\'annotation « coup de cœur ♥ », écrite au feutre, sur la photo. À réserver à 1 ou 2 réalisations pour garder l\'effet.');
         yield DateField::new('realisedAt', 'Date de réalisation');
         yield TextareaField::new('description', 'Description')
             ->setHelp('Affichée à côté de la photo quand on l\'ouvre sur le site : le projet, la zone, le nombre de séances… (facultatif). Sautez une ligne pour faire un nouveau paragraphe.')

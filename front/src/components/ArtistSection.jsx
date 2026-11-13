@@ -3,6 +3,7 @@ import { FaInstagram } from 'react-icons/fa';
 import { useSalon } from '../context/SalonContext';
 import { assetUrl } from '../api/client';
 import { toParagraphs } from '../utils/format';
+import Scribble from './Scribble';
 // Photo de secours, utilisée tant qu'aucune photo n'est envoyée depuis le backoffice
 import defaultPhoto from '../assets/images/artist.jpg';
 import './ArtistSection.scss';
@@ -38,6 +39,8 @@ const ArtistSection = ({ artist, variant = 'short', id, eyebrow = "L'artiste der
               alt={`Portrait de ${artist.firstName} ${artist.lastName}, tatoueur de Boogi'ink`}
               loading="lazy"
             />
+            {/* Annotation au feutre, sur l'accueil seulement (version courte) */}
+            {!isFull && <Scribble arrow="down-left" className="artist-section__scribble">c'est moi !</Scribble>}
           </div>
 
           <div className="artist-section__text">

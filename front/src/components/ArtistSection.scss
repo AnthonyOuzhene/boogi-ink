@@ -100,6 +100,15 @@
     flex-basis: 380px;
   }
 
+  // "c'est moi !" au feutre, au-dessus du coin haut droit de la photo, flèche vers le portrait
+  &__scribble {
+    position: absolute;
+    z-index: 1;
+    top: -46px;
+    right: -64px;
+    font-size: 24px;
+  }
+
   &__actions {
     display: flex;
     flex-wrap: wrap;
@@ -115,6 +124,12 @@
     &__photo {
       flex-basis: 100%;
       max-width: 420px;
+    }
+
+    // Petit écran : l'annotation reste au-dessus de la photo, sans dépasser de l'écran
+    &__scribble {
+      right: 8px;
+      font-size: 20px;
     }
   }
 }

@@ -4,6 +4,7 @@ import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 import { assetUrl } from '../api/client';
 import { formatDate, toParagraphs } from '../utils/format';
 import SketchCompare from './SketchCompare';
+import Scribble from './Scribble';
 import './GalleryViewer.scss';
 
 /**
@@ -136,6 +137,7 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
       <aside className="viewer__panel">
         {meta && <p className="eyebrow">{meta}</p>}
         <h2 id="viewer-title" className="viewer__title">{gallery.name}</h2>
+        {gallery.isFavorite && <Scribble decorative={false} className="viewer__favorite">coup de cœur ♥</Scribble>}
 
         {gallery.sketchUrl && (
           <p className="viewer__hint">

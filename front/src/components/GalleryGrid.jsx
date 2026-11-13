@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { assetUrl } from '../api/client';
+import Scribble from './Scribble';
 import './GalleryGrid.scss';
 
 /** Lien par défaut (accueil) : la page Réalisations, visionneuse ouverte sur ce tatouage */
@@ -21,6 +22,10 @@ const GalleryGrid = ({ galleries, getLink = defaultLink }) => (
         className={`gallery-grid__item ${index === 0 ? 'gallery-grid__item--featured' : ''}`}
       >
         <img src={assetUrl(gallery.mainPictureUrl)} alt={gallery.name} loading="lazy" />
+        {/* Coup de cœur de l'artiste (case à cocher du backoffice) : annotation au feutre */}
+        {gallery.isFavorite && (
+          <Scribble decorative={false} className="gallery-grid__favorite">coup de cœur ♥</Scribble>
+        )}
         <span className="gallery-grid__caption">
           {gallery.category && <span className="text-cyan">{gallery.category.name} — </span>}
           {gallery.name}
