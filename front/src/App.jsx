@@ -19,6 +19,7 @@ import SignUpPage from './pages/SignUpPage';
 import AccountLayout from './pages/account/AccountLayout';
 import AccountInfo from './pages/account/AccountInfo';
 import AccountComments from './pages/account/AccountComments';
+import AccountFavorites from './pages/account/AccountFavorites';
 import AccountSecurity from './pages/account/AccountSecurity';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -57,6 +58,7 @@ const App = () => {
           <Route path="/profil" element={<AccountLayout />}>
             <Route index element={<AccountInfo />} />
             <Route path="avis" element={<AccountComments />} />
+            <Route path="favoris" element={<AccountFavorites />} />
             <Route path="securite" element={<AccountSecurity />} />
           </Route>
           {/* Ancienne adresse de la page de l'atelier */}

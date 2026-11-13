@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
+import useAuthRedirect from '../hooks/useAuthRedirect';
 import './pages.scss';
 
 const LoginPage = () => {
   const { login } = useAuth();
-  const navigate = useNavigate();
+  // Connexion lancée depuis un cœur de flash : ajout aux favoris + retour à la page d'origine
+  const { pendingFavorite, authState, finishAuth } = useAuthRedirect();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +20,8 @@ const LoginPage = () => {
     try {
       const user = await login(email, password);
       toast.success(`Bonjour ${user.name} !`);
-      navigate('/'); // redirection sans rechargement de page
+      // Retour à la page d'où l'on vient (ex. clic sur un cœur de flash), sinon l'accueil
+      await finishAuth();
     } catch {
       toast.error('Email ou mot de passe incorrect.');
     } finally {
@@ -31,6 +34,9 @@ const LoginPage = () => {
       <div className="neon-card auth__card">
         <p className="eyebrow">Espace client</p>
         <h1 className="section-title">Connexion</h1>
+        {pendingFavorite && (
+          <p className="auth__intro">Connecte-toi pour garder « {pendingFavorite.name} » dans tes favoris ♥</p>
+        )}
 
         <form className="form" onSubmit={handleSubmit}>
           <div className="field">
@@ -49,7 +55,8 @@ const LoginPage = () => {
         </form>
 
         <p className="auth__switch muted">
-          Pas encore de compte ? <Link to="/inscription">Inscris-toi</Link>
+          {/* state : on garde le flash à mettre en favori et la page d'origine */}
+          Pas encore de compte ? <Link to="/inscription" state={authState}>Inscris-toi</Link>
         </p>
       </div>
     </section>

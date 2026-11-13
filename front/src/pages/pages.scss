@@ -313,6 +313,15 @@
     margin-top: 8px;
   }
 
+  // Arrivée depuis un cœur de flash : rappel de ce qui se passera après
+  &__intro {
+    padding: 12px 16px;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--cyan);
+    font-size: 15px;
+  }
+
   @media (max-width: 900px) {
     padding-top: 48px;
   }

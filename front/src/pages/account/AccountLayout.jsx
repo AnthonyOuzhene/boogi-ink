@@ -7,6 +7,7 @@ import './AccountLayout.scss';
 const SECTIONS = [
   { to: '/profil', label: 'Mes informations', end: true },
   { to: '/profil/avis', label: 'Mes avis' },
+  { to: '/profil/favoris', label: 'Mes favoris' },
   { to: '/profil/securite', label: 'Sécurité' },
 ];
 

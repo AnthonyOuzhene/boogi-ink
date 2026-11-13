@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { assetUrl } from '../api/client';
 import { formatPrice } from '../utils/format';
+import FavoriteButton from './FavoriteButton';
 import './FlashGallery.scss';
 
 /**
@@ -9,7 +10,7 @@ import './FlashGallery.scss';
  * le papier, un numéro, le nom, et le prix "écrit au feutre".
  * Réservé : tampon rouge "Réservé" de travers sur le dessin.
  */
-export const FlashCard = ({ flash, number }) => {
+export const FlashCard = ({ flash, number, onFavoriteChange }) => {
   const details = [flash.size, flash.placement].filter(Boolean).join(' · ');
 
   return (
@@ -17,6 +18,8 @@ export const FlashCard = ({ flash, number }) => {
       <div className="flash-card__img">
         {flash.pictureUrl && <img src={assetUrl(flash.pictureUrl)} alt={`Dessin du flash « ${flash.name} »`} loading="lazy" />}
         {!flash.isAvailable && <span className="flash-card__stamp" aria-hidden="true">Réservé</span>}
+        {/* Cœur "favori" (connexion demandée si besoin) */}
+        <FavoriteButton flash={flash} onChange={onFavoriteChange} />
       </div>
       <div className="flash-card__body">
         <h3 className="flash-card__name">
@@ -36,10 +39,11 @@ export const FlashCard = ({ flash, number }) => {
 /**
  * La planche de flashs (aperçu de l'accueil, page Flashs…).
  * numberOf : numéro d'un flash ; par défaut sa place dans la liste affichée.
+ * onFavoriteChange : facultatif, appelé quand un cœur change (ex. recharger "Mes favoris").
  */
-export const FlashGrid = ({ flashes, numberOf = (flash, index) => index + 1 }) => (
+export const FlashGrid = ({ flashes, numberOf = (flash, index) => index + 1, onFavoriteChange }) => (
   <div className="flash-grid">
-    {flashes.map((flash, index) => <FlashCard key={flash.id} flash={flash} number={numberOf(flash, index)} />)}
+    {flashes.map((flash, index) => <FlashCard key={flash.id} flash={flash} number={numberOf(flash, index)} onFavoriteChange={onFavoriteChange} />)}
   </div>
 );
 

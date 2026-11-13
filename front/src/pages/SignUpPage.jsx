@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { toast } from 'react-toastify';
 import api, { getViolations } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import useAuthRedirect from '../hooks/useAuthRedirect';
 import './pages.scss';
 
 const EMPTY_FORM = { name: '', email: '', password: '', passwordConfirm: '' };
 
 const SignUpPage = () => {
   const { login } = useAuth();
-  const navigate = useNavigate();
+  // Inscription lancée depuis un cœur de flash : ajout aux favoris + retour à la page d'origine
+  const { pendingFavorite, authState, finishAuth } = useAuthRedirect();
 
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
@@ -33,7 +35,7 @@ const SignUpPage = () => {
       // Inscription réussie : on connecte directement l'utilisateur
       await login(form.email, form.password);
       toast.success('Bienvenue ! Ton compte est créé.');
-      navigate('/');
+      await finishAuth();
     } catch (error) {
       setErrors(getViolations(error));
       toast.error("L'inscription a échoué, vérifie le formulaire.");
@@ -47,6 +49,9 @@ const SignUpPage = () => {
       <div className="neon-card auth__card">
         <p className="eyebrow">Espace client</p>
         <h1 className="section-title">Inscription</h1>
+        {pendingFavorite && (
+          <p className="auth__intro">Crée ton compte pour garder « {pendingFavorite.name} » dans tes favoris ♥</p>
+        )}
 
         <form className="form" onSubmit={handleSubmit}>
           <div className="field">
@@ -79,7 +84,8 @@ const SignUpPage = () => {
         </form>
 
         <p className="auth__switch muted">
-          Déjà inscrit ? <Link to="/connexion">Connecte-toi</Link>
+          {/* state : on garde le flash à mettre en favori et la page d'origine */}
+          Déjà inscrit ? <Link to="/connexion" state={authState}>Connecte-toi</Link>
         </p>
       </div>
     </section>

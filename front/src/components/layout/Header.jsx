@@ -144,6 +144,7 @@ const Header = () => {
                 <ul className="account__menu">
                   <li><Link to="/profil" onClick={closeMenus}>Mon compte</Link></li>
                   <li><Link to="/profil/avis" onClick={closeMenus}>Mes avis</Link></li>
+                  <li><Link to="/profil/favoris" onClick={closeMenus}>Mes favoris</Link></li>
                   <li><Link to="/profil/securite" onClick={closeMenus}>Sécurité</Link></li>
                   {isAdmin && (
                     <li><a href={`${BACKEND_URL}/admin`} target="_blank" rel="noreferrer">Backoffice</a></li>

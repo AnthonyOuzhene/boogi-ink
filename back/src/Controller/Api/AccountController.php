@@ -6,6 +6,7 @@ use App\Controller\Api\Input\ChangePasswordInput;
 use App\Controller\Api\Input\CommentInput;
 use App\Controller\Api\Input\RegisterInput;
 use App\Entity\Comment;
+use App\Entity\Flash;
 use App\Entity\User;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,6 +42,12 @@ final class AccountController extends AbstractController
     /** Un compte en JSON : id, e-mail, rôles et nom (groupe user:read), jamais le mot de passe */
     private const USER_CONTEXT = [
         'groups' => ['user:read'],
+        AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+    ];
+
+    /** Un flash en JSON : les mêmes champs que la liste publique GET /api/flashes */
+    private const FLASH_CONTEXT = [
+        'groups' => ['flash:read'],
         AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
     ];
 
@@ -205,6 +212,50 @@ final class AccountController extends AbstractController
 
         // On renvoie l'avis à jour, avec les mêmes champs que GET /api/me/comments
         return $this->json($comment, Response::HTTP_OK, [], self::OWNER_COMMENT_CONTEXT);
+    }
+
+    /**
+     * GET /api/me/favorites : les flashs mis en favori par l'utilisateur connecté,
+     * avec les mêmes champs que la liste publique des flashs (groupe flash:read).
+     */
+    #[Route('/me/favorites', name: 'me_favorites', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function listFavorites(): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->json($user->getFavoriteFlashes()->getValues(), Response::HTTP_OK, [], self::FLASH_CONTEXT);
+    }
+
+    /**
+     * PUT /api/me/favorites/{id} : mettre un flash en favori.
+     * PUT (et non POST) : la requête peut être répétée sans effet de plus (déjà favori = rien ne change).
+     * #[MapEntity] charge le flash à partir de {id} (404 s'il n'existe pas).
+     */
+    #[Route('/me/favorites/{id}', name: 'me_add_favorite', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[IsGranted('ROLE_USER')]
+    public function addFavorite(#[MapEntity(id: 'id')] Flash $flash, EntityManagerInterface $entityManager): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $user->addFavoriteFlash($flash); // ne fait rien s'il y est déjà
+        $entityManager->flush();
+
+        return new Response(null, Response::HTTP_NO_CONTENT); // 204 : fait, rien à renvoyer
+    }
+
+    /** DELETE /api/me/favorites/{id} : retirer un flash de ses favoris */
+    #[Route('/me/favorites/{id}', name: 'me_remove_favorite', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    #[IsGranted('ROLE_USER')]
+    public function removeFavorite(#[MapEntity(id: 'id')] Flash $flash, EntityManagerInterface $entityManager): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $user->removeFavoriteFlash($flash);
+        $entityManager->flush();
+
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**

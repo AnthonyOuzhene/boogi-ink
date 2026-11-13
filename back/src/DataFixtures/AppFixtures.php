@@ -241,20 +241,23 @@ class AppFixtures extends Fixture
             ['Calavera', 'tattoo4.jpg', 'Environ 15 cm', 'Bras, cuisse', '180.00', true],
             ['Montre à gousset — mini', 'tattoo2.png', 'Environ 6 cm', 'Poignet, cheville', '90.00', false],
         ];
+        $flashEntities = []; // par nom, pour les favoris de démo plus bas
         foreach ($flashes as $position => [$name, $file, $size, $placement, $price, $available]) {
-            $manager->persist((new Flash())
+            $flashEntities[$name] = (new Flash())
                 ->setName($name)
                 ->setPicture($this->copyImage($file, Flash::UPLOAD_PATH))
                 ->setSize($size)
                 ->setPlacement($placement)
                 ->setPrice($price)
                 ->setIsAvailable($available)
-                ->setPosition(($position + 1) * 10));
+                ->setPosition(($position + 1) * 10);
+            $manager->persist($flashEntities[$name]);
         }
 
         // --- Utilisateurs ---
         $admin = $this->createUser('admin@boogi-ink.local', 'Admin', 'admin1234', ['ROLE_ADMIN']);
-        $julie = $this->createUser('julie@example.com', 'Julie', 'client1234');
+        $julie = $this->createUser('julie@example.com', 'Julie', 'client1234')
+            ->addFavoriteFlash($flashEntities['Calavera']); // démo de la section "Mes favoris"
         $paul = $this->createUser('paul@example.com', 'Paul', 'client1234');
         $manager->persist($admin);
         $manager->persist($julie);

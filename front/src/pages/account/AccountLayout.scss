@@ -192,3 +192,15 @@
     gap: 12px;
   }
 }
+
+// "Mes favoris" : la planche de flashs posée sur une feuille de papier
+// (les dessins sont sur fond blanc et ont besoin d'un fond clair, voir FlashGallery.scss)
+.account-favorites {
+  margin-top: 28px;
+  padding: 40px 32px;
+  border-radius: var(--radius);
+
+  @media (max-width: 600px) {
+    padding: 28px 20px;
+  }
+}

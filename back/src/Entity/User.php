@@ -76,10 +76,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /** Date d'inscription, remplie automatiquement à la création (voir le constructeur) */
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    /**
+     * Flashs mis en favori par le client (cœur sur le site, section "Mes favoris").
+     * Relation à sens unique : un flash n'a pas besoin de connaître ses fans.
+     * Table de liaison user_favorite_flash : supprimer un flash ou un compte
+     * supprime aussi ses lignes de favoris (ON DELETE CASCADE, ajouté par Doctrine).
+     *
+     * @var Collection<int, Flash>
+     */
+    #[ORM\ManyToMany(targetEntity: Flash::class)]
+    #[ORM\JoinTable(name: 'user_favorite_flash')]
+    private Collection $favoriteFlashes;
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->favoriteFlashes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -230,6 +243,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Flash>
+     */
+    public function getFavoriteFlashes(): Collection
+    {
+        return $this->favoriteFlashes;
+    }
+
+    /**
+     * Numéros (id) des flashs favoris, renvoyés par GET /api/me : le site sait ainsi
+     * quels cœurs afficher pleins, sans charger tous les flashs.
+     *
+     * @return list<int>
+     */
+    #[Groups(['user:read'])]
+    public function getFavoriteFlashIds(): array
+    {
+        return $this->favoriteFlashes->map(fn (Flash $flash) => $flash->getId())->getValues();
+    }
+
+    public function addFavoriteFlash(Flash $favoriteFlash): static
+    {
+        if (!$this->favoriteFlashes->contains($favoriteFlash)) {
+            $this->favoriteFlashes->add($favoriteFlash);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteFlash(Flash $favoriteFlash): static
+    {
+        $this->favoriteFlashes->removeElement($favoriteFlash);
 
         return $this;
     }

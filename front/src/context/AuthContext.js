@@ -7,5 +7,8 @@ import { createContext, useContext } from 'react';
  */
 export const AuthContext = createContext(null);
 
-/** const { user, isConnected, isAdmin, login, logout } = useAuth(); */
+/**
+ * const { user, isConnected, isAdmin, login, logout } = useAuth();
+ * Favoris : isFavoriteFlash(id) et toggleFavoriteFlash(id) (voir AuthProvider.jsx)
+ */
 export const useAuth = () => useContext(AuthContext);
