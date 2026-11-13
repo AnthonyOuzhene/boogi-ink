@@ -120,6 +120,23 @@ ul {
 
 .section {
   padding-top: var(--section);
+
+  // Les bandeaux (.band, FAQ, livre d'or sur papier) sont collés à la section précédente,
+  // sans grande bande noire entre les deux. Une section classique juste avant un bandeau
+  // garde donc une marge en bas, pour que son contenu ne touche pas le bandeau.
+  // (:has(+ X) = "qui est immédiatement suivie de X")
+  &:has(+ .band, + .faq-band, + .guestbook.paper) {
+    padding-bottom: 120px;
+
+    @media (max-width: 900px) {
+      padding-bottom: 72px;
+    }
+  }
+}
+
+// Page qui se termine par un bandeau : le pied de page s'y colle aussi
+.site-main:has(> :last-child:is(.band, .faq-band, .guestbook.paper)) + .site-footer {
+  margin-top: 0;
 }
 
 .section-head {
@@ -156,6 +173,45 @@ ul {
 .glow {
   color: var(--cyan);
   text-shadow: 0 0 40px rgba(34, 211, 238, 0.55);
+}
+
+// --- Zone "papier" : fond blanc cassé, comme le papier de dessin du tatoueur ---------------
+// S'ajoute à une section (souvent avec .band) pour apporter de la lumière par endroits.
+// Les couleurs du site sont des variables CSS : on les redéfinit ici, et tout ce qui est dans
+// la zone (titres, cartes, badges, boutons, formulaires) passe en version claire tout seul.
+.paper {
+  --bg: #f3efe6;          // papier
+  --surface: #fffdf8;     // cartes posées sur le papier
+  --text: #14191b;        // encre
+  --muted: #4c5a5f;       // texte secondaire (contraste AA sur le papier)
+  --line: #ddd5c4;
+  --line-strong: #c3b9a5;
+  --cyan: #0e7490;        // cyan foncé : le cyan vif est illisible sur du clair
+  --cyan-light: #155e75;
+  --ink: #ffffff;         // texte posé sur le cyan foncé (boutons)
+
+  color: var(--text);
+  border-block: 0;
+  // Grain très léger (bruit SVG) pour l'effet papier, au-dessus de la couleur unie
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
+    var(--bg);
+
+  // Cartes (flashs, étapes, questions, avis) : blanches, détachées du papier par une ombre douce.
+  // Sur fond sombre elles utilisent --bg ; ici --bg = le papier, elles ne se verraient plus.
+  .flash-card,
+  .steps-preview__item,
+  .faq__item,
+  .guestbook__slide,
+  .comment {
+    background: var(--surface);
+    box-shadow: 0 10px 30px -18px rgba(20, 25, 27, 0.35);
+  }
+
+  // Le halo néon des titres n'a pas de sens sur du papier
+  .glow {
+    text-shadow: none;
+  }
 }
 
 .eyebrow {

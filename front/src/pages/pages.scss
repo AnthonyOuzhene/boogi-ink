@@ -67,7 +67,8 @@
 
 // --- Bandeau pleine largeur sur fond clair (Comment ça se passe, Hygiène) ---
 .band {
-  margin-top: var(--section);
+  // Pas de marge au-dessus : les bandeaux s'enchaînent avec les sections voisines
+  // (voir .section dans global.scss), sans bande noire entre les deux
   padding-block: var(--band-padding);
   // Dégradé vertical + halo cyan en haut à gauche, au lieu d'un aplat
   background:
@@ -87,6 +88,15 @@
   &__more {
     margin-top: 56px;
     text-align: center;
+  }
+
+  // Bandeau placé juste sous le titre d'une page (PageHero) : collé au titre, marges réduites
+  &--flush {
+    padding-block: 96px;
+
+    @media (max-width: 900px) {
+      padding-block: 56px;
+    }
   }
 }
 
@@ -121,7 +131,12 @@
   gap: 12px;
   margin-top: 16px;
 
-  button {
+  // Boutons (page Réalisations) ou liens (accueil) : même pastille
+  button,
+  a {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
     min-height: 44px;
     padding: 10px 22px;
     border-radius: 999px;

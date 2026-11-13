@@ -19,11 +19,14 @@ const ContentPage = () => {
     <>
       <PageHero eyebrow={`Mise à jour le ${formatDate(page.updatedAt)}`} title={page.title} />
 
-      <article className="container section section--tight content-page">
-        {toBlocks(page.content).map((block) => (block.type === 'heading'
-          ? <h2 key={block.text}>{block.text}</h2>
-          : <p key={block.text}>{block.text}</p>))}
-      </article>
+      {/* Texte long (mentions légales…) sur papier : plus confortable à lire */}
+      <div className="band band--flush paper">
+        <article className="container content-page">
+          {toBlocks(page.content).map((block) => (block.type === 'heading'
+            ? <h2 key={block.text}>{block.text}</h2>
+            : <p key={block.text}>{block.text}</p>))}
+        </article>
+      </div>
     </>
   );
 };

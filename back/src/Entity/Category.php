@@ -39,7 +39,9 @@ class Category
     /**
      * @var Collection<int, Gallery>
      */
-    #[ORM\OneToMany(targetEntity: Gallery::class, mappedBy: 'category')]
+    // EXTRA_LAZY : $this->galleries->count() fait un simple "SELECT COUNT(*)" en base,
+    // sans charger toutes les réalisations (voir getGalleryCount())
+    #[ORM\OneToMany(targetEntity: Gallery::class, mappedBy: 'category', fetch: 'EXTRA_LAZY')]
     private Collection $galleries;
 
     public function __construct()
@@ -51,6 +53,17 @@ class Category
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * Nombre de réalisations de ce style, renvoyé par l'API (GET /api/categories) :
+     * le front n'affiche que les styles qui ont au moins une réalisation.
+     * Champ calculé : un getter avec un groupe de sérialisation suffit, pas de colonne en base.
+     */
+    #[Groups(['category:read'])]
+    public function getGalleryCount(): int
+    {
+        return $this->galleries->count();
     }
 
     public function getName(): ?string

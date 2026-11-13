@@ -139,6 +139,16 @@
   }
 }
 
+// --- Styles du tatoueur, entre le titre "Réalisations" et les photos ---
+.home-styles {
+  // Rapproché du titre (.section-head a déjà 72 px de marge en dessous)
+  margin: -36px 0 40px;
+
+  @media (max-width: 900px) {
+    margin: -16px 0 28px;
+  }
+}
+
 // Agrandissement de 10 % : visible sur la durée, jamais flou (la photo du backoffice fait
 // au moins 1 920 px de large) ; translate3d confie l'animation à la carte graphique (fluide)
 @keyframes hero-zoom {

@@ -5,6 +5,11 @@
   padding-top: var(--section);
   overflow: hidden; // les voisins sont coupés au bord de l'écran
 
+  // Sur papier : bandeau collé à la section précédente, marges intérieures comme les autres (.band)
+  &.paper {
+    padding-block: var(--band-padding);
+  }
+
   &__head {
     display: flex;
     flex-wrap: wrap;

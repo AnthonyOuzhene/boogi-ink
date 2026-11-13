@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import useApi from '../hooks/useApi';
 import { useSalon } from '../context/SalonContext';
 import { assetUrl } from '../api/client';
-import CategoryBand from '../components/CategoryBand';
+import ArgumentsBand from '../components/ArgumentsBand';
 import GalleryGrid from '../components/GalleryGrid';
 import ServiceList from '../components/ServiceList';
 import ArtistSection from '../components/ArtistSection';
@@ -22,6 +22,9 @@ const HomePage = () => {
   const { data: artists } = useApi('/artists');
   const { data: flashes } = useApi('/flashes');
   const { data: steps } = useApi('/session_steps');
+  const { data: categories } = useApi('/categories');
+  // Styles affichés au-dessus des réalisations : seulement ceux qui ont au moins une réalisation
+  const styles = categories?.filter((category) => category.galleryCount > 0) ?? [];
 
   // L'API liste les flashs disponibles en premier : l'aperçu n'affiche que ceux-là
   const availableFlashes = flashes?.filter((flash) => flash.isAvailable).slice(0, 4) ?? [];
@@ -65,7 +68,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <CategoryBand />
+      <ArgumentsBand />
 
       {/* --- L'artiste : version courte, son parcours complet est sur L'atelier --- */}
       <ArtistSection artist={artists?.[0]} />
@@ -77,22 +80,33 @@ const HomePage = () => {
             <h2 className="section-title">Réali<span className="text-cyan">sations</span></h2>
             <Link to="/realisations" className="link-arrow">Toute la galerie →</Link>
           </div>
+          {/* Les styles du tatoueur, juste au-dessus des photos : chacun ouvre la galerie filtrée */}
+          {styles.length > 0 && (
+            <nav aria-label="Styles de tatouage" className="filters home-styles">
+              {styles.map((category) => (
+                <Link key={category.id} to={`/realisations?category=${category.id}`}>{category.name}</Link>
+              ))}
+            </nav>
+          )}
           <GalleryGrid galleries={galleries.slice(0, 5)} />
         </section>
       )}
 
-      {/* --- Flashs disponibles : aperçu, la liste complète est sur /flashs --- */}
+      {/* --- Flashs disponibles : aperçu, la liste complète est sur /flashs ---
+          Bandeau "papier" (fond clair) : les dessins sont sur papier blanc, ils s'y fondent */}
       {availableFlashes.length > 0 && (
-        <section className="container section">
-          <div className="section-head">
-            <div className="stack">
-              <p className="eyebrow">Prêts à tatouer</p>
-              <h2 className="section-title">Flashs <span className="text-cyan">disponibles</span></h2>
-              <p className="muted lead-text">Des motifs dessinés par {artists?.[0]?.firstName ?? "l'artiste"}, tatoués une seule fois. Premier arrivé, premier servi.</p>
+        <section className="band paper">
+          <div className="container">
+            <div className="section-head">
+              <div className="stack">
+                <p className="eyebrow">Prêts à tatouer</p>
+                <h2 className="section-title">Flashs <span className="text-cyan">disponibles</span></h2>
+                <p className="muted lead-text">Des motifs dessinés par {artists?.[0]?.firstName ?? "l'artiste"}, tatoués une seule fois. Premier arrivé, premier servi.</p>
+              </div>
+              <Link to="/flashs" className="link-arrow">Tous les flashs →</Link>
             </div>
-            <Link to="/flashs" className="link-arrow">Tous les flashs →</Link>
+            <FlashGrid flashes={availableFlashes} />
           </div>
-          <FlashGrid flashes={availableFlashes} />
         </section>
       )}
 
@@ -112,23 +126,25 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* --- Prestations : titre à gauche, 3 tarifs à droite --- */}
-      <section className="container section split">
-        <div className="split__intro">
-          <h2 className="section-title">Presta<span className="text-cyan">tions</span></h2>
-          <p className="muted">Chaque projet est dessiné sur mesure. Les grandes pièces et les recouvrements sont établis sur devis.</p>
-          <Link to="/atelier#tarifs" className="link-arrow">Tous les tarifs →</Link>
-        </div>
-        <div className="split__list">
-          {services && <ServiceList services={services.slice(0, 3)} />}
+      {/* --- Prestations : titre à gauche, 3 tarifs à droite (sur papier, comme une carte de tarifs) --- */}
+      <section className="band paper">
+        <div className="container split">
+          <div className="split__intro">
+            <h2 className="section-title">Presta<span className="text-cyan">tions</span></h2>
+            <p className="muted">Chaque projet est dessiné sur mesure. Les grandes pièces et les recouvrements sont établis sur devis.</p>
+            <Link to="/atelier#tarifs" className="link-arrow">Tous les tarifs →</Link>
+          </div>
+          <div className="split__list">
+            {services && <ServiceList services={services.slice(0, 3)} />}
+          </div>
         </div>
       </section>
 
       {/* --- Questions fréquentes --- */}
       <FaqSection />
 
-      {/* --- Livre d'or : carrousel des avis publiés --- */}
-      <GuestbookCarousel />
+      {/* --- Livre d'or : carrousel des avis publiés, sur papier --- */}
+      <GuestbookCarousel className="paper" />
     </>
   );
 };

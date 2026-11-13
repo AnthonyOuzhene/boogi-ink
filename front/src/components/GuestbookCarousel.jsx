@@ -18,8 +18,9 @@ const mod = (value, length) => ((value % length) + length) % length;
 /**
  * Carrousel du livre d'or : l'avis courant au centre, le précédent et le suivant
  * dépassent de chaque côté. Défilement automatique, en pause au survol ou au clavier.
+ * className : classe ajoutée à la section (ex. "paper" pour le fond clair).
  */
-const GuestbookCarousel = () => {
+const GuestbookCarousel = ({ className = '' }) => {
   const { data: comments } = useApi('/comments');
 
   // "current" n'est jamais ramené entre 0 et n-1 : il sert aussi de clé stable aux cartes,
@@ -50,7 +51,7 @@ const GuestbookCarousel = () => {
 
   return (
     <section
-      className="guestbook"
+      className={`guestbook ${className}`}
       aria-roledescription="carrousel"
       aria-labelledby="guestbook-title"
       // Pause seulement pour le focus CLAVIER (:focus-visible) : un clic de souris sur une flèche

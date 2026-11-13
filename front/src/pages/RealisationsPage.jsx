@@ -14,7 +14,9 @@ const RealisationsPage = () => {
   const categoryId = searchParams.get('category');
   const openedId = searchParams.get('realisation');
 
-  const { data: categories } = useApi('/categories');
+  const { data: allCategories } = useApi('/categories');
+  // Seulement les styles qui ont au moins une réalisation : pas de filtre qui mène à une page vide
+  const categories = allCategories?.filter((category) => category.galleryCount > 0);
   const { data: galleries, loading } = useApi(categoryId ? `/galleries?category=${categoryId}` : '/galleries');
 
   const selectCategory = (id) => setSearchParams(id ? { category: id } : {});

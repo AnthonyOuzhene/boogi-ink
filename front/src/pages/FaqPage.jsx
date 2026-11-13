@@ -16,11 +16,14 @@ const FaqPage = () => {
         lead="Tarifs, douleur, cicatrisation, prise de rendez-vous : les réponses aux questions qu'on nous pose le plus souvent."
       />
 
-      <section className="container section section--tight faq-page">
-        {loading && <p className="muted">Chargement…</p>}
-        {error && <p className="muted">Impossible de charger les questions.</p>}
-        {faqs?.length === 0 && <p className="muted">Aucune question pour le moment.</p>}
-        {faqs?.length > 0 && <FaqList faqs={faqs} />}
+      {/* Les réponses sur papier : plus confortable à lire */}
+      <section className="band band--flush paper">
+        <div className="container faq-page">
+          {loading && <p className="muted">Chargement…</p>}
+          {error && <p className="muted">Impossible de charger les questions.</p>}
+          {faqs?.length === 0 && <p className="muted">Aucune question pour le moment.</p>}
+          {faqs?.length > 0 && <FaqList faqs={faqs} />}
+        </div>
       </section>
 
       <section className="container section">

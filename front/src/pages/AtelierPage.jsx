@@ -117,16 +117,18 @@ const AtelierPage = () => {
 
       {/* --- Le déroulé d'une séance --- */}
       {has('seance') && (
-        <section id="seance" className="container section split anchor">
-          <div className="split__intro">
-            <p className="eyebrow">{number('seance')} — Pas à pas</p>
-            <h2 className="section-title">Une séance <span className="text-cyan">chez nous</span></h2>
-            <p className="muted lead-text">De la première idée à la cicatrisation complète : voici comment se passe un tatouage chez Boogi'ink.</p>
-            <Link to="/contact" className="btn btn--primary">Commencer mon projet</Link>
-            <p className="muted">Une question avant de vous lancer ? <Link to="/faq">Consultez la FAQ</Link></p>
-          </div>
-          <div className="split__list">
-            <SessionSteps steps={steps} />
+        <section id="seance" className="band paper anchor">
+          <div className="container split">
+            <div className="split__intro">
+              <p className="eyebrow">{number('seance')} — Pas à pas</p>
+              <h2 className="section-title">Une séance <span className="text-cyan">chez nous</span></h2>
+              <p className="muted lead-text">De la première idée à la cicatrisation complète : voici comment se passe un tatouage chez Boogi'ink.</p>
+              <Link to="/contact" className="btn btn--primary">Commencer mon projet</Link>
+              <p className="muted">Une question avant de vous lancer ? <Link to="/faq">Consultez la FAQ</Link></p>
+            </div>
+            <div className="split__list">
+              <SessionSteps steps={steps} />
+            </div>
           </div>
         </section>
       )}
@@ -149,18 +151,20 @@ const AtelierPage = () => {
 
       {/* --- Les flashs --- */}
       {has('flashs') && (
-        <section id="flashs" className="container section anchor">
-          <div className="section-head">
-            <div className="stack">
-              <p className="eyebrow">{number('flashs')} — Prêts à tatouer</p>
-              <h2 className="section-title">Les <span className="glow">flashs</span></h2>
-              <p className="muted lead-text">
-                Des motifs dessinés par {artist?.firstName ?? "l'artiste"}, prêts à être tatoués.
-                Chaque flash n'est tatoué qu'une seule fois : une fois réservé, il est à vous.
-              </p>
+        <section id="flashs" className="band paper anchor">
+          <div className="container">
+            <div className="section-head">
+              <div className="stack">
+                <p className="eyebrow">{number('flashs')} — Prêts à tatouer</p>
+                <h2 className="section-title">Les <span className="glow">flashs</span></h2>
+                <p className="muted lead-text">
+                  Des motifs dessinés par {artist?.firstName ?? "l'artiste"}, prêts à être tatoués.
+                  Chaque flash n'est tatoué qu'une seule fois : une fois réservé, il est à vous.
+                </p>
+              </div>
             </div>
+            <FlashGallery flashes={flashes} />
           </div>
-          <FlashGallery flashes={flashes} />
         </section>
       )}
 

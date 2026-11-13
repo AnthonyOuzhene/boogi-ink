@@ -14,9 +14,12 @@ const FlashsPage = () => {
         title={<>Les <span className="glow">flashs</span></>}
         lead="Des motifs dessinés à l'avance par l'artiste. Chaque flash n'est tatoué qu'une seule fois : une fois réservé, il est à vous."
       />
-      <section className="container section section--tight">
-        {flashes?.length > 0 && <FlashGallery flashes={flashes} />}
-        {!loading && !flashes?.length && <p className="muted">Pas de flash disponible pour le moment. Revenez bientôt !</p>}
+      {/* Sur papier : les dessins (fond blanc) s'y fondent */}
+      <section className="band band--flush paper">
+        <div className="container">
+          {flashes?.length > 0 && <FlashGallery flashes={flashes} />}
+          {!loading && !flashes?.length && <p className="muted">Pas de flash disponible pour le moment. Revenez bientôt !</p>}
+        </div>
       </section>
     </>
   );
