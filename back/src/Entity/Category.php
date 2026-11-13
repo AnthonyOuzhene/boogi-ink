@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
@@ -17,6 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['category:read']],
 )]
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+// Le slug est calculé à partir du nom : deux noms qui donnent le même slug sont refusés
+#[UniqueEntity(fields: ['slug'], message: 'Une catégorie porte déjà ce nom (ou un nom très proche).', errorPath: 'name')]
 class Category
 {
     #[Groups(['category:read', 'service:read', 'gallery:read'])]
@@ -43,6 +47,15 @@ class Category
     // sans charger toutes les réalisations (voir getGalleryCount())
     #[ORM\OneToMany(targetEntity: Gallery::class, mappedBy: 'category', fetch: 'EXTRA_LAZY')]
     private Collection $galleries;
+
+    /**
+     * Nom adapté aux adresses web ("Fine line" → "fine-line") : la page Réalisations
+     * l'affiche dans l'URL (/realisations?category=fine-line) au lieu de l'id.
+     * Calculé automatiquement dans setName() : rien à saisir dans le backoffice.
+     */
+    #[Groups(['category:read', 'gallery:read'])]
+    #[ORM\Column(length: 120, unique: true)]
+    private ?string $slug = null;
 
     public function __construct()
     {
@@ -74,6 +87,8 @@ class Category
     public function setName(?string $name): static
     {
         $this->name = $name;
+        // AsciiSlugger : retire les accents, remplace espaces et ponctuation par des tirets
+        $this->slug = $name ? (new AsciiSlugger('fr'))->slug($name)->lower()->toString() : null;
 
         return $this;
     }
@@ -141,5 +156,11 @@ class Category
     public function __toString(): string
     {
         return (string) $this->name;
+    }
+
+    // Pas de setSlug() : le slug suit toujours le nom (voir setName())
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 }

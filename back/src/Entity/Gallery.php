@@ -20,8 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
         new GetCollection(
             order: ['realisedAt' => 'DESC'],
-            // GET /api/galleries?category=3
-            parameters: ['category' => new QueryParameter(filter: new ExactFilter(), property: 'category')],
+            // GET /api/galleries?category=fine-line (slug de la catégorie, lisible dans l'URL du site)
+            parameters: ['category' => new QueryParameter(filter: new ExactFilter(), property: 'category.slug')],
         ),
     ],
     normalizationContext: ['groups' => ['gallery:read']],

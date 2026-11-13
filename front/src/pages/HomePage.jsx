@@ -84,7 +84,7 @@ const HomePage = () => {
           {styles.length > 0 && (
             <nav aria-label="Styles de tatouage" className="filters home-styles">
               {styles.map((category) => (
-                <Link key={category.id} to={`/realisations?category=${category.id}`}>{category.name}</Link>
+                <Link key={category.id} to={`/realisations?category=${category.slug}`}>{category.name}</Link>
               ))}
             </nav>
           )}

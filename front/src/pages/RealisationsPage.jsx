@@ -7,19 +7,22 @@ import './pages.scss';
 
 const RealisationsPage = () => {
   // Tout l'état de la page est dans l'URL, elle peut donc être partagée telle quelle :
-  // - ?category=2 : filtre par style
+  // - ?category=fine-line : filtre par style (slug de la catégorie, lisible)
   // - ?realisation=12 : visionneuse ouverte sur cette réalisation
   // Le bouton "précédent" du navigateur ferme la visionneuse / revient au filtre précédent.
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoryId = searchParams.get('category');
+  const categorySlug = searchParams.get('category');
   const openedId = searchParams.get('realisation');
 
   const { data: allCategories } = useApi('/categories');
   // Seulement les styles qui ont au moins une réalisation : pas de filtre qui mène à une page vide
   const categories = allCategories?.filter((category) => category.galleryCount > 0);
-  const { data: galleries, loading } = useApi(categoryId ? `/galleries?category=${categoryId}` : '/galleries');
+  // L'API filtre directement par slug : GET /api/galleries?category=fine-line
+  const { data: galleries, loading } = useApi(
+    categorySlug ? `/galleries?category=${encodeURIComponent(categorySlug)}` : '/galleries',
+  );
 
-  const selectCategory = (id) => setSearchParams(id ? { category: id } : {});
+  const selectCategory = (slug) => setSearchParams(slug ? { category: slug } : {});
 
   // Adresse d'une réalisation dans la visionneuse, en gardant le filtre en cours
   const linkTo = (gallery) => {
@@ -46,13 +49,13 @@ const RealisationsPage = () => {
       <PageHero eyebrow="Galerie" title={<>Réali<span className="text-cyan">sations</span></>}>
         {categories?.length > 0 && (
           <div className="filters" role="group" aria-label="Filtrer par style">
-            <button type="button" aria-pressed={!categoryId} onClick={() => selectCategory(null)}>Tout</button>
+            <button type="button" aria-pressed={!categorySlug} onClick={() => selectCategory(null)}>Tout</button>
             {categories.map((category) => (
               <button
                 type="button"
                 key={category.id}
-                aria-pressed={categoryId === String(category.id)}
-                onClick={() => selectCategory(category.id)}
+                aria-pressed={categorySlug === category.slug}
+                onClick={() => selectCategory(category.slug)}
               >
                 {category.name}
               </button>
