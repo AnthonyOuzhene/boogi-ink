@@ -26,6 +26,7 @@
 
   --font-display: 'Anton', Impact, 'Arial Narrow', sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-marker: 'Permanent Marker', 'Comic Sans MS', cursive; // "écrit au feutre" : prix des flashs uniquement
 
   --container: 1280px;
   --gutter: 48px;         // marges latérales
@@ -197,9 +198,9 @@ ul {
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
     var(--bg);
 
-  // Cartes (flashs, étapes, questions, avis) : blanches, détachées du papier par une ombre douce.
+  // Cartes (étapes, questions, avis) : blanches, détachées du papier par une ombre douce.
   // Sur fond sombre elles utilisent --bg ; ici --bg = le papier, elles ne se verraient plus.
-  .flash-card,
+  // (Les flashs n'ont pas de carte : ils sont dessinés à même la "planche", voir FlashGallery.scss)
   .steps-preview__item,
   .faq__item,
   .guestbook__slide,
@@ -212,6 +213,16 @@ ul {
   .glow {
     text-shadow: none;
   }
+}
+
+// Texte masqué à l'écran mais lu par les lecteurs d'écran (ex. "Disponible" sur un flash)
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .eyebrow {

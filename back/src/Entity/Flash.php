@@ -54,8 +54,10 @@ class Flash
 
     /** DECIMAL : Doctrine le renvoie en chaîne ("120.00") pour ne pas perdre de précision. Vide = sur devis */
     #[Groups(['flash:read'])]
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    #[Assert\PositiveOrZero]
+    /** Prix fixe : un flash est un dessin déjà fait, il n'est jamais "sur devis" */
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Assert\NotBlank(message: 'Un flash a toujours un prix fixe.')]
+    #[Assert\Positive]
     private ?string $price = null;
 
     #[ORM\Column]

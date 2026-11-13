@@ -231,11 +231,11 @@ class AppFixtures extends Fixture
                 ->setPosition(($position + 1) * 10));
         }
 
-        // --- Flashs (prix à définir : vides = « Sur devis ») ---
+        // --- Flashs (prix fixe obligatoire ; montants de démo, à remplacer par les vrais) ---
         $flashes = [
-            ['Montre à gousset', 'tattoo2.png', 'Environ 12 cm', 'Avant-bras, mollet', null, true],
-            ['Calavera', 'tattoo4.jpg', 'Environ 15 cm', 'Bras, cuisse', null, true],
-            ['Montre à gousset — mini', 'tattoo2.png', 'Environ 6 cm', 'Poignet, cheville', null, false],
+            ['Montre à gousset', 'tattoo2.png', 'Environ 12 cm', 'Avant-bras, mollet', '150.00', true],
+            ['Calavera', 'tattoo4.jpg', 'Environ 15 cm', 'Bras, cuisse', '180.00', true],
+            ['Montre à gousset — mini', 'tattoo2.png', 'Environ 6 cm', 'Poignet, cheville', '90.00', false],
         ];
         foreach ($flashes as $position => [$name, $file, $size, $placement, $price, $available]) {
             $manager->persist((new Flash())

@@ -1,101 +1,112 @@
+// --- Planche de flashs ---
+// Comme au salon : les dessins posés à même le papier (zone .paper), numérotés,
+// le prix écrit au feutre, et un tampon "Réservé" sur ceux qui sont pris.
+// ⚠ Prévu pour une zone papier (accueil, L'atelier, page Flashs) : sur fond sombre,
+// "multiply" ferait disparaître les dessins dans le noir.
 .flash-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 48px 32px;
 }
 
 .flash-card {
   display: flex;
   flex-direction: column;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: border-color 0.3s;
+  gap: 16px;
 
-  &:hover {
-    border-color: var(--cyan);
-  }
-
-  // Dessin sur fond papier, affiché en entier
+  // Le dessin : fond blanc fondu dans le papier grâce à "multiply"
+  // (le blanc disparaît, seuls les traits restent), sans cadre ni carte
   &__img {
-    height: 260px;
-    padding: 16px;
-    background: #fff; // fond papier : se confond avec le fond des dessins
+    position: relative;
+    height: 240px;
+    padding: 8px;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      mix-blend-mode: multiply;
+      transition: transform 0.35s ease;
     }
   }
 
+  &:hover &__img img {
+    transform: scale(1.04) rotate(-1deg);
+  }
+
+  // Légende sous le dessin, séparée par un trait fin comme sur une planche
   &__body {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 20px;
+    gap: 4px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
   }
 
-  &__name {
-    font-size: 19px;
-    font-weight: 600;
-  }
-
-  &__details {
-    font-size: 15px;
-  }
-
-  &__price {
-    margin-top: auto;
-    font-family: var(--font-display);
-    font-size: 26px;
+  &__number {
+    margin-right: 10px;
     color: var(--cyan);
   }
 
-  // Réservé : toujours visible (il montre le style de l'artiste), mais en retrait
+  &__name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  &__details {
+    font-size: 14px;
+  }
+
+  // Prix "écrit au feutre", légèrement de travers
+  &__price {
+    align-self: flex-start;
+    margin-top: 6px;
+    font-family: var(--font-marker);
+    font-size: 22px;
+    color: var(--cyan);
+    transform: rotate(-3deg);
+    transform-origin: left center;
+  }
+
+  // Réservé : dessin estompé + tampon rouge de travers
   &--reserved {
     .flash-card__img img {
-      opacity: 0.55;
+      opacity: 0.45;
     }
 
     .flash-card__price {
       color: var(--muted);
+      text-decoration: line-through;
     }
+  }
+
+  &__stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-14deg);
+    padding: 6px 18px;
+    border: 3px double #b3261e;
+    border-radius: 6px;
+    color: #b3261e;
+    font-family: var(--font-display);
+    font-size: 30px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    // Encre de tampon : un peu transparente, se mélange au papier
+    opacity: 0.85;
+    mix-blend-mode: multiply;
+    pointer-events: none;
   }
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-
-  &::before {
-    content: '';
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-
-  &--ok {
-    color: var(--cyan);
-    // Teintes calculées depuis --cyan : le badge suit aussi le bandeau "papier"
-    background: color-mix(in srgb, var(--cyan) 10%, transparent);
-    border: 1px solid color-mix(in srgb, var(--cyan) 40%, transparent);
-  }
-
-  &--reserved {
-    color: var(--muted);
-    border: 1px dashed var(--line-strong);
+@media (prefers-reduced-motion: reduce) {
+  .flash-card__img img {
+    transition: none;
   }
 }
 

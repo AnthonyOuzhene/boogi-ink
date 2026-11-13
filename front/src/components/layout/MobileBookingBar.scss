@@ -1,0 +1,38 @@
+// Barre de rendez-vous en bas de l'écran : seulement quand le menu est en burger (≤ 1024 px,
+// même seuil que Header.scss), et glisse depuis le bas une fois qu'on a un peu défilé
+.booking-bar {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .booking-bar {
+    display: block;
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 9; // sous l'en-tête (10) : le menu burger ouvert passe par-dessus
+    padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom)); // encoche des iPhone
+    background: rgba(11, 18, 21, 0.94); // = --bg, légèrement transparent
+    border-top: 1px solid var(--line);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+
+    &.is-visible {
+      transform: none;
+    }
+
+    &__btn {
+      width: 100%;
+    }
+  }
+
+  // Le bas du pied de page n'est jamais caché derrière la barre
+  .site-footer {
+    padding-bottom: 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-bar {
+    transition: none;
+  }
+}

@@ -55,7 +55,8 @@ class FlashCrudController extends AbstractCrudController
         yield NumberField::new('price', 'Prix (€)')
             ->setStoredAsString()
             ->setNumDecimals(2)
-            ->setHelp('Laisser vide pour « Sur devis ».');
+            ->setRequired(true)
+            ->setHelp('Prix fixe du flash (obligatoire) : un flash n\'est jamais « sur devis ».');
         yield IntegerField::new('position', 'Ordre')
             ->setHelp("Du plus petit au plus grand. Les flashs disponibles s'affichent toujours avant les réservés.");
     }

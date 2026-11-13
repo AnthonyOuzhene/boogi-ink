@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import MobileBookingBar from './components/layout/MobileBookingBar';
 import HomePage from './pages/HomePage';
 import RealisationsPage from './pages/RealisationsPage';
 import GalleryDetailPage from './pages/GalleryDetailPage';
@@ -64,6 +65,8 @@ const App = () => {
         </Routes>
       </main>
       <Footer />
+      {/* Téléphone et tablette : bouton "Prendre rendez-vous" toujours à portée de pouce */}
+      <MobileBookingBar />
     </div>
   );
 };
