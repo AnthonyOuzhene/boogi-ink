@@ -5,8 +5,9 @@ import useApi from '../hooks/useApi';
 import { formatDate } from '../utils/format';
 import './GuestbookCarousel.scss';
 
-const AUTOPLAY_DELAY = 7000; // ms entre deux avis : défilement lent
+const AUTOPLAY_DELAY = 5500; // ms entre deux avis : le temps de lire, sans traîner
 const POSITIONS = [-2, -1, 0, 1, 2]; // 0 = avis courant, ±1 = voisins visibles, ±2 = hors champ
+const PIN_COLORS = ['', 'pin--blue', 'pin--yellow']; // punaises en alternance (voir .pin dans global.scss)
 
 // Respecte le réglage système "réduire les animations" : pas de défilement automatique
 const prefersReducedMotion = () =>
@@ -87,6 +88,8 @@ const GuestbookCarousel = ({ className = '' }) => {
               onMouseEnter={isCurrent ? () => setHovered(true) : undefined}
               onMouseLeave={isCurrent ? () => setHovered(false) : undefined}
             >
+              {/* Punaise décorative : l'avis est "épinglé", couleur en alternance */}
+              <span className={`pin ${PIN_COLORS[mod(index, count) % PIN_COLORS.length]}`} aria-hidden="true" />
               <span className="guestbook__mark" aria-hidden="true">“</span>
               <h3 className="guestbook__title">{comment.title}</h3>
               <blockquote className="guestbook__message">{comment.message}</blockquote>

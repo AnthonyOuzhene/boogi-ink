@@ -34,23 +34,26 @@
     align-items: stretch;
   }
 
+  // Avis = note punaisée (comme sur la page Livre d'or), sans inclinaison : les cartes défilent déjà
   &__slide {
+    position: relative; // pour la punaise (.pin)
     grid-area: 1 / 1;
     width: var(--slide-width);
     display: flex;
     flex-direction: column;
     gap: 24px;
     padding: 64px;
-    border: 1px solid var(--line-strong);
-    border-radius: 16px;
-    background: var(--bg);
+    border-radius: 3px;
+    background: var(--surface);
+    box-shadow:
+      0 1px 2px rgba(20, 25, 27, 0.12),
+      0 14px 24px -14px rgba(20, 25, 27, 0.45);
     cursor: pointer;
     // Défilement lent et doux
     transition:
-      transform 1.2s cubic-bezier(0.65, 0, 0.35, 1),
-      opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1),
-      border-color 1.2s,
-      box-shadow 1.2s;
+      transform 1s cubic-bezier(0.65, 0, 0.35, 1),
+      opacity 1s cubic-bezier(0.65, 0, 0.35, 1),
+      box-shadow 1s;
 
     // Position = décalage d'une largeur de carte + l'espace entre deux cartes
     transform: translateX(calc(var(--offset, 0) * (var(--slide-width) + var(--slide-gap)))) scale(0.9);
@@ -67,8 +70,10 @@
       transform: none;
       opacity: 1;
       cursor: default;
-      border-color: var(--cyan);
-      box-shadow: 0 0 60px rgba(34, 211, 238, 0.15);
+      // Au premier plan : ombre plus marquée, comme une feuille un peu soulevée
+      box-shadow:
+        0 2px 4px rgba(20, 25, 27, 0.12),
+        0 26px 40px -18px rgba(20, 25, 27, 0.55);
       z-index: 1;
     }
 

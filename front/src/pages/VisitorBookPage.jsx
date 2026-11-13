@@ -4,6 +4,9 @@ import PageHero from '../components/PageHero';
 import CommentForm from '../components/CommentForm';
 import './pages.scss';
 
+// Couleurs des punaises, en alternance (voir .pin dans global.scss)
+const PIN_COLORS = ['', 'pin--blue', 'pin--yellow'];
+
 const VisitorBookPage = () => {
   // L'API ne renvoie que les avis validés dans le backoffice, du plus récent au plus ancien
   const { data: comments, loading, error } = useApi('/comments');
@@ -23,8 +26,10 @@ const VisitorBookPage = () => {
           {comments?.length === 0 && <p className="muted">Aucun avis pour le moment. Sois le premier !</p>}
 
           <div className="comments">
-            {comments?.map((comment) => (
+            {comments?.map((comment, index) => (
               <article key={comment.id} className="comment">
+                {/* Punaise décorative, couleur en alternance */}
+                <span className={`pin ${PIN_COLORS[index % PIN_COLORS.length]}`} aria-hidden="true" />
                 <span className="comment__mark" aria-hidden="true">“</span>
                 <h2 className="comment__title">{comment.title}</h2>
                 <p className="comment__message">{comment.message}</p>

@@ -198,13 +198,12 @@ ul {
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
     var(--bg);
 
-  // Cartes (étapes, questions, avis) : blanches, détachées du papier par une ombre douce.
+  // Cartes (étapes, questions) : blanches, détachées du papier par une ombre douce.
   // Sur fond sombre elles utilisent --bg ; ici --bg = le papier, elles ne se verraient plus.
-  // (Les flashs n'ont pas de carte : ils sont dessinés à même la "planche", voir FlashGallery.scss)
+  // (Les flashs sont dessinés à même la "planche" et les avis sont des notes punaisées :
+  // ils ont leur propre style, voir FlashGallery.scss, pages.scss et GuestbookCarousel.scss)
   .steps-preview__item,
-  .faq__item,
-  .guestbook__slide,
-  .comment {
+  .faq__item {
     background: var(--surface);
     box-shadow: 0 10px 30px -18px rgba(20, 25, 27, 0.35);
   }
@@ -212,6 +211,45 @@ ul {
   // Le halo néon des titres n'a pas de sens sur du papier
   .glow {
     text-shadow: none;
+  }
+}
+
+// --- Punaise (avis du livre d'or "épinglés au mur") ---------------------------------------
+// À placer dans un élément en position: relative ; trois couleurs qui alternent
+// (rouge par défaut, puis bleu pétrole et jaune via .pin--blue / .pin--yellow).
+.pin {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  border-radius: 50%;
+  // Tête bombée : reflet en haut à gauche, plus sombre en bas à droite
+  background: radial-gradient(circle at 35% 30%, #ff9b8f 0%, #c7372b 45%, #7a1a12 100%);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+
+  // Ombre portée de la punaise sur le papier
+  &::after {
+    content: '';
+    position: absolute;
+    top: 17px;
+    left: 12px;
+    width: 12px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.18);
+    filter: blur(1.5px);
+  }
+
+  &--blue {
+    background: radial-gradient(circle at 35% 30%, #8be3f5 0%, #0e7490 45%, #0b3b4a 100%);
+  }
+
+  &--yellow {
+    background: radial-gradient(circle at 35% 30%, #fff1b8 0%, #e0a21a 45%, #8a5a06 100%);
   }
 }
 
