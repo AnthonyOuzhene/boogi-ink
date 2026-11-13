@@ -22,8 +22,9 @@ const CommentForm = () => {
     setErrors({});
     setSending(true);
     try {
-      // L'auteur n'est pas envoyé : le back le déduit du jeton JWT
-      await api.post('/comments', {
+      // POST /api/me/comments (AccountController) : l'auteur n'est pas envoyé,
+      // le back le déduit du jeton JWT et crée l'avis "en attente de validation"
+      await api.post('/me/comments', {
         title: form.title,
         message: form.message,
         projectName: form.projectName || null,

@@ -8,28 +8,18 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use App\State\CommentAuthorProcessor;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
+    // API Platform : le livre d'or PUBLIC, en lecture seule (avis publiés uniquement,
+    // voir PublishedCommentExtension).
+    // Tout ce que fait un client (déposer, lister SES avis, les modifier) : AccountController,
+    // sous /api/me/comments. Pas de suppression possible.
     operations: [
         new Get(),
         new GetCollection(order: ['createdAt' => 'DESC']),
-        // POST /api/comments : réservé aux clients connectés (jeton JWT)
-        new Post(
-            security: "is_granted('ROLE_USER')",
-            denormalizationContext: ['groups' => ['comment:write']],
-            // Groupe dédié : l'auteur est ajouté APRÈS la validation (par le processor),
-            // donc la contrainte NotBlank de "author" (groupe Default) ne doit pas s'appliquer ici
-            validationContext: ['groups' => ['comment:create']],
-            processor: CommentAuthorProcessor::class,
-        ),
-        // Espace client (liste de MES avis, modification) : voir AccountController
-        // (GET /api/me/comments, PATCH /api/me/comments/{id}).
-        // Pas d'opération Delete : la suppression est impossible.
     ],
     normalizationContext: ['groups' => ['comment:read']],
 )]
@@ -42,24 +32,24 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['comment:read', 'comment:write'])]
+    #[Groups(['comment:read'])]
     #[ORM\Column(length: 150)]
-    #[Assert\NotBlank(groups: ['Default', 'comment:create'])]
-    #[Assert\Length(max: 150, groups: ['Default', 'comment:create'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 150)]
     private ?string $title = null;
 
-    #[Groups(['comment:read', 'comment:write'])]
+    #[Groups(['comment:read'])]
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank(groups: ['Default', 'comment:create'])]
-    #[Assert\Length(max: 5000, groups: ['Default', 'comment:create'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 5000)]
     private ?string $message = null;
 
-    #[Groups(['comment:read', 'comment:write'])]
+    #[Groups(['comment:read'])]
     #[ORM\Column(length: 150, nullable: true)]
-    #[Assert\Length(max: 150, groups: ['Default', 'comment:create'])]
+    #[Assert\Length(max: 150)]
     private ?string $projectName = null;
 
-    #[Groups(['comment:read', 'comment:write'])]
+    #[Groups(['comment:read'])]
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $realisedAt = null;
 

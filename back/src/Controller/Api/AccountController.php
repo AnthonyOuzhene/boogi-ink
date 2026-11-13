@@ -3,7 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Controller\Api\Input\ChangePasswordInput;
-use App\Controller\Api\Input\CommentUpdateInput;
+use App\Controller\Api\Input\CommentInput;
 use App\Controller\Api\Input\RegisterInput;
 use App\Entity\Comment;
 use App\Entity\User;
@@ -149,6 +149,35 @@ final class AccountController extends AbstractController
     }
 
     /**
+     * POST /api/me/comments : déposer un avis dans le livre d'or.
+     *
+     * - l'auteur est TOUJOURS l'utilisateur du jeton (il n'est pas lu dans le JSON) ;
+     * - l'avis est créé "en attente" : il n'apparaît dans le livre d'or qu'une fois validé
+     *   dans le backoffice ;
+     * - la date de dépôt est fixée par le constructeur de Comment.
+     */
+    #[Route('/me/comments', name: 'me_create_comment', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function createComment(
+        #[MapRequestPayload] CommentInput $input,
+        EntityManagerInterface $entityManager,
+    ): JsonResponse {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $comment = (new Comment())
+            ->setAuthor($user)
+            ->setIsPublished(false);
+        $this->fillComment($comment, $input);
+
+        $entityManager->persist($comment); // nouvel objet : à signaler à Doctrine avant le flush
+        $entityManager->flush();
+
+        // 201 Created + l'avis créé (mêmes champs que GET /api/me/comments)
+        return $this->json($comment, Response::HTTP_CREATED, [], self::OWNER_COMMENT_CONTEXT);
+    }
+
+    /**
      * PATCH /api/me/comments/{id} : modifier un de ses avis (pas de suppression possible).
      *
      * - #[MapEntity] charge l'avis depuis la base à partir de {id} (404 s'il n'existe pas) ;
@@ -160,24 +189,34 @@ final class AccountController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function updateComment(
         #[MapEntity(id: 'id')] Comment $comment,
-        #[MapRequestPayload] CommentUpdateInput $input,
+        #[MapRequestPayload] CommentInput $input,
         EntityManagerInterface $entityManager,
     ): JsonResponse {
         if ($comment->getAuthor() !== $this->getUser()) {
             throw $this->createAccessDeniedException('Vous ne pouvez modifier que vos propres avis.');
         }
 
-        // Seuls les champs du DTO sont recopiés : statut et auteur ne peuvent pas être changés ici
+        // Le texte change : l'avis repasse en attente de validation
+        $this->fillComment($comment, $input);
         $comment
-            ->setTitle($input->title)
-            ->setMessage($input->message)
-            ->setProjectName($input->projectName ?: null)
-            ->setRealisedAt($input->realisedAt)
             ->setIsPublished(false)
             ->setUpdatedAt(new \DateTimeImmutable());
         $entityManager->flush();
 
         // On renvoie l'avis à jour, avec les mêmes champs que GET /api/me/comments
         return $this->json($comment, Response::HTTP_OK, [], self::OWNER_COMMENT_CONTEXT);
+    }
+
+    /**
+     * Recopie le formulaire sur l'avis (dépôt et modification).
+     * Seuls les champs du DTO sont recopiés : auteur et statut ne viennent jamais du JSON.
+     */
+    private function fillComment(Comment $comment, CommentInput $input): void
+    {
+        $comment
+            ->setTitle($input->title)
+            ->setMessage($input->message)
+            ->setProjectName($input->projectName ?: null)
+            ->setRealisedAt($input->realisedAt);
     }
 }

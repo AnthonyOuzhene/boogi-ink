@@ -5,13 +5,13 @@ namespace App\Controller\Api\Input;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Formulaire "modifier mon avis" (AccountController::updateComment()).
+ * Formulaire d'un avis du livre d'or, pour le DÉPÔT (AccountController::createComment())
+ * comme pour la MODIFICATION (AccountController::updateComment()) : ce sont les mêmes champs.
  *
- * Il ne contient QUE les champs modifiables par l'auteur : envoyer "isPublished"
- * ou "author" dans le JSON n'a donc aucun effet (ces champs sont ignorés).
- * Les règles reprennent celles du dépôt d'un avis.
+ * Il ne contient QUE ce que l'auteur peut écrire : envoyer "isPublished" ou "author"
+ * dans le JSON n'a donc aucun effet. L'auteur vient du jeton, le statut est fixé par le contrôleur.
  */
-final class CommentUpdateInput
+final class CommentInput
 {
     #[Assert\NotBlank(message: 'Le titre est obligatoire.')]
     #[Assert\Length(max: 150, maxMessage: 'Le titre ne doit pas dépasser {{ limit }} caractères.')]
