@@ -43,7 +43,8 @@
     flex-direction: column;
     justify-content: flex-end;
     gap: 40px;
-    padding-bottom: 128px;
+    // 128 px d'espace + 110 px recouverts par les cartes à jouer (SalonCards : margin-top -110px)
+    padding-bottom: 238px;
   }
 
   &__title {
@@ -120,7 +121,8 @@
   @media (max-width: 900px) {
     &__content {
       gap: 28px;
-      padding-bottom: 72px;
+      // 72 px d'espace + 64 px recouverts par les cartes à jouer (SalonCards, mobile)
+      padding-bottom: 136px;
     }
   }
 

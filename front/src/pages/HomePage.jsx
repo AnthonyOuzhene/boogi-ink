@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import useApi from '../hooks/useApi';
 import { useSalon } from '../context/SalonContext';
 import { assetUrl } from '../api/client';
-import ArgumentsBand from '../components/ArgumentsBand';
+import SalonCards from '../components/SalonCards';
 import GalleryGrid from '../components/GalleryGrid';
 import ServiceList from '../components/ServiceList';
 import ArtistSection from '../components/ArtistSection';
@@ -68,7 +68,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <ArgumentsBand />
+      <SalonCards />
 
       {/* --- L'artiste : version courte, son parcours complet est sur L'atelier --- */}
       <ArtistSection artist={artists?.[0]} />
