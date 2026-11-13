@@ -112,7 +112,7 @@ class AppFixtures extends Fixture
             ['quill', 'Dessins sur mesure', 'Chaque tatouage est dessiné pour vous, à partir de votre idée. Pas de copie, pas de modèle tout fait.'],
             ['swallow', 'Sur rendez-vous', "On prend le temps d'échanger sur votre projet avant de tatouer, au calme et sans attente."],
             ['needle', 'Hygiène irréprochable', 'Aiguilles stériles à usage unique, poste désinfecté à chaque séance : votre peau est entre de bonnes mains.'],
-            ['anchor', 'À Beuzeville', 'Un salon chaleureux, rue Louis Gillain. Passez nous voir ou écrivez-nous.'],
+            ['compass', 'Conseils & suivi', "Avant, pendant et après la séance : on vous accompagne jusqu'à la cicatrisation complète."],
         ];
         foreach ($homeCards as $position => [$icon, $title, $text]) {
             $manager->persist((new HomeCard())
