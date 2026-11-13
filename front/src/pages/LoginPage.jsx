@@ -35,7 +35,7 @@ const LoginPage = () => {
         <form className="form" onSubmit={handleSubmit}>
           <div className="field">
             <label htmlFor="email">E-mail</label>
-            <input id="email" type="email" required autoComplete="email" placeholder="vous@exemple.fr"
+            <input id="email" type="email" required autoComplete="email" placeholder="toi@exemple.fr"
               value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="field">
@@ -49,7 +49,7 @@ const LoginPage = () => {
         </form>
 
         <p className="auth__switch muted">
-          Pas encore de compte ? <Link to="/inscription">Inscrivez-vous</Link>
+          Pas encore de compte ? <Link to="/inscription">Inscris-toi</Link>
         </p>
       </div>
     </section>

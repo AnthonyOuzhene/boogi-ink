@@ -24,11 +24,11 @@ const AccountComments = () => {
       <h2 className="account-section-title">Mes avis</h2>
 
       {loading && <p className="muted">Chargement…</p>}
-      {error && <p className="muted">Impossible de charger vos avis.</p>}
+      {error && <p className="muted">Impossible de charger tes avis.</p>}
 
       {comments?.length === 0 && (
         <div className="account-empty">
-          <p className="muted">Vous n'avez pas encore laissé d'avis dans le livre d'or.</p>
+          <p className="muted">Tu n'as pas encore laissé d'avis dans le livre d'or.</p>
           <Link to="/livre-d-or" className="btn btn--primary">Laisser un avis</Link>
         </div>
       )}

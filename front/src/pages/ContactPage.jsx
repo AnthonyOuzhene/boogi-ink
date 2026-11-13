@@ -26,7 +26,7 @@ const ContactPage = () => {
       <PageHero
         eyebrow="Prendre rendez-vous"
         title={<>Par<span className="text-cyan">lons-en</span></>}
-        lead="Décrivez votre projet : style, emplacement, taille, références. Nous revenons vers vous pour en discuter."
+        lead="Décris ton projet : style, emplacement, taille, références. On revient vers toi pour en discuter."
       />
 
       <section className="container section section--tight contact">
@@ -65,7 +65,7 @@ const ContactPage = () => {
           </div>
           {(salon?.instagramUrl || salon?.facebookUrl) && (
             <div>
-              <h2 className="contact__label">Suivez-nous</h2>
+              <h2 className="contact__label">Suis-nous</h2>
               <SocialLinks />
             </div>
           )}
@@ -82,7 +82,7 @@ const ContactPage = () => {
               value={form.subject} onChange={handleChange} />
           </div>
           <div className="field">
-            <label htmlFor="message">Votre projet</label>
+            <label htmlFor="message">Ton projet</label>
             <textarea id="message" name="message" required value={form.message} onChange={handleChange} />
           </div>
           <div>

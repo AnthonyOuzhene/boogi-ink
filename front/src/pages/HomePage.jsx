@@ -54,7 +54,7 @@ const HomePage = () => {
                 {/* Espace entre les deux lignes pour les lecteurs d'écran (invisible : lignes empilées) */}
                 {' '}
                 <span className="hero__line hero__line--highlight">
-                  <span className="hero__ink glow">{salon?.heroHighlight ?? 'vous ressemble'}</span>
+                  <span className="hero__ink glow">{salon?.heroHighlight ?? 'te ressemble'}</span>
                   <span className="hero__needle" aria-hidden="true" />
                   <span className="hero__underline" aria-hidden="true" />
                 </span>
@@ -62,7 +62,7 @@ const HomePage = () => {
             )}
           </h1>
           <div className="hero__actions">
-            <Link to="/contact" className="btn btn--primary">Parlez-nous de votre projet</Link>
+            <Link to="/contact" className="btn btn--primary">Parle-nous de ton projet</Link>
             <Link to="/realisations" className="btn btn--ghost">Voir les réalisations</Link>
           </div>
         </div>

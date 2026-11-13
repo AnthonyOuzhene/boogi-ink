@@ -193,7 +193,7 @@ final class AccountController extends AbstractController
         EntityManagerInterface $entityManager,
     ): JsonResponse {
         if ($comment->getAuthor() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('Vous ne pouvez modifier que vos propres avis.');
+            throw $this->createAccessDeniedException('Tu ne peux modifier que tes propres avis.');
         }
 
         // Le texte change : l'avis repasse en attente de validation

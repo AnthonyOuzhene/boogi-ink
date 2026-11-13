@@ -19,7 +19,7 @@ const FaqSection = () => {
 
       <div className="container faq-band__inner">
         <header className="faq-band__head">
-          <p className="eyebrow">Avant votre séance</p>
+          <p className="eyebrow">Avant ta séance</p>
           <h2 id="faq-title" className="section-title">Questions <span className="text-cyan">fréquentes</span></h2>
         </header>
 
@@ -29,7 +29,7 @@ const FaqSection = () => {
           <Link to="/faq" className="btn btn--ghost">
             {faqs.length > PREVIEW_COUNT ? `Voir les ${faqs.length} questions` : 'Toutes les questions'}
           </Link>
-          <span className="muted">Une autre question ? <Link to="/contact">Écrivez-nous</Link></span>
+          <span className="muted">Une autre question ? <Link to="/contact">Écris-nous</Link></span>
         </div>
       </div>
     </section>

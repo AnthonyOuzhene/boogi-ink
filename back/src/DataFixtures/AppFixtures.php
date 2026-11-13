@@ -59,7 +59,7 @@ class AppFixtures extends Fixture
             ->setOpeningHours("[Mardi – Samedi : horaires à préciser]\n[Dimanche et lundi : fermé]")
             ->setPicture($this->copyImage('banner.jpg', Home::UPLOAD_PATH))
             ->setHeroTitle("L'encre qui")
-            ->setHeroHighlight('vous ressemble')
+            ->setHeroHighlight('te ressemble')
             ->setStoryIntro("[Comment est né Boogi'ink, et d'où vient le nom.]")
             ->setPlaceDescription("[Une phrase sur l'ambiance du lieu.]")
             ->setIsOpen(true);
@@ -109,10 +109,10 @@ class AppFixtures extends Fixture
 
         // --- Accueil : cartes à jouer sous la grande photo (textes à valider avec le salon) ---
         $homeCards = [
-            ['quill', 'Dessins sur mesure', 'Chaque tatouage est dessiné pour vous, à partir de votre idée. Pas de copie, pas de modèle tout fait.'],
-            ['swallow', 'Sur rendez-vous', "On prend le temps d'échanger sur votre projet avant de tatouer, au calme et sans attente."],
-            ['needle', 'Hygiène irréprochable', 'Aiguilles stériles à usage unique, poste désinfecté à chaque séance : votre peau est entre de bonnes mains.'],
-            ['compass', 'Conseils & suivi', "Avant, pendant et après la séance : on vous accompagne jusqu'à la cicatrisation complète."],
+            ['quill', 'Dessins sur mesure', 'Chaque tatouage est dessiné pour toi, à partir de ton idée. Pas de copie, pas de modèle tout fait.'],
+            ['swallow', 'Sur rendez-vous', "On prend le temps d'échanger sur ton projet avant de tatouer, au calme et sans attente."],
+            ['needle', 'Hygiène irréprochable', 'Aiguilles stériles à usage unique, poste désinfecté à chaque séance : ta peau est entre de bonnes mains.'],
+            ['compass', 'Conseils & suivi', "Avant, pendant et après la séance : on t'accompagne jusqu'à la cicatrisation complète."],
         ];
         foreach ($homeCards as $position => [$icon, $title, $text]) {
             $manager->persist((new HomeCard())
@@ -127,7 +127,7 @@ class AppFixtures extends Fixture
             ['Petit tatouage', '80.00', 'Motif de moins de 5 cm. Idéal pour un premier tatouage.', 'Graphique'],
             ['Tatouage moyen', '150.00', 'Motif de 5 à 15 cm, dessin personnalisé inclus.', null],
             ['Grande pièce', null, 'Bras, dos, jambe… Projet sur plusieurs séances, établi sur devis.', null],
-            ['Lettrage', '60.00', 'Prénom, date ou citation, dans la typographie de votre choix.', null],
+            ['Lettrage', '60.00', 'Prénom, date ou citation, dans la typographie de ton choix.', null],
             ['Recouvrement (cover)', null, "Recouvrir ou retravailler un ancien tatouage. Sur devis après rendez-vous.", null],
             ['Retouche', '40.00', "Retouche d'un tatouage réalisé au salon.", null],
         ];
@@ -201,11 +201,11 @@ class AppFixtures extends Fixture
 
         // --- L'atelier : déroulé d'une séance ---
         $steps = [
-            ['On parle de votre projet', 'Votre idée, l\'emplacement, la taille.', "Par message ou au salon : votre idée, l'emplacement, la taille, vos références."],
-            ['Julien dessine votre motif', 'Un dessin créé sur mesure.', "Un dessin sur mesure, ajusté avec vous jusqu'à ce qu'il vous ressemble."],
+            ['On parle de ton projet', 'Ton idée, l\'emplacement, la taille.', "Par message ou au salon : ton idée, l'emplacement, la taille, tes références."],
+            ['Julien dessine ton motif', 'Un dessin créé sur mesure.', "Un dessin sur mesure, ajusté avec toi jusqu'à ce qu'il te ressemble."],
             ['Devis et rendez-vous', 'Prix et date validés ensemble.', 'Le prix et la date de la séance sont fixés ensemble. [Acompte : montant et conditions.]'],
             ['Le jour J', 'Dans un cadre propre et serein.', "Pose du calque, dernières retouches, puis la séance. [Conseils : bien manger, dormir, éviter l'alcool la veille…]"],
-            ['Les soins à la maison', 'Les conseils de cicatrisation.', 'Vous repartez avec les consignes de cicatrisation. [Fiche de soins à télécharger.]'],
+            ['Les soins à la maison', 'Les conseils de cicatrisation.', 'Tu repars avec les consignes de cicatrisation. [Fiche de soins à télécharger.]'],
             ['La retouche', 'Pour un résultat parfait.', '[Conditions de la retouche : délai, gratuite ou non.]'],
         ];
         foreach ($steps as $position => [$title, $summary, $description]) {
@@ -218,7 +218,7 @@ class AppFixtures extends Fixture
 
         // --- L'atelier : hygiène & sécurité (engagements à faire valider par le salon) ---
         $commitments = [
-            ['shield', 'Matériel stérile', 'Aiguilles et cartouches à usage unique, ouvertes devant vous.'],
+            ['shield', 'Matériel stérile', 'Aiguilles et cartouches à usage unique, ouvertes devant toi.'],
             ['ink', 'Encres conformes', 'Des encres respectant la réglementation européenne.'],
             ['training', 'Formation hygiène', 'Formation hygiène et salubrité suivie par le tatoueur.'],
             ['clean', 'Poste désinfecté', 'Surfaces nettoyées et protégées entre chaque client.'],

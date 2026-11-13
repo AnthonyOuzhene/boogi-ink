@@ -20,7 +20,7 @@ const VisitorBookPage = () => {
         <div className="container">
           {loading && <p className="muted">Chargement…</p>}
           {error && <p className="muted">Impossible de charger les avis.</p>}
-          {comments?.length === 0 && <p className="muted">Aucun avis pour le moment. Soyez le premier !</p>}
+          {comments?.length === 0 && <p className="muted">Aucun avis pour le moment. Sois le premier !</p>}
 
           <div className="comments">
             {comments?.map((comment) => (

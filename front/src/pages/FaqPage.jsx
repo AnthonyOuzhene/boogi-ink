@@ -11,7 +11,7 @@ const FaqPage = () => {
   return (
     <>
       <PageHero
-        eyebrow="Avant votre séance"
+        eyebrow="Avant ta séance"
         title={<>Questions <span className="text-cyan">fréquentes</span></>}
         lead="Tarifs, douleur, cicatrisation, prise de rendez-vous : les réponses aux questions qu'on nous pose le plus souvent."
       />
@@ -29,7 +29,7 @@ const FaqPage = () => {
       <section className="container section">
         <div className="neon-card cta-card">
           <h2 className="section-title">Une autre <span className="text-cyan">question ?</span></h2>
-          <p className="muted">Écrivez-nous ou passez au salon : on prend le temps d'en parler avec vous.</p>
+          <p className="muted">Écris-nous ou passe au salon : on prend le temps d'en parler avec toi.</p>
           <div className="cta-card__actions">
             <Link to="/contact" className="btn btn--primary">Nous contacter</Link>
           </div>

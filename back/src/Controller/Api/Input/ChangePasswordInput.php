@@ -20,12 +20,12 @@ final class ChangePasswordInput
      * (un champ vide n'affiche donc pas aussi "mot de passe incorrect").
      */
     #[Assert\Sequentially([
-        new Assert\NotBlank(message: 'Saisissez votre mot de passe actuel.'),
+        new Assert\NotBlank(message: 'Saisis ton mot de passe actuel.'),
         new UserPassword(message: 'Le mot de passe actuel est incorrect.'),
     ])]
     public ?string $currentPassword = null;
 
-    #[Assert\NotBlank(message: 'Saisissez un nouveau mot de passe.')]
+    #[Assert\NotBlank(message: 'Saisis un nouveau mot de passe.')]
     #[Assert\Length(min: 8, max: 4096, minMessage: 'Le nouveau mot de passe doit contenir au moins {{ limit }} caractères.')]
     #[Assert\NotEqualTo(propertyPath: 'currentPassword', message: "Le nouveau mot de passe doit être différent de l'actuel.")]
     public ?string $newPassword = null;

@@ -30,11 +30,11 @@ const CommentForm = () => {
         projectName: form.projectName || null,
         realisedAt: form.realisedAt || null,
       });
-      toast.success('Merci ! Votre avis sera publié après validation par le salon.');
+      toast.success('Merci ! Ton avis sera publié après validation par le salon.');
       setForm(EMPTY_FORM);
     } catch (error) {
       setErrors(getViolations(error));
-      toast.error("L'envoi a échoué, vérifiez le formulaire.");
+      toast.error("L'envoi a échoué, vérifie le formulaire.");
     } finally {
       setSending(false);
     }
@@ -43,8 +43,8 @@ const CommentForm = () => {
   if (!isConnected) {
     return (
       <div className="neon-card cta-card">
-        <h2 className="section-title">Partagez votre <span className="text-cyan">expérience</span></h2>
-        <p className="muted">Connectez-vous pour laisser un avis sur votre tatouage.</p>
+        <h2 className="section-title">Partage ton <span className="text-cyan">expérience</span></h2>
+        <p className="muted">Connecte-toi pour laisser un avis sur ton tatouage.</p>
         <div className="cta-card__actions">
           <Link to="/connexion" className="btn btn--primary">Se connecter</Link>
           <Link to="/inscription" className="btn btn--ghost">Créer un compte</Link>
@@ -55,8 +55,8 @@ const CommentForm = () => {
 
   return (
     <div className="neon-card">
-      <h2 className="section-title form-title">Partagez votre <span className="text-cyan">expérience</span></h2>
-      <p className="muted form-intro">Vous publiez en tant que <strong>{user.name}</strong>. Votre avis apparaîtra après validation.</p>
+      <h2 className="section-title form-title">Partage ton <span className="text-cyan">expérience</span></h2>
+      <p className="muted form-intro">Tu publies en tant que <strong>{user.name}</strong>. Ton avis apparaîtra après validation.</p>
 
       <form className="form" onSubmit={handleSubmit}>
         <div className="field">
@@ -80,8 +80,8 @@ const CommentForm = () => {
         </div>
 
         <div className="field">
-          <label htmlFor="message">Votre avis</label>
-          <textarea id="message" name="message" placeholder="Racontez-nous votre expérience" required maxLength={5000}
+          <label htmlFor="message">Ton avis</label>
+          <textarea id="message" name="message" placeholder="Raconte-nous ton expérience" required maxLength={5000}
             value={form.message} onChange={handleChange} />
           {errors.message && <p className="field__error">{errors.message}</p>}
         </div>

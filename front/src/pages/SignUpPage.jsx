@@ -32,11 +32,11 @@ const SignUpPage = () => {
       await api.post('/users', { name: form.name, email: form.email, plainPassword: form.password });
       // Inscription réussie : on connecte directement l'utilisateur
       await login(form.email, form.password);
-      toast.success('Bienvenue ! Votre compte est créé.');
+      toast.success('Bienvenue ! Ton compte est créé.');
       navigate('/');
     } catch (error) {
       setErrors(getViolations(error));
-      toast.error("L'inscription a échoué, vérifiez le formulaire.");
+      toast.error("L'inscription a échoué, vérifie le formulaire.");
     } finally {
       setSending(false);
     }
@@ -57,7 +57,7 @@ const SignUpPage = () => {
           </div>
           <div className="field">
             <label htmlFor="email">E-mail</label>
-            <input id="email" name="email" type="email" required autoComplete="email" placeholder="vous@exemple.fr"
+            <input id="email" name="email" type="email" required autoComplete="email" placeholder="toi@exemple.fr"
               value={form.email} onChange={handleChange} />
             {errors.email && <p className="field__error">{errors.email}</p>}
           </div>
@@ -79,7 +79,7 @@ const SignUpPage = () => {
         </form>
 
         <p className="auth__switch muted">
-          Déjà inscrit ? <Link to="/connexion">Connectez-vous</Link>
+          Déjà inscrit ? <Link to="/connexion">Connecte-toi</Link>
         </p>
       </div>
     </section>

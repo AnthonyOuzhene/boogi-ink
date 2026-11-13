@@ -12,13 +12,13 @@ const FlashsPage = () => {
       <PageHero
         eyebrow="Prêts à tatouer"
         title={<>Les <span className="glow">flashs</span></>}
-        lead="Des motifs dessinés à l'avance par l'artiste. Chaque flash n'est tatoué qu'une seule fois : une fois réservé, il est à vous."
+        lead="Des motifs dessinés à l'avance par l'artiste. Chaque flash n'est tatoué qu'une seule fois : une fois réservé, il est à toi."
       />
       {/* Sur papier : les dessins (fond blanc) s'y fondent */}
       <section className="band band--flush paper">
         <div className="container">
           {flashes?.length > 0 && <FlashGallery flashes={flashes} />}
-          {!loading && !flashes?.length && <p className="muted">Pas de flash disponible pour le moment. Revenez bientôt !</p>}
+          {!loading && !flashes?.length && <p className="muted">Pas de flash disponible pour le moment. Reviens bientôt !</p>}
         </div>
       </section>
     </>

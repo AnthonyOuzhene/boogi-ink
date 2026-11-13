@@ -39,7 +39,7 @@ const CommentEditForm = ({ comment, onSaved, onCancel }) => {
       onSaved();
     } catch (error) {
       setErrors(getViolations(error));
-      toast.error("La modification a échoué, vérifiez le formulaire.");
+      toast.error("La modification a échoué, vérifie le formulaire.");
     } finally {
       setSending(false);
     }
@@ -69,14 +69,14 @@ const CommentEditForm = ({ comment, onSaved, onCancel }) => {
       </div>
 
       <div className="field">
-        <label htmlFor={fieldId('message')}>Votre avis</label>
+        <label htmlFor={fieldId('message')}>Ton avis</label>
         <textarea id={fieldId('message')} name="message" required maxLength={5000}
           value={form.message} onChange={handleChange} />
         {errors.message && <p className="field__error">{errors.message}</p>}
       </div>
 
       <p className="comment-edit__warning">
-        Après modification, votre avis repassera en attente de validation et disparaîtra
+        Après modification, ton avis repassera en attente de validation et disparaîtra
         du livre d'or jusqu'à ce que le salon le valide.
       </p>
 

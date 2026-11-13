@@ -29,11 +29,11 @@ const AccountSecurity = () => {
         currentPassword: form.currentPassword,
         newPassword: form.newPassword,
       });
-      toast.success('Votre mot de passe a été modifié.');
+      toast.success('Ton mot de passe a été modifié.');
       setForm(EMPTY_FORM);
     } catch (error) {
       setErrors(getViolations(error));
-      toast.error("Le mot de passe n'a pas été modifié, vérifiez le formulaire.");
+      toast.error("Le mot de passe n'a pas été modifié, vérifie le formulaire.");
     } finally {
       setSending(false);
     }
@@ -42,7 +42,7 @@ const AccountSecurity = () => {
   return (
     <>
       <h2 className="account-section-title">Sécurité</h2>
-      <p className="muted">Modifiez votre mot de passe. Il doit contenir au moins 8 caractères.</p>
+      <p className="muted">Modifie ton mot de passe. Il doit contenir au moins 8 caractères.</p>
 
       <form className="form account-form" onSubmit={handleSubmit}>
         <div className="field">

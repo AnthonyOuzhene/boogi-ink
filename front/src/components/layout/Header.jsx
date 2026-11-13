@@ -87,7 +87,7 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     closeMenus();
-    toast.info('Vous êtes déconnecté.');
+    toast.info('Tu es déconnecté.');
     navigate('/');
   };
 
