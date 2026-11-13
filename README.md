@@ -33,6 +33,8 @@ Comptes de démo créés par les fixtures :
 
 Pour un vrai compte admin : `ddev console app:create-admin vous@exemple.fr "Votre nom"`.
 
+Le bouton « Voir le site » du backoffice pointe vers `FRONT_URL` (`back/.env`, par défaut `http://localhost:5180`, le port du front fixé dans `front/vite.config.js`). Pour une autre adresse, surchargez-la dans `back/.env.local`.
+
 - Backoffice : https://boogi-ink.ddev.site/admin
 - Documentation de l'API (partie API Platform) : https://boogi-ink.ddev.site/api/docs
 
@@ -41,7 +43,7 @@ Pour un vrai compte admin : `ddev console app:create-admin vous@exemple.fr "Votr
 ```bash
 cd front
 npm install
-npm run dev        # http://localhost:5173 (ou un autre port : npm run dev -- --port 5180)
+npm run dev        # http://localhost:5180 (port fixé dans front/vite.config.js)
 ```
 
 L'adresse du back est dans `front/.env` (`VITE_BACKEND_URL`).

@@ -1,0 +1,14 @@
+{#
+  Surcharge du gabarit d'EasyAdmin : Symfony utilise ce fichier à la place de celui du bundle
+  (convention templates/bundles/<NomDuBundle>/). Le "!" de @!EasyAdmin désigne l'original,
+  qu'on étend pour ne modifier qu'un seul bloc.
+#}
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{# Barre du haut : bouton "Voir le site", à gauche du menu de l'utilisateur #}
+{% block header_custom_menu_wrapper %}
+    <a href="{{ front_url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm bo-site-link">
+        <i class="fa fa-arrow-up-right-from-square"></i> Voir le site
+    </a>
+    {{ parent() }}
+{% endblock header_custom_menu_wrapper %}

@@ -1,22 +1,168 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
+{# Tableau de bord du backoffice. Les données viennent de DashboardController::index(),
+   les styles de public/admin-assets/admin.css (classes "bo-…"). #}
+
 {% block content_title %}Tableau de bord{% endblock %}
 
 {% block main %}
-    <h2>Bienvenue dans l'administration de Boogi'ink</h2>
+<div class="bo">
 
-    <ul>
-        <li>
-            <a href="{{ path('admin_comment_index') }}">Avis en attente de validation</a> :
-            <strong>{{ pendingComments }}</strong>
-        </li>
-        <li>
-            <a href="{{ path('admin_gallery_index') }}">Réalisations</a> :
-            <strong>{{ galleryCount }}</strong>
-        </li>
-        <li>
-            <a href="{{ path('admin_service_index') }}">Prestations</a> :
-            <strong>{{ serviceCount }}</strong>
-        </li>
-    </ul>
+    {# --- En-tête : date, bonjour, statut du salon --- #}
+    <div class="bo-head">
+        <div>
+            <p class="bo-eyebrow">{{ today|capitalize }}</p>
+            <h2 class="bo-hello">Bonjour {{ app.user.name }}</h2>
+        </div>
+        {% if salon %}
+            <div class="bo-status">
+                <span class="bo-dot {{ salon.isOpen ? 'is-open' : 'is-closed' }}"></span>
+                <span><strong>{{ salon.isOpen ? 'Salon ouvert' : 'Salon fermé' }}</strong>
+                    <span class="bo-muted">— {{ salon.isOpen ? 'affiché sur le site' : 'un message prévient les visiteurs' }}</span></span>
+                <a href="{{ path('admin_home_edit', {entityId: salon.id}) }}">Modifier</a>
+            </div>
+        {% endif %}
+    </div>
+
+    {# --- Chiffres clés --- #}
+    <div class="bo-kpis">
+        <a class="bo-card bo-kpi {{ pendingCount > 0 ? 'is-warning' }}" href="{{ path('admin_comment_index') }}">
+            <span class="bo-kpi__label">Avis en attente</span>
+            <span class="bo-kpi__value">{{ pendingCount }}</span>
+            <span class="bo-kpi__link">{{ pendingCount > 0 ? 'Valider →' : 'Voir le livre d\'or →' }}</span>
+        </a>
+        <a class="bo-card bo-kpi" href="{{ path('admin_flash_index') }}">
+            <span class="bo-kpi__label">Flashs</span>
+            <span class="bo-kpi__value">{{ availableFlashCount }} <small>disponible{{ availableFlashCount > 1 ? 's' }} · {{ reservedFlashCount }} réservé{{ reservedFlashCount > 1 ? 's' }}</small></span>
+            <span class="bo-kpi__link">Gérer les flashs →</span>
+        </a>
+        <a class="bo-card bo-kpi" href="{{ path('admin_gallery_index') }}">
+            <span class="bo-kpi__label">Réalisations</span>
+            <span class="bo-kpi__value">{{ galleryCount }}</span>
+            <span class="bo-kpi__link">Voir la galerie →</span>
+        </a>
+        <a class="bo-card bo-kpi" href="{{ path('admin_user_index') }}">
+            <span class="bo-kpi__label">Clients inscrits</span>
+            <span class="bo-kpi__value">{{ clientCount }}</span>
+            <span class="bo-kpi__link">Voir les comptes →</span>
+        </a>
+    </div>
+
+    {# --- Raccourcis --- #}
+    <div class="bo-shortcuts">
+        <span class="bo-muted">Raccourcis</span>
+        <a class="btn btn-primary" href="{{ path('admin_gallery_new') }}"><i class="fa fa-plus"></i> Ajouter une réalisation</a>
+        <a class="btn btn-secondary" href="{{ path('admin_flash_new') }}"><i class="fa fa-plus"></i> Ajouter un flash</a>
+        <a class="btn btn-secondary" href="{{ path('admin_faq_new') }}"><i class="fa fa-plus"></i> Ajouter une question (FAQ)</a>
+        {% if salon %}
+            <a class="btn btn-secondary" href="{{ path('admin_home_edit', {entityId: salon.id}) }}"><i class="fa fa-clock"></i> Horaires du salon</a>
+        {% endif %}
+    </div>
+
+    <div class="bo-columns">
+
+        {# --- Contenus à compléter (service ContentChecklist) --- #}
+        <section class="bo-card">
+            <header class="bo-card__head">
+                <div>
+                    <h3 class="bo-card__title">Contenus à compléter</h3>
+                    <p class="bo-muted bo-small">Textes encore entre crochets, comme <code class="bo-ph">[Année]</code>. À remplir avant la mise en ligne.</p>
+                </div>
+                {% if checklist.total > 0 %}
+                    <span class="badge badge-warning">{{ checklist.total }} texte{{ checklist.total > 1 ? 's' }}</span>
+                {% else %}
+                    <span class="badge badge-success">Tout est rempli</span>
+                {% endif %}
+            </header>
+            <div class="bo-progress">
+                <div class="bo-progress__bar"><span style="width: {{ checklist.progress }}%"></span></div>
+                <span class="bo-muted bo-small">Site complété à <strong>{{ checklist.progress }} %</strong></span>
+            </div>
+            {% for item in checklist.items %}
+                <div class="bo-row">
+                    <strong class="bo-row__label">{{ item.label }}</strong>
+                    <span class="bo-row__detail bo-muted">{{ item.detail }}</span>
+                    <span class="badge badge-warning">{{ item.count }}</span>
+                    <a class="btn btn-secondary btn-sm" href="{{ item.url }}">Compléter</a>
+                </div>
+            {% endfor %}
+            {% if unpricedFlashCount > 0 %}
+                <div class="bo-row is-info">
+                    <strong class="bo-row__label">Flashs</strong>
+                    <span class="bo-row__detail bo-muted">{{ unpricedFlashCount }} sans prix : le site affiche « Sur devis »</span>
+                    <span class="badge badge-secondary">info</span>
+                    <a class="btn btn-secondary btn-sm" href="{{ path('admin_flash_index') }}">Voir</a>
+                </div>
+            {% endif %}
+        </section>
+
+        <div class="bo-stack">
+            {# --- Avis à valider, avec publication directe --- #}
+            <section class="bo-card">
+                <header class="bo-card__head">
+                    <h3 class="bo-card__title">Avis à valider</h3>
+                    <a class="bo-small" href="{{ path('admin_comment_index') }}">Tout le livre d'or →</a>
+                </header>
+                {% for comment in pendingComments %}
+                    <div class="bo-comment">
+                        <div class="bo-comment__top">
+                            <strong>{{ comment.title }}</strong>
+                            <span class="badge badge-warning">En attente</span>
+                        </div>
+                        <p class="bo-muted">« {{ comment.message|length > 160 ? comment.message|slice(0, 160) ~ '…' : comment.message }} »</p>
+                        <span class="bo-meta">{{ comment.author.name }} · {{ comment.createdAt|date('d/m/Y à H:i') }}</span>
+                        <div class="bo-comment__actions">
+                            {# Formulaire POST + jeton CSRF : voir DashboardController::publishComment() #}
+                            <form method="post" action="{{ path('admin_dashboard_publish_comment', {id: comment.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('publish-comment-' ~ comment.id) }}">
+                                <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-check"></i> Publier</button>
+                            </form>
+                            <a class="btn btn-secondary btn-sm" href="{{ path('admin_comment_edit', {entityId: comment.id}) }}">Lire et modifier</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="bo-empty bo-muted">Aucun avis en attente. 🎉</p>
+                {% endfor %}
+            </section>
+
+            {# --- Flashs --- #}
+            <section class="bo-card">
+                <header class="bo-card__head">
+                    <h3 class="bo-card__title">Flashs</h3>
+                    <a class="bo-small" href="{{ path('admin_flash_new') }}">+ Ajouter</a>
+                </header>
+                {% for flash in flashes %}
+                    <a class="bo-row bo-row--link" href="{{ path('admin_flash_edit', {entityId: flash.id}) }}">
+                        <img class="bo-thumb {{ flash.isAvailable ? '' : 'is-faded' }}" src="{{ asset('uploads/flashes/' ~ flash.picture) }}" alt="">
+                        <span class="bo-row__detail">{{ flash.name }}</span>
+                        {% if flash.isAvailable %}
+                            <span class="badge badge-primary">Disponible</span>
+                        {% else %}
+                            <span class="badge badge-secondary">Réservé</span>
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <p class="bo-empty bo-muted">Aucun flash pour le moment.</p>
+                {% endfor %}
+            </section>
+
+            {# --- Derniers inscrits --- #}
+            <section class="bo-card">
+                <header class="bo-card__head">
+                    <h3 class="bo-card__title">Derniers inscrits</h3>
+                    <a class="bo-small" href="{{ path('admin_user_index') }}">Tous →</a>
+                </header>
+                {% for client in latestClients %}
+                    <a class="bo-row bo-row--link" href="{{ path('admin_user_edit', {entityId: client.id}) }}">
+                        <span class="bo-avatar">{{ client.name|first|upper }}</span>
+                        <span class="bo-row__detail">{{ client.name }} <span class="bo-muted">· {{ client.email }}</span></span>
+                        <span class="bo-muted bo-small">{{ client.createdAt|date('d/m/Y') }}</span>
+                    </a>
+                {% else %}
+                    <p class="bo-empty bo-muted">Aucun client inscrit.</p>
+                {% endfor %}
+            </section>
+        </div>
+    </div>
+</div>
 {% endblock %}
