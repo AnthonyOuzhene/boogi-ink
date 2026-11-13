@@ -5,10 +5,12 @@ namespace App\Controller\Admin;
 use App\Repository\ArtistRepository;
 use App\Repository\CommentRepository;
 use App\Repository\GalleryRepository;
+use App\Repository\HomeRepository;
 use App\Repository\ServiceRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Menu\ControllerMenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +26,7 @@ class DashboardController extends AbstractDashboardController
         private readonly GalleryRepository $galleryRepository,
         private readonly ServiceRepository $serviceRepository,
         private readonly ArtistRepository $artistRepository,
+        private readonly HomeRepository $homeRepository,
     ) {
     }
 
@@ -47,16 +50,16 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
 
         yield MenuItem::section('Le salon');
-        yield MenuItem::linkTo(HomeCrudController::class, 'Salon', 'fa fa-store');
-        // Une seule fiche artiste : le menu ouvre directement son formulaire (ou la création s'il n'y en a pas)
-        $artist = $this->artistRepository->findOneBy([]);
-        yield null === $artist
-            ? MenuItem::linkTo(ArtistCrudController::class, "L'artiste", 'fa fa-user-pen')->setAction(Action::NEW)
-            : MenuItem::linkTo(ArtistCrudController::class, "L'artiste", 'fa fa-user-pen')->setAction(Action::EDIT)->setEntityId($artist->getId());
+        // Fiches uniques (salon, artiste) : le menu ouvre directement le formulaire
+        yield $this->singleRecordMenuItem(HomeCrudController::class, 'Salon', 'fa fa-store', $this->homeRepository->findOneBy([]));
+        yield $this->singleRecordMenuItem(ArtistCrudController::class, "L'artiste", 'fa fa-user-pen', $this->artistRepository->findOneBy([]));
         yield MenuItem::linkTo(ServiceCrudController::class, 'Prestations', 'fa fa-pen-nib');
         yield MenuItem::linkTo(CategoryCrudController::class, 'Catégories', 'fa fa-tags');
         yield MenuItem::linkTo(GalleryCrudController::class, 'Réalisations', 'fa fa-images');
+
+        yield MenuItem::section('Site');
         yield MenuItem::linkTo(FaqCrudController::class, 'FAQ', 'fa fa-circle-question');
+        yield MenuItem::linkTo(PageCrudController::class, 'Pages', 'fa fa-file-lines');
 
         yield MenuItem::section('Clients');
         yield MenuItem::linkTo(CommentCrudController::class, "Livre d'or", 'fa fa-comments');
@@ -64,5 +67,18 @@ class DashboardController extends AbstractDashboardController
 
         // PictureCrudController n'est pas dans le menu : les photos se gèrent
         // directement dans le formulaire d'une réalisation (Gallery).
+    }
+
+    /**
+     * Lien de menu vers une fiche unique : son formulaire d'édition si elle existe,
+     * sinon le formulaire de création.
+     */
+    private function singleRecordMenuItem(string $crudController, string $label, string $icon, ?object $record): ControllerMenuItem
+    {
+        $item = MenuItem::linkTo($crudController, $label, $icon);
+
+        return null === $record
+            ? $item->setAction(Action::NEW)
+            : $item->setAction(Action::EDIT)->setEntityId($record->getId());
     }
 }

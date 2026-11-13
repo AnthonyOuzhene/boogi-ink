@@ -8,9 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Post;
-use App\State\CurrentUserProvider;
-use App\State\UserRegistrationProcessor;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,20 +16,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ApiResource(
     operations: [
-        // GET /api/me : le profil de l'utilisateur connecté (jeton JWT obligatoire)
-        new Get(
-            uriTemplate: '/me',
-            security: "is_granted('ROLE_USER')",
-            provider: CurrentUserProvider::class,
-        ),
+        // Profil de l'utilisateur connecté (GET /api/me) : voir AccountController
         // GET /api/users/{id} : seulement son propre compte (ou un admin)
         new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
-        // POST /api/users : inscription, ouverte à tous
-        new Post(
-            denormalizationContext: ['groups' => ['user:create']],
-            validationContext: ['groups' => ['Default', 'user:create']],
-            processor: UserRegistrationProcessor::class,
-        ),
+        // Inscription (POST /api/users) : voir AccountController
     ],
     normalizationContext: ['groups' => ['user:read']],
 )]
@@ -47,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['user:read', 'user:create'])]
+    #[Groups(['user:read'])]
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Email]
@@ -72,12 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Pas de #[ORM\Column] : cette propriété n'est JAMAIS enregistrée en base,
      * elle sert seulement à transporter la saisie jusqu'au hachage.
      */
-    #[Groups(['user:create'])]
-    #[Assert\NotBlank(groups: ['user:create'])]
-    #[Assert\Length(min: 8, max: 4096, groups: ['user:create'])]
     private ?string $plainPassword = null;
 
-    #[Groups(['comment:read', 'user:read', 'user:create'])]
+    #[Groups(['comment:read', 'user:read'])]
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 100)]

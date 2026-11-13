@@ -15,7 +15,8 @@ use Doctrine\ORM\QueryBuilder;
  *
  * Grâce à l'autoconfiguration de Symfony, implémenter ces interfaces suffit :
  * API Platform détecte et utilise cette classe tout seul.
- * EasyAdmin n'est pas concerné : il ne passe pas par API Platform.
+ * EasyAdmin et AccountController ne sont pas concernés : ils ne passent pas par API Platform
+ * (un auteur peut donc modifier son avis même quand il est en attente).
  */
 final class PublishedCommentExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {

@@ -3,7 +3,6 @@ import useApi from '../hooks/useApi';
 import PageHero from '../components/PageHero';
 import ServiceList from '../components/ServiceList';
 import ArtistSection from '../components/ArtistSection';
-import FaqSection from '../components/FaqSection';
 import './pages.scss';
 
 const AtelierPage = () => {
@@ -32,7 +31,6 @@ const AtelierPage = () => {
         </div>
       </section>
 
-      <FaqSection />
     </>
   );
 };

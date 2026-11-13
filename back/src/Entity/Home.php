@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\HomeRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Home
 {
     /** Dossier des images, relatif à public/ (utilisé par l'API et par EasyAdmin) */
+    // La photo du salon sert de grande image en haut de l'accueil
     public const UPLOAD_PATH = 'uploads/home';
 
     #[Groups(['home:read'])]
@@ -57,6 +59,38 @@ class Home
 
     #[ORM\Column]
     private bool $isOpen = true;
+
+    #[Groups(['home:read'])]
+    #[ORM\Column(length: 180, nullable: true)]
+    #[Assert\Email]
+    #[Assert\Length(max: 180)]
+    private ?string $email = null;
+
+    #[Groups(['home:read'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(requireTld: true)]
+    #[Assert\Length(max: 255)]
+    private ?string $instagramUrl = null;
+
+    #[Groups(['home:read'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(requireTld: true)]
+    #[Assert\Length(max: 255)]
+    private ?string $facebookUrl = null;
+
+    #[Groups(['home:read'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $openingHours = null;
+
+    #[Groups(['home:read'])]
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    private ?string $heroTitle = null;
+
+    #[Groups(['home:read'])]
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    private ?string $heroHighlight = null;
 
     public function getId(): ?int
     {
@@ -159,5 +193,77 @@ class Home
     public function getPictureUrl(): ?string
     {
         return $this->picture ? '/'.self::UPLOAD_PATH.'/'.$this->picture : null;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getInstagramUrl(): ?string
+    {
+        return $this->instagramUrl;
+    }
+
+    public function setInstagramUrl(?string $instagramUrl): static
+    {
+        $this->instagramUrl = $instagramUrl;
+
+        return $this;
+    }
+
+    public function getFacebookUrl(): ?string
+    {
+        return $this->facebookUrl;
+    }
+
+    public function setFacebookUrl(?string $facebookUrl): static
+    {
+        $this->facebookUrl = $facebookUrl;
+
+        return $this;
+    }
+
+    public function getOpeningHours(): ?string
+    {
+        return $this->openingHours;
+    }
+
+    public function setOpeningHours(?string $openingHours): static
+    {
+        $this->openingHours = $openingHours;
+
+        return $this;
+    }
+
+    public function getHeroTitle(): ?string
+    {
+        return $this->heroTitle;
+    }
+
+    public function setHeroTitle(?string $heroTitle): static
+    {
+        $this->heroTitle = $heroTitle;
+
+        return $this;
+    }
+
+    public function getHeroHighlight(): ?string
+    {
+        return $this->heroHighlight;
+    }
+
+    public function setHeroHighlight(?string $heroHighlight): static
+    {
+        $this->heroHighlight = $heroHighlight;
+
+        return $this;
     }
 }

@@ -34,6 +34,8 @@ class CommentCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield DateTimeField::new('createdAt', 'Déposé le')->hideOnForm();
+        // Rempli quand l'auteur modifie son avis depuis le site : il repasse alors "non publié"
+        yield DateTimeField::new('updatedAt', 'Modifié le')->hideOnForm();
         yield AssociationField::new('author', 'Auteur');
         yield TextField::new('title', 'Titre');
         yield TextareaField::new('message', 'Message')->hideOnIndex();

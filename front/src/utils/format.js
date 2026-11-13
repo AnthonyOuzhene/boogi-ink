@@ -13,3 +13,17 @@ export const toParagraphs = (text) =>
     .split(/\n\s*\n/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
+
+/**
+ * Contenu d'une page (backoffice) → blocs à afficher :
+ * une ligne commençant par "## " devient un intertitre, le reste des paragraphes.
+ */
+export const toBlocks = (text) =>
+  toParagraphs(text).map((block) =>
+    block.startsWith('## ')
+      ? { type: 'heading', text: block.slice(3).trim() }
+      : { type: 'paragraph', text: block });
+
+/** "Mardi – Samedi : 10h – 19h\nLundi : fermé" → ["Mardi – Samedi : 10h – 19h", "Lundi : fermé"] */
+export const toLines = (text) =>
+  (text ?? '').split('\n').map((line) => line.trim()).filter(Boolean);

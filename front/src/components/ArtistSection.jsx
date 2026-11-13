@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import useApi from '../hooks/useApi';
-import { INSTAGRAM_URL } from '../config';
+import { useSalon } from '../context/SalonContext';
 import { assetUrl } from '../api/client';
 import { toParagraphs } from '../utils/format';
 // Photo de secours, utilisée tant qu'aucune photo n'est envoyée depuis le backoffice
@@ -14,6 +14,7 @@ import './ArtistSection.scss';
  */
 const ArtistSection = () => {
   const { data: artists } = useApi('/artists');
+  const { salon } = useSalon();
   // Les styles pratiqués viennent des catégories gérées dans le backoffice
   const { data: categories } = useApi('/categories');
 
@@ -62,7 +63,9 @@ const ArtistSection = () => {
 
           <div className="artist-section__actions">
             <Link to="/realisations" className="btn btn--primary">Voir son travail</Link>
-            <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="btn btn--ghost">Suivre sur Instagram</a>
+            {salon?.instagramUrl && (
+              <a href={salon.instagramUrl} target="_blank" rel="noreferrer" className="btn btn--ghost">Suivre sur Instagram</a>
+            )}
           </div>
         </div>
       </div>

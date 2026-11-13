@@ -1,12 +1,14 @@
 import { Link } from 'react-router';
 import useApi from '../../hooks/useApi';
-import { CONTACT_EMAIL, FACEBOOK_URL, INSTAGRAM_URL } from '../../config';
+import { useSalon } from '../../context/SalonContext';
+import { toLines } from '../../utils/format';
 import './Footer.scss';
 
 const Footer = () => {
-  // Coordonnées gérées dans le backoffice (menu "Salon")
-  const { data: homes } = useApi('/homes');
-  const salon = homes?.[0];
+  // Coordonnées, horaires et réseaux : backoffice, menu "Salon"
+  const { salon } = useSalon();
+  // Pages légales : backoffice, menu "Pages" (titre + adresse uniquement)
+  const { data: pages } = useApi('/pages');
 
   return (
     <footer className="site-footer">
@@ -17,24 +19,32 @@ const Footer = () => {
             <>
               <span className="muted">{salon.address}, {salon.zipCode} {salon.city}</span>
               <a href={`tel:${salon.phoneNumber.replace(/\s/g, '')}`} className="muted">{salon.phoneNumber}</a>
+              {salon.email && <a href={`mailto:${salon.email}`} className="muted">{salon.email}</a>}
             </>
           )}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="muted">{CONTACT_EMAIL}</a>
         </div>
+
+        {salon?.openingHours && (
+          <div className="site-footer__hours">
+            <span className="site-footer__label">Horaires</span>
+            {toLines(salon.openingHours).map((line) => <span key={line} className="muted">{line}</span>)}
+          </div>
+        )}
 
         <nav aria-label="Pied de page" className="site-footer__links">
           <Link to="/realisations">Réalisations</Link>
           <Link to="/atelier">L'atelier</Link>
           <Link to="/livre-d-or">Livre d'or</Link>
-          <Link to="/#faq">FAQ</Link>
+          <Link to="/faq">FAQ</Link>
           <Link to="/contact">Contact</Link>
         </nav>
 
         <div className="site-footer__links">
-          <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer">Instagram</a>
-          <a href={FACEBOOK_URL} target="_blank" rel="noreferrer">Facebook</a>
-          {/* Pages à créer */}
-          <span className="muted">Mentions légales</span>
+          {salon?.instagramUrl && <a href={salon.instagramUrl} target="_blank" rel="noreferrer">Instagram</a>}
+          {salon?.facebookUrl && <a href={salon.facebookUrl} target="_blank" rel="noreferrer">Facebook</a>}
+          {pages?.map((page) => (
+            <Link key={page.slug} to={`/pages/${page.slug}`} className="muted">{page.title}</Link>
+          ))}
         </div>
       </div>
     </footer>

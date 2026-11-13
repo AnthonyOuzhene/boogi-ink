@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import useApi from '../hooks/useApi';
-import { CONTACT_EMAIL, FACEBOOK_URL, INSTAGRAM_URL } from '../config';
+import { useSalon } from '../context/SalonContext';
+import { toLines } from '../utils/format';
 import PageHero from '../components/PageHero';
 import './pages.scss';
 
 const ContactPage = () => {
-  const { data: homes } = useApi('/homes');
-  const salon = homes?.[0];
+  // Coordonnées, horaires et réseaux : backoffice, menu "Salon"
+  const { salon } = useSalon();
   const fullAddress = salon ? `${salon.address}, ${salon.zipCode} ${salon.city}` : null;
 
   // Pas encore d'envoi d'email côté Symfony : le formulaire ouvre la messagerie
@@ -16,7 +16,7 @@ const ContactPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const body = `${form.message}\n\n${form.name}`;
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${salon?.email ?? ''}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
@@ -42,17 +42,29 @@ const ContactPage = () => {
               </div>
             </>
           )}
-          <div>
-            <h2 className="contact__label">E-mail</h2>
-            <p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
-          </div>
-          <div>
-            <h2 className="contact__label">Suivez-nous</h2>
-            <p className="contact__social">
-              <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer">Instagram</a>
-              <a href={FACEBOOK_URL} target="_blank" rel="noreferrer">Facebook</a>
-            </p>
-          </div>
+          {salon?.email && (
+            <div>
+              <h2 className="contact__label">E-mail</h2>
+              <p><a href={`mailto:${salon.email}`}>{salon.email}</a></p>
+            </div>
+          )}
+          {salon?.openingHours && (
+            <div>
+              <h2 className="contact__label">Horaires</h2>
+              <p className="contact__hours">
+                {toLines(salon.openingHours).map((line) => <span key={line}>{line}</span>)}
+              </p>
+            </div>
+          )}
+          {(salon?.instagramUrl || salon?.facebookUrl) && (
+            <div>
+              <h2 className="contact__label">Suivez-nous</h2>
+              <p className="contact__social">
+                {salon.instagramUrl && <a href={salon.instagramUrl} target="_blank" rel="noreferrer">Instagram</a>}
+                {salon.facebookUrl && <a href={salon.facebookUrl} target="_blank" rel="noreferrer">Facebook</a>}
+              </p>
+            </div>
+          )}
         </div>
 
         <form className="form neon-card contact__form" onSubmit={handleSubmit}>

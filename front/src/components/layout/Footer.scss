@@ -38,3 +38,20 @@
     }
   }
 }
+
+// Bloc "Horaires" (chaque ligne saisie dans le backoffice = une ligne ici)
+.site-footer__hours {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.site-footer__label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}

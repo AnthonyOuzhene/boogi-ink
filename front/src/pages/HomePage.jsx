@@ -1,34 +1,55 @@
 import { Link } from 'react-router';
 import useApi from '../hooks/useApi';
+import { useSalon } from '../context/SalonContext';
+import { assetUrl } from '../api/client';
 import CategoryBand from '../components/CategoryBand';
 import GalleryGrid from '../components/GalleryGrid';
 import ServiceList from '../components/ServiceList';
 import ArtistSection from '../components/ArtistSection';
 import FaqSection from '../components/FaqSection';
-import banner from '../assets/images/banner.jpg';
+import GuestbookCarousel from '../components/GuestbookCarousel';
+// Photo de secours tant qu'aucune n'est envoyée depuis le backoffice
+import defaultBanner from '../assets/images/banner.jpg';
 import './pages.scss';
 import './HomePage.scss';
 
 const HomePage = () => {
-  const { data: homes } = useApi('/homes');
+  const { salon, loading: salonLoading } = useSalon();
   const { data: galleries } = useApi('/galleries');
   const { data: services } = useApi('/services');
-  const { data: comments } = useApi('/comments');
 
-  const city = homes?.[0]?.city;
-  const latestComment = comments?.[0];
 
   return (
     <>
       {/* --- Grande photo d'accueil --- */}
       <section className="hero">
-        <img src={banner} alt="" className="hero__img" />
+        {/* Pas d'image tant que la fiche charge : évite d'afficher la photo par défaut puis de la remplacer */}
+        {!salonLoading && (
+          <img src={salon?.pictureUrl ? assetUrl(salon.pictureUrl) : defaultBanner} alt="" className="hero__img" />
+        )}
         <div className="hero__tint" aria-hidden="true" />
         <div className="container hero__content">
-          <p className="eyebrow">Salon de tatouage{city && ` — ${city}`}</p>
+          <p className="eyebrow">Salon de tatouage{salon?.city && ` — ${salon.city}`}</p>
+          {/* Accroche : backoffice, menu "Salon" ; textes par défaut si les champs sont vides.
+              Animation "tracé d'aiguille" : chaque ligne est dessinée de gauche à droite par une
+              aiguille lumineuse (CSS dans HomePage.scss). Elle démarre quand le titre apparaît,
+              c'est-à-dire une fois la fiche du salon chargée. */}
           <h1 className="hero__title display">
-            L'encre qui<br />
-            <span className="glow">vous ressemble</span>
+            {!salonLoading && (
+              <>
+                <span className="hero__line">
+                  <span className="hero__ink">{salon?.heroTitle ?? "L'encre qui"}</span>
+                  <span className="hero__needle" aria-hidden="true" />
+                </span>
+                {/* Espace entre les deux lignes pour les lecteurs d'écran (invisible : lignes empilées) */}
+                {' '}
+                <span className="hero__line hero__line--highlight">
+                  <span className="hero__ink glow">{salon?.heroHighlight ?? 'vous ressemble'}</span>
+                  <span className="hero__needle" aria-hidden="true" />
+                  <span className="hero__underline" aria-hidden="true" />
+                </span>
+              </>
+            )}
           </h1>
           <div className="hero__actions">
             <Link to="/contact" className="btn btn--primary">Parlez-nous de votre projet</Link>
@@ -68,22 +89,8 @@ const HomePage = () => {
       {/* --- Questions fréquentes --- */}
       <FaqSection />
 
-      {/* --- Dernier avis du livre d'or --- */}
-      {latestComment && (
-        <section className="container section">
-          <figure className="neon-card quote">
-            <span className="quote__mark" aria-hidden="true">“</span>
-            <blockquote className="quote__text">{latestComment.message}</blockquote>
-            <figcaption className="quote__footer">
-              <span className="muted">
-                {latestComment.author.name}
-                {latestComment.projectName && ` — ${latestComment.projectName}`}
-              </span>
-              <Link to="/livre-d-or" className="link-arrow">Lire le livre d'or →</Link>
-            </figcaption>
-          </figure>
-        </section>
-      )}
+      {/* --- Livre d'or : carrousel des avis publiés --- */}
+      <GuestbookCarousel />
     </>
   );
 };

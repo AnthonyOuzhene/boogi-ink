@@ -8,36 +8,26 @@ import HomePage from './pages/HomePage';
 import RealisationsPage from './pages/RealisationsPage';
 import GalleryDetailPage from './pages/GalleryDetailPage';
 import AtelierPage from './pages/AtelierPage';
+import FaqPage from './pages/FaqPage';
+import ContentPage from './pages/ContentPage';
 import VisitorBookPage from './pages/VisitorBookPage';
 import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
-import AccountPage from './pages/AccountPage';
+import AccountLayout from './pages/account/AccountLayout';
+import AccountInfo from './pages/account/AccountInfo';
+import AccountComments from './pages/account/AccountComments';
+import AccountSecurity from './pages/account/AccountSecurity';
 import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
-  const { pathname, hash } = useLocation();
+  const { pathname } = useLocation();
   const isHome = pathname === '/';
 
-  // Changement de page : on remonte en haut (sinon on garde le défilement de la page précédente).
-  // Avec une ancre (/#faq), on descend jusqu'à la section. Elle peut n'apparaître qu'après
-  // la réponse de l'API : on la cherche toutes les 100 ms pendant 2 secondes maximum.
+  // Changement de page : on remonte en haut (sinon on garde le défilement de la page précédente)
   useEffect(() => {
-    if (!hash) {
-      window.scrollTo(0, 0);
-      return undefined;
-    }
-    let attempts = 0;
-    const timer = setInterval(() => {
-      const target = document.getElementById(hash.slice(1));
-      attempts += 1;
-      if (target || attempts > 20) {
-        clearInterval(timer);
-        target?.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-    return () => clearInterval(timer);
-  }, [pathname, hash]);
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <div className="app">
@@ -53,10 +43,18 @@ const App = () => {
           <Route path="/realisations/:id" element={<GalleryDetailPage />} />
           <Route path="/atelier" element={<AtelierPage />} />
           <Route path="/livre-d-or" element={<VisitorBookPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+          {/* Pages gérées dans le backoffice : mentions légales, confidentialité… */}
+          <Route path="/pages/:slug" element={<ContentPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/connexion" element={<LoginPage />} />
           <Route path="/inscription" element={<SignUpPage />} />
-          <Route path="/profil" element={<AccountPage />} />
+          {/* Espace client : routes imbriquées, affichées dans le <Outlet /> du gabarit */}
+          <Route path="/profil" element={<AccountLayout />}>
+            <Route index element={<AccountInfo />} />
+            <Route path="avis" element={<AccountComments />} />
+            <Route path="securite" element={<AccountSecurity />} />
+          </Route>
           {/* Ancienne adresse de la page de l'atelier */}
           <Route path="/atelier-tatouage" element={<Navigate to="/atelier" replace />} />
           <Route path="*" element={<NotFoundPage />} />

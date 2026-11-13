@@ -125,6 +125,44 @@
   }
 }
 
+// --- Pages de contenu (mentions légales…) : colonne de lecture confortable ---
+.content-page {
+  // (pas de max-width ici : la règle .container, chargée après, l'écraserait)
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  line-height: 1.8;
+
+  h2 {
+    margin-top: 32px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 32px;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+
+  h2:first-child {
+    margin-top: 0;
+  }
+
+  h2,
+  p {
+    max-width: 760px; // lignes de 70 à 80 caractères : lecture confortable
+  }
+
+  p {
+    color: var(--muted);
+    white-space: pre-line; // conserve les simples retours à la ligne
+  }
+}
+
+// --- FAQ ---
+.faq-page {
+  display: flex;
+  justify-content: center;
+}
+
 // --- Livre d'or ---
 .comments {
   display: grid;
@@ -279,6 +317,11 @@
   &__social {
     display: flex;
     gap: 24px;
+  }
+
+  &__hours {
+    display: flex;
+    flex-direction: column;
   }
 
   &__form {

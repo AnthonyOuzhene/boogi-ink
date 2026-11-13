@@ -69,7 +69,8 @@
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 44px;
+  // L'espace entre les liens se resserre sur les écrans moyens
+  gap: clamp(24px, 2.6vw, 44px);
 
   &__link {
     color: var(--text);
@@ -80,6 +81,7 @@
     text-transform: uppercase;
     padding-block: 8px;
     border-bottom: 2px solid transparent;
+    white-space: nowrap; // "Livre d'or" ne passe jamais sur deux lignes
 
     &:hover,
     &.active {
@@ -115,7 +117,9 @@
 
   &__menu {
     position: absolute;
-    right: 0;
+    // Centré sous le nom : bord gauche au milieu du nom, puis recul de la moitié de sa propre largeur
+    left: 50%;
+    transform: translateX(-50%);
     top: calc(100% + 12px);
     min-width: 200px;
     list-style: none;
@@ -123,6 +127,17 @@
     background: var(--surface);
     border: 1px solid var(--line-strong);
     border-radius: var(--radius);
+
+    // "Passerelle" invisible qui comble les 12 px entre le nom et le menu :
+    // la souris reste "dans" le menu en traversant cet espace, il ne se ferme donc pas
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 100%;
+      height: 14px;
+    }
 
     a,
     button {
@@ -146,8 +161,14 @@
   }
 }
 
-// --- Mobile : menu en panneau plein écran ---
-@media (max-width: 1100px) {
+// Le bouton "Prendre rendez-vous" ne se coupe pas non plus
+.site-nav__cta,
+.account__toggle {
+  white-space: nowrap;
+}
+
+// --- Mobile et tablette : menu en panneau plein écran ---
+@media (max-width: 1240px) {
   .site-header__burger {
     display: inline-flex;
   }
@@ -181,6 +202,7 @@
 
   .account__menu {
     position: static;
+    transform: none; // menu burger : aligné à gauche, sous les autres liens
     margin-top: 8px;
   }
 }

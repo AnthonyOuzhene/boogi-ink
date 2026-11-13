@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { AiOutlineUser } from 'react-icons/ai';
@@ -12,8 +12,13 @@ const LINKS = [
   { to: '/realisations', label: 'Réalisations' },
   { to: '/atelier', label: "L'atelier" },
   { to: '/livre-d-or', label: "Livre d'or" },
+  { to: '/faq', label: 'FAQ' },
   { to: '/contact', label: 'Contact' },
 ];
+
+// Menu de bureau (horizontal) + souris : seul cas où le sous-menu du compte s'ouvre au survol.
+// 1241px = juste au-dessus du seuil du menu burger (@media (max-width: 1240px) dans Header.scss)
+const DESKTOP_HOVER_QUERY = '(min-width: 1241px) and (hover: hover) and (pointer: fine)';
 
 const Header = () => {
   const { isConnected, isAdmin, user, logout } = useAuth();
@@ -25,6 +30,46 @@ const Header = () => {
   const closeMenus = () => {
     setMenuOpen(false);
     setAccountOpen(false);
+  };
+
+  // --- Sous-menu du compte : ouverture au survol, UNIQUEMENT sur le menu de bureau ---
+  // Conditions : écran large (menu horizontal, au-delà de 1240 px, même seuil que Header.scss)
+  // ET pointeur qui sait survoler (souris). Dans le menu mobile (burger), on reste au clic/appui.
+  const isDesktopHover = () => window.matchMedia(DESKTOP_HOVER_QUERY).matches;
+
+  // Petit délai avant fermeture : le menu ne disparaît pas au moindre écart de souris
+  const closeTimer = useRef(null);
+  const cancelClose = () => clearTimeout(closeTimer.current);
+  useEffect(() => cancelClose, []); // nettoyage si l'en-tête disparaît
+
+  const handleAccountEnter = (e) => {
+    // Tactile (pas de survol) ou menu mobile : c'est le clic / l'appui qui ouvre
+    if (e.pointerType !== 'mouse' || !isDesktopHover()) return;
+    cancelClose();
+    setAccountOpen(true);
+  };
+
+  const handleAccountLeave = (e) => {
+    if (e.pointerType !== 'mouse' || !isDesktopHover()) return;
+    closeTimer.current = setTimeout(() => setAccountOpen(false), 200);
+  };
+
+  const handleAccountClick = (e) => {
+    // Menu de bureau + souris : le survol a déjà ouvert le menu, un clic ne doit pas le refermer.
+    // Partout ailleurs (menu mobile, tactile, clavier où detail === 0) : le clic ouvre / ferme.
+    if (e.detail !== 0 && isDesktopHover()) {
+      setAccountOpen(true);
+      return;
+    }
+    setAccountOpen((open) => !open);
+  };
+
+  // Échap referme le sous-menu et rend le focus au bouton
+  const handleAccountKeyDown = (e) => {
+    if (e.key === 'Escape' && accountOpen) {
+      setAccountOpen(false);
+      e.currentTarget.querySelector('.account__toggle')?.focus();
+    }
   };
 
   // Sur l'accueil, le menu est transparent au-dessus de la photo, puis devient opaque au défilement
@@ -71,18 +116,26 @@ const Header = () => {
           ))}
 
           {isConnected ? (
-            <div className="account">
+            <div
+              className="account"
+              onPointerEnter={handleAccountEnter}
+              onPointerLeave={handleAccountLeave}
+              onKeyDown={handleAccountKeyDown}
+            >
               <button
                 type="button"
                 className="account__toggle"
                 aria-expanded={accountOpen}
-                onClick={() => setAccountOpen(!accountOpen)}
+                aria-haspopup="true"
+                onClick={handleAccountClick}
               >
                 <AiOutlineUser size={20} aria-hidden="true" /> {user.name}
               </button>
               {accountOpen && (
                 <ul className="account__menu">
                   <li><Link to="/profil" onClick={closeMenus}>Mon compte</Link></li>
+                  <li><Link to="/profil/avis" onClick={closeMenus}>Mes avis</Link></li>
+                  <li><Link to="/profil/securite" onClick={closeMenus}>Sécurité</Link></li>
                   {isAdmin && (
                     <li><a href={`${BACKEND_URL}/admin`} target="_blank" rel="noreferrer">Backoffice</a></li>
                   )}

@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\State\CommentAuthorProcessor;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
@@ -26,6 +27,9 @@ use Symfony\Component\Validator\Constraints as Assert;
             validationContext: ['groups' => ['comment:create']],
             processor: CommentAuthorProcessor::class,
         ),
+        // Espace client (liste de MES avis, modification) : voir AccountController
+        // (GET /api/me/comments, PATCH /api/me/comments/{id}).
+        // Pas d'opération Delete : la suppression est impossible.
     ],
     normalizationContext: ['groups' => ['comment:read']],
 )]
@@ -71,6 +75,11 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     private ?User $author = null;
+
+    /** Date de la dernière modification par l'auteur (null si jamais modifié) */
+    #[Groups(['comment:owner'])]
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
@@ -143,6 +152,10 @@ class Comment
         return $this;
     }
 
+    // Le getter s'appelle isPublished() : sans SerializedName, le JSON l'exposerait sous le nom "published".
+    // Groupe comment:owner : visible uniquement par l'auteur (AccountController, /api/me/comments)
+    #[Groups(['comment:owner'])]
+    #[SerializedName('isPublished')]
     public function isPublished(): ?bool
     {
         return $this->isPublished;
@@ -170,5 +183,17 @@ class Comment
     public function __toString(): string
     {
         return (string) $this->title;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 }

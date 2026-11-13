@@ -97,11 +97,6 @@ ul {
 }
 
 // --- Mise en page --------------------------------------------------------------
-// Cible d'une ancre (/#faq) : on la décale sous le menu fixe
-[id] {
-  scroll-margin-top: calc(var(--header-height) + 24px);
-}
-
 .container {
   max-width: calc(var(--container) + 2 * var(--gutter));
   margin: 0 auto;
