@@ -139,6 +139,17 @@
     text-transform: uppercase;
   }
 
+  // Indication du curseur "du dessin à la peau" (seulement si un dessin est envoyé)
+  &__hint {
+    display: flex;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--cyan);
+    font-size: 14px;
+  }
+
   &__text {
     color: var(--muted);
     line-height: 1.7;

@@ -1,0 +1,94 @@
+// Comparaison dessin / tatouage : la photo donne la taille, le dessin est posé par-dessus
+// et découpé à droite selon --position (clip-path)
+.compare {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  line-height: 0; // pas d'espace sous l'image
+
+  &__photo {
+    display: block;
+  }
+
+  &__sketch {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fffdf8; // papier : les dessins sont sur fond blanc
+    border-radius: var(--radius);
+    // Seule la partie gauche (jusqu'au curseur) reste visible
+    clip-path: inset(0 calc(100% - var(--position)) 0 0);
+  }
+
+  // Trait vertical cyan + pastille ↔ au niveau du curseur
+  &__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--position);
+    width: 2px;
+    transform: translateX(-1px);
+    background: var(--cyan);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+    pointer-events: none;
+
+    &::after {
+      content: '↔';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--cyan);
+      color: var(--ink);
+      font: 600 20px/1 var(--font-body);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  &__label {
+    position: absolute;
+    top: 14px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(11, 18, 21, 0.75);
+    color: var(--text);
+    font: 600 11px/1 var(--font-body);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    pointer-events: none;
+
+    &--sketch {
+      left: 14px;
+    }
+
+    &--photo {
+      right: 14px;
+    }
+  }
+
+  // Le vrai curseur : invisible, sur toute l'image (on peut saisir n'importe où)
+  &__range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    touch-action: pan-y; // le glisser horizontal pilote le curseur, le défilement vertical reste possible
+  }
+
+  // Focus clavier : contour autour de toute la comparaison
+  &:has(.compare__range:focus-visible) {
+    outline: 2px solid var(--cyan);
+    outline-offset: 4px;
+    border-radius: var(--radius);
+  }
+}

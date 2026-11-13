@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 import { assetUrl } from '../api/client';
 import { formatDate, toParagraphs } from '../utils/format';
+import SketchCompare from './SketchCompare';
 import './GalleryViewer.scss';
 
 /**
@@ -86,12 +87,22 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
       </button>
 
       <div className="viewer__stage" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-        <img
-          key={pictures[photoIndex]}
-          src={assetUrl(pictures[photoIndex])}
-          alt={`${gallery.name} — photo ${photoIndex + 1} sur ${pictures.length}`}
-          className="viewer__img"
-        />
+        {/* Photo principale + dessin préparatoire envoyé : curseur "du dessin à la peau" */}
+        {photoIndex === 0 && gallery.sketchUrl ? (
+          <SketchCompare
+            key={gallery.id}
+            photo={assetUrl(pictures[0])}
+            sketch={assetUrl(gallery.sketchUrl)}
+            name={gallery.name}
+          />
+        ) : (
+          <img
+            key={pictures[photoIndex]}
+            src={assetUrl(pictures[photoIndex])}
+            alt={`${gallery.name} — photo ${photoIndex + 1} sur ${pictures.length}`}
+            className="viewer__img"
+          />
+        )}
 
         {(photoIndex > 0 || hasPrevious) && (
           <button type="button" className="viewer__arrow viewer__arrow--prev" aria-label="Précédente" onClick={showPrevious}>
@@ -125,6 +136,12 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
       <aside className="viewer__panel">
         {meta && <p className="eyebrow">{meta}</p>}
         <h2 id="viewer-title" className="viewer__title">{gallery.name}</h2>
+
+        {gallery.sketchUrl && (
+          <p className="viewer__hint">
+            <span aria-hidden="true">↔</span> Du dessin à la peau : fais glisser le curseur sur la photo.
+          </p>
+        )}
 
         {toParagraphs(gallery.description).map((paragraph) => (
           <p key={paragraph} className="viewer__text">{paragraph}</p>

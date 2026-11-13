@@ -72,6 +72,13 @@ class Gallery
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    /**
+     * Dessin préparatoire (nom du fichier, même dossier que les photos) : facultatif.
+     * Renseigné, la visionneuse propose un curseur "du dessin à la peau" (voir getSketchUrl()).
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $sketch = null;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
@@ -183,6 +190,13 @@ class Gallery
         return $this->mainPicture ? '/'.self::UPLOAD_PATH.'/'.$this->mainPicture : null;
     }
 
+    /** Adresse du dessin préparatoire pour l'API (null s'il n'y en a pas : pas de curseur) */
+    #[Groups(['gallery:read'])]
+    public function getSketchUrl(): ?string
+    {
+        return $this->sketch ? '/'.self::UPLOAD_PATH.'/'.$this->sketch : null;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -191,6 +205,18 @@ class Gallery
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getSketch(): ?string
+    {
+        return $this->sketch;
+    }
+
+    public function setSketch(?string $sketch): static
+    {
+        $this->sketch = $sketch;
 
         return $this;
     }

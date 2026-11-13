@@ -40,6 +40,15 @@ class GalleryCrudController extends AbstractCrudController
             ->setUploadedFileNamePattern('[randomhash].[extension]')
             // obligatoire à la création, facultatif en modification (on garde l'ancienne)
             ->setRequired(Crud::PAGE_NEW === $pageName);
+        // Facultatif : s'il est envoyé, la visionneuse du site propose un curseur
+        // pour passer du dessin au tatouage terminé (sur la photo principale)
+        yield ImageField::new('sketch', 'Dessin préparatoire')
+            ->setBasePath(Gallery::UPLOAD_PATH)
+            ->setUploadDir('public/'.Gallery::UPLOAD_PATH)
+            ->setUploadedFileNamePattern('[randomhash].[extension]')
+            ->setRequired(false)
+            ->setHelp('Facultatif. Le dessin d\'origine du tatouage (scan ou photo, idéalement sur fond blanc et cadré comme la photo principale) : sur le site, un curseur permet de passer du dessin au tatouage.')
+            ->hideOnIndex();
         yield TextField::new('name', 'Titre');
         yield AssociationField::new('category', 'Catégorie');
         yield DateField::new('realisedAt', 'Date de réalisation');
