@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { useSalon } from '../context/SalonContext';
 import { toLines } from '../utils/format';
 import PageHero from '../components/PageHero';
+import SocialLinks from '../components/SocialLinks';
 import './pages.scss';
 
 const ContactPage = () => {
@@ -65,10 +66,7 @@ const ContactPage = () => {
           {(salon?.instagramUrl || salon?.facebookUrl) && (
             <div>
               <h2 className="contact__label">Suivez-nous</h2>
-              <p className="contact__social">
-                {salon.instagramUrl && <a href={salon.instagramUrl} target="_blank" rel="noreferrer">Instagram</a>}
-                {salon.facebookUrl && <a href={salon.facebookUrl} target="_blank" rel="noreferrer">Facebook</a>}
-              </p>
+              <SocialLinks />
             </div>
           )}
         </div>

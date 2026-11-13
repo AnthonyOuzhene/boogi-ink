@@ -1,0 +1,42 @@
+// Logos des réseaux : ronds bordés de cyan (comme le logo et l'avatar du menu),
+// qui prennent la couleur officielle du réseau au survol
+.social-links {
+  display: flex;
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    color: var(--cyan);
+    background: var(--surface);
+    transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+    &:hover,
+    &:focus-visible {
+      color: #fff;
+      border-color: transparent;
+    }
+
+    // Dégradé officiel d'Instagram
+    &--instagram:hover,
+    &--instagram:focus-visible {
+      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+      box-shadow: 0 0 20px rgba(214, 36, 159, 0.4);
+    }
+
+    // Bleu officiel de Facebook
+    &--facebook:hover,
+    &--facebook:focus-visible {
+      background: #1877f2;
+      box-shadow: 0 0 20px rgba(24, 119, 242, 0.4);
+    }
+  }
+}

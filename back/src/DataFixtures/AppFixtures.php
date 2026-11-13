@@ -69,6 +69,8 @@ class AppFixtures extends Fixture
             ->setFirstName('Julien')
             ->setLastName('Bourgarit')
             ->setPicture($this->copyImage('artist.jpg', Artist::UPLOAD_PATH))
+            // Photo de Julien dans l'atelier (page L'atelier)
+            ->setAtelierPicture($this->copyImage('artist-atelier.jpg', Artist::UPLOAD_PATH))
             ->setQuote('[Une phrase du tatoueur qui résume sa vision du tatouage.]')
             ->setShortBio("[Deux lignes d'accroche sur Julien : son style, ce qui le distingue.]")
             ->setInfluences(['[Influence 1]', '[Influence 2]', '[Influence 3]'])
@@ -97,9 +99,9 @@ class AppFixtures extends Fixture
             $manager->persist((new Page())->setTitle($title)->setSlug($slug)->setContent($content));
         }
 
-        // --- Catégories ---
+        // --- Catégories (styles relevés sur l'Instagram du salon) ---
         $categories = [];
-        foreach (['Réaliste', 'Old school', 'Graphique', 'Lettrage'] as $name) {
+        foreach (['Graphique', 'Sketch', 'Mandala', 'Pattern', 'Pop culture', 'Dotwork', 'Fine line', 'Floral'] as $name) {
             $categories[$name] = (new Category())->setName($name);
             $manager->persist($categories[$name]);
         }
@@ -107,9 +109,9 @@ class AppFixtures extends Fixture
         // --- Prestations (prix null = sur devis) ---
         $services = [
             ['Petit tatouage', '80.00', 'Motif de moins de 5 cm. Idéal pour un premier tatouage.', 'Graphique'],
-            ['Tatouage moyen', '150.00', 'Motif de 5 à 15 cm, dessin personnalisé inclus.', 'Réaliste'],
-            ['Grande pièce', null, 'Bras, dos, jambe… Projet sur plusieurs séances, établi sur devis.', 'Réaliste'],
-            ['Lettrage', '60.00', 'Prénom, date ou citation, dans la typographie de votre choix.', 'Lettrage'],
+            ['Tatouage moyen', '150.00', 'Motif de 5 à 15 cm, dessin personnalisé inclus.', null],
+            ['Grande pièce', null, 'Bras, dos, jambe… Projet sur plusieurs séances, établi sur devis.', null],
+            ['Lettrage', '60.00', 'Prénom, date ou citation, dans la typographie de votre choix.', null],
             ['Recouvrement (cover)', null, "Recouvrir ou retravailler un ancien tatouage. Sur devis après rendez-vous.", null],
             ['Retouche', '40.00', "Retouche d'un tatouage réalisé au salon.", null],
         ];
@@ -124,12 +126,12 @@ class AppFixtures extends Fixture
 
         // --- Réalisations (photos copiées dans public/uploads/galleries) ---
         $galleries = [
-            ['Portrait réaliste', 'tattoo1.jpg', 'Réaliste', '-10 days', ['tattoo3.jpg', 'tattoo4.jpg']],
-            ['Hirondelle old school', 'tattoo2.png', 'Old school', '-25 days', []],
-            ['Fleur fine line', 'tattoo3.jpg', 'Graphique', '-40 days', []],
+            ['Portrait sketch', 'tattoo1.jpg', 'Sketch', '-10 days', ['tattoo3.jpg', 'tattoo4.jpg']],
+            ['Hirondelle dotwork', 'tattoo2.png', 'Dotwork', '-25 days', []],
+            ['Fleur fine line', 'tattoo3.jpg', 'Fine line', '-40 days', []],
             ['Manchette graphique', 'tattoo4.jpg', 'Graphique', '-2 months', ['tattoo6.jpg']],
-            ['Rose et lettrage', 'tattoo5.jpg', 'Lettrage', '-3 months', []],
-            ['Ancre traditionnelle', 'tattoo6.jpg', 'Old school', '-5 months', []],
+            ['Rose', 'tattoo5.jpg', 'Floral', '-3 months', []],
+            ['Ancre', 'tattoo6.jpg', 'Pattern', '-5 months', []],
         ];
         foreach ($galleries as [$name, $mainPicture, $category, $date, $extraPictures]) {
             $gallery = (new Gallery())

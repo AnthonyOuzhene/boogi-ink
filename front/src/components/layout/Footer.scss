@@ -29,6 +29,11 @@
     text-transform: uppercase;
   }
 
+  // Logos Instagram / Facebook, sous les coordonnées
+  &__social {
+    margin-top: 12px;
+  }
+
   &__links {
     display: flex;
     flex-direction: column;

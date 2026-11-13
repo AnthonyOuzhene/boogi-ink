@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { FaInstagram } from 'react-icons/fa';
 import { useSalon } from '../context/SalonContext';
 import { assetUrl } from '../api/client';
 import { toParagraphs } from '../utils/format';
@@ -71,7 +72,9 @@ const ArtistSection = ({ artist, variant = 'short', id, eyebrow = "L'artiste der
                 // Le hash #artiste fait défiler L'atelier jusqu'à sa section (voir useScrollToHash)
                 : <Link to="/atelier#artiste" className="btn btn--primary">Découvrir son parcours</Link>}
               {salon?.instagramUrl && (
-                <a href={salon.instagramUrl} target="_blank" rel="noreferrer" className="btn btn--ghost">Suivre sur Instagram</a>
+                <a href={salon.instagramUrl} target="_blank" rel="noreferrer" className="btn btn--ghost">
+                  <FaInstagram size={20} aria-hidden="true" /> Suivre sur Instagram
+                </a>
               )}
             </div>
           </div>

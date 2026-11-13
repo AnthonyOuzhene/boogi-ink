@@ -75,8 +75,14 @@ class HomeCrudController extends AbstractCrudController
             ->setHelp('Décochez pendant les vacances ou une fermeture exceptionnelle : un message s\'affiche sur la page Contact.');
 
         yield FormField::addFieldset('Réseaux sociaux')->setIcon('fa fa-share-nodes');
-        yield UrlField::new('instagramUrl', 'Instagram')->hideOnIndex();
-        yield UrlField::new('facebookUrl', 'Facebook')->hideOnIndex();
+        // Libellés avec le logo du réseau : icônes Font Awesome "brands", déjà fournies par EasyAdmin.
+        // label_html : le formulaire Symfony affiche le libellé comme du HTML (et non comme du texte brut).
+        yield UrlField::new('instagramUrl', '<i class="fa-brands fa-instagram"></i> Instagram')
+            ->setFormTypeOption('label_html', true)
+            ->hideOnIndex();
+        yield UrlField::new('facebookUrl', '<i class="fa-brands fa-facebook"></i> Facebook')
+            ->setFormTypeOption('label_html', true)
+            ->hideOnIndex();
 
         yield FormField::addFieldset("Haut de la page d'accueil")->setIcon('fa fa-image');
         yield ImageField::new('picture', 'Grande photo')

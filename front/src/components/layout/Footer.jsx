@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import useApi from '../../hooks/useApi';
 import { useSalon } from '../../context/SalonContext';
 import { toLines } from '../../utils/format';
+import SocialLinks from '../SocialLinks';
 import './Footer.scss';
 
 const Footer = () => {
@@ -22,6 +23,7 @@ const Footer = () => {
               {salon.email && <a href={`mailto:${salon.email}`} className="muted">{salon.email}</a>}
             </>
           )}
+          <SocialLinks className="site-footer__social" />
         </div>
 
         {salon?.openingHours && (
@@ -41,8 +43,6 @@ const Footer = () => {
         </nav>
 
         <div className="site-footer__links">
-          {salon?.instagramUrl && <a href={salon.instagramUrl} target="_blank" rel="noreferrer">Instagram</a>}
-          {salon?.facebookUrl && <a href={salon.facebookUrl} target="_blank" rel="noreferrer">Facebook</a>}
           {pages?.map((page) => (
             <Link key={page.slug} to={`/pages/${page.slug}`} className="muted">{page.title}</Link>
           ))}
