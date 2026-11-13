@@ -1,12 +1,4 @@
 # IDE
 /.idea/
 
-# Ancien back Symfony 5.4, gardé en local pour référence pendant la réécriture
-# (l'historique complet est sur GitHub : boogi-ink-lady-piercing-back, branche develop)
-/back-legacy/
-
 .DS_Store
-
-# Ancien front Create React App, gardé en local pour référence
-# (historique complet sur GitHub : boogi-ink-lady-piercing-front, branche develop)
-/front-legacy/
