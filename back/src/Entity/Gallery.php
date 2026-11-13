@@ -67,6 +67,11 @@ class Gallery
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $pictures;
 
+    /** Texte affiché à côté de la photo dans la visionneuse (facultatif) */
+    #[Groups(['gallery:read'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
@@ -176,5 +181,17 @@ class Gallery
     public function getMainPictureUrl(): ?string
     {
         return $this->mainPicture ? '/'.self::UPLOAD_PATH.'/'.$this->mainPicture : null;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

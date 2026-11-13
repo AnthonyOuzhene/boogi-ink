@@ -1,0 +1,225 @@
+// Visionneuse plein écran : photo à gauche, texte à droite (empilés sur mobile)
+.viewer {
+  // <dialog> a des marges, bordures et tailles maximales par défaut : on les retire
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+
+  // Ouvert : grille photo | texte (display: grid seulement quand il est ouvert,
+  // sinon on écraserait le "display: none" d'un dialog fermé)
+  &[open] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+  }
+
+  // Fond derrière la fenêtre (pseudo-élément propre aux <dialog> ouverts avec showModal)
+  &::backdrop {
+    background: rgba(6, 10, 12, 0.94);
+  }
+
+  &__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+  }
+
+  &__close,
+  &__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: rgba(11, 18, 21, 0.8);
+    color: var(--text);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+  }
+
+  // --- Photo ---
+  &__stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    min-height: 0;
+    padding: 40px 88px;
+  }
+
+  &__img {
+    max-width: 100%;
+    max-height: calc(100dvh - 180px);
+    object-fit: contain;
+    border-radius: var(--radius);
+    animation: viewer-fade 0.25s ease;
+  }
+
+  &__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    &--prev {
+      left: 20px;
+    }
+
+    &--next {
+      right: 20px;
+    }
+  }
+
+  &__thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  &__thumb {
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--surface);
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.2s, border-color 0.2s;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &:hover,
+    &[aria-current='true'] {
+      opacity: 1;
+    }
+
+    &[aria-current='true'] {
+      border-color: var(--cyan);
+    }
+  }
+
+  // --- Texte ---
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 96px 40px 40px;
+    overflow-y: auto;
+    border-left: 1px solid var(--line);
+    background: linear-gradient(180deg, #17232a 0%, #111a1f 100%);
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  &__text {
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; // boutons sur toute la largeur du panneau, alignés entre eux
+    gap: 14px;
+    margin-top: 16px;
+
+    .btn {
+      padding-inline: 24px;
+      line-height: 1.4; // si le libellé passe quand même sur deux lignes, elles respirent
+    }
+  }
+
+  &__count {
+    margin-top: auto;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  // --- Tablette et mobile : photo en haut, texte en dessous, tout défile ---
+  @media (max-width: 900px) {
+    &[open] {
+      display: block;
+      overflow-y: auto;
+    }
+
+    &__stage {
+      min-height: 70dvh;
+      padding: 72px 16px 20px;
+    }
+
+    &__img {
+      max-height: 60dvh;
+    }
+
+    &__arrow {
+      width: 40px;
+      height: 40px;
+
+      &--prev {
+        left: 8px;
+      }
+
+      &--next {
+        right: 8px;
+      }
+    }
+
+    &__close {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+    }
+
+    &__panel {
+      padding: 32px var(--gutter) 48px;
+      border-left: 0;
+      border-top: 1px solid var(--line);
+      overflow: visible;
+    }
+
+    &__title {
+      font-size: 34px;
+    }
+  }
+}
+
+@keyframes viewer-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewer__img {
+    animation: none;
+  }
+}

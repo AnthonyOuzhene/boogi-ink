@@ -136,6 +136,7 @@ class AppFixtures extends Fixture
         foreach ($galleries as [$name, $mainPicture, $category, $date, $extraPictures]) {
             $gallery = (new Gallery())
                 ->setName($name)
+                ->setDescription("[Texte de démo] Le projet du client, la zone tatouée, le nombre de séances.\n\n[Un mot sur le style ou la technique utilisée.]")
                 ->setMainPicture($this->copyImage($mainPicture))
                 ->setCategory($categories[$category])
                 ->setRealisedAt(new \DateTimeImmutable($date));

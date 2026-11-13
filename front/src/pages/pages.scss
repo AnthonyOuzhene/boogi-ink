@@ -8,13 +8,6 @@
   }
 }
 
-.detail-actions {
-  margin-top: 56px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
 // --- Deux colonnes : intro (titre, texte, bouton) + liste ---
 .split {
   display: flex;
@@ -149,52 +142,6 @@
       background: var(--cyan);
       border-color: var(--cyan);
       color: var(--ink);
-    }
-  }
-}
-
-// --- Détail d'une réalisation ---
-.photo-stack {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: 340px;
-  grid-auto-flow: dense;
-  gap: 28px;
-
-  a {
-    position: relative;
-    display: block;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--surface);
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .is-main {
-    grid-column: span 2;
-    grid-row: span 2;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      box-shadow: inset 0 0 0 2px var(--cyan);
-    }
-  }
-
-  @media (max-width: 700px) {
-    grid-template-columns: minmax(0, 1fr);
-    grid-auto-rows: 320px;
-
-    .is-main {
-      grid-column: auto;
-      grid-row: auto;
     }
   }
 }

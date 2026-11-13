@@ -221,6 +221,7 @@ a.chip:hover {
   border-radius: 999px;
   border: 1px solid transparent;
   font: 600 16px/1.2 var(--font-body);
+  text-align: center; // un libellé long sur deux lignes reste centré
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;

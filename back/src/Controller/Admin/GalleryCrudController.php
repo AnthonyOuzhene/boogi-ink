@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
@@ -42,6 +43,10 @@ class GalleryCrudController extends AbstractCrudController
         yield TextField::new('name', 'Titre');
         yield AssociationField::new('category', 'Catégorie');
         yield DateField::new('realisedAt', 'Date de réalisation');
+        yield TextareaField::new('description', 'Description')
+            ->setHelp('Affichée à côté de la photo quand on l\'ouvre sur le site : le projet, la zone, le nombre de séances… (facultatif). Sautez une ligne pour faire un nouveau paragraphe.')
+            ->setNumOfRows(5)
+            ->hideOnIndex();
         yield UrlField::new('video', 'Lien vidéo')
             ->setHelp('Lien Instagram, YouTube… (facultatif)')
             ->hideOnIndex();
