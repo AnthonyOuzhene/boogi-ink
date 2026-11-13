@@ -66,6 +66,11 @@ Déclarées par `#[ApiResource]` dans `back/src/Entity/`. Aucune écriture possi
 | `GET /api/galleries` (`?category=2`), `/api/galleries/{id}` | Réalisations et leurs photos | `Gallery`, `Picture` |
 | `GET /api/comments`, `/api/comments/{id}` | Livre d'or : **avis publiés uniquement** (filtre `Doctrine/PublishedCommentExtension`) | `Comment` |
 | `GET /api/faqs` | Questions fréquentes, triées | `Faq` |
+| `GET /api/flashes` | Flashs (motifs prêts à tatouer), disponibles d'abord | `Flash` |
+| `GET /api/milestones` (`?timeline=salon` ou `artist`) | Dates des frises de L'atelier : histoire du salon, parcours de l'artiste | `Milestone` |
+| `GET /api/session_steps` | Déroulé d'une séance | `SessionStep` |
+| `GET /api/studio_photos` | Photos du salon (« Le lieu en images ») | `StudioPhoto` |
+| `GET /api/hygiene_commitments` | Engagements d'hygiène et de sécurité | `HygieneCommitment` |
 | `GET /api/pages`, `/api/pages/{slug}` | Pages de contenu (mentions légales…), identifiées par leur slug | `Page` |
 | `GET /api/users/{id}` | Un compte : soi-même ou un admin (sert aussi à identifier les auteurs en JSON-LD) | `User` |
 
@@ -117,7 +122,7 @@ Le texte de l'erreur est dans `title` pour `AccountController`, et dans `message
 
 - `ddev console debug:router` liste toutes les routes : `_api_…` pour API Platform, `api_…` pour `AccountController`.
 - Swagger (`/api/docs`) ne documente que la partie API Platform.
-- `debug:router` affiche aussi `GET /api/faqs/{id}` : c'est une route technique créée par API Platform pour identifier chaque question ; elle n'est pas exposée (404).
+- `debug:router` affiche aussi `GET /api/faqs/{id}` (et de même pour les flashs, frises, étapes, photos du salon, engagements) : c'est une route technique créée par API Platform pour identifier chaque élément ; elle n'est pas exposée (404).
 
 ## Commandes utiles
 

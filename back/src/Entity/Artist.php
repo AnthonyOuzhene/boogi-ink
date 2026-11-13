@@ -55,6 +55,22 @@ class Artist
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
+    /** Présentation courte, affichée sur la page d'accueil (la biographie complète est sur L'atelier) */
+    #[Groups(['artist:read'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(max: 400)]
+    private ?string $shortBio = null;
+
+    /**
+     * Influences et styles, affichés en pastilles.
+     * SIMPLE_ARRAY : un tableau PHP stocké en base sous forme de texte séparé par des virgules.
+     *
+     * @var list<string>|null
+     */
+    #[Groups(['artist:read'])]
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
+    private ?array $influences = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -129,5 +145,29 @@ class Artist
     public function getPictureUrl(): ?string
     {
         return $this->picture ? '/'.self::UPLOAD_PATH.'/'.$this->picture : null;
+    }
+
+    public function getShortBio(): ?string
+    {
+        return $this->shortBio;
+    }
+
+    public function setShortBio(?string $shortBio): static
+    {
+        $this->shortBio = $shortBio;
+
+        return $this;
+    }
+
+    public function getInfluences(): ?array
+    {
+        return $this->influences;
+    }
+
+    public function setInfluences(?array $influences): static
+    {
+        $this->influences = $influences;
+
+        return $this;
     }
 }

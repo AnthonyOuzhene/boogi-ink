@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -27,7 +28,7 @@ class ServiceCrudController extends AbstractCrudController
         return $crud
             ->setEntityLabelInSingular('Prestation')
             ->setEntityLabelInPlural('Prestations')
-            ->setDefaultSort(['name' => 'ASC']);
+            ->setDefaultSort(['position' => 'ASC', 'name' => 'ASC']);
     }
 
     public function configureFields(string $pageName): iterable
@@ -37,6 +38,8 @@ class ServiceCrudController extends AbstractCrudController
             ->setUploadDir('public/'.Service::UPLOAD_PATH)
             ->setUploadedFileNamePattern('[randomhash].[extension]')
             ->setRequired(false);
+        yield IntegerField::new('position', 'Ordre')
+            ->setHelp("Les 3 premières prestations sont affichées sur la page d'accueil.");
         yield TextField::new('name', 'Nom');
         yield AssociationField::new('category', 'Catégorie');
         // La colonne est un DECIMAL : Doctrine la renvoie sous forme de chaîne

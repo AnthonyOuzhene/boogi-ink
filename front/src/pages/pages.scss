@@ -47,6 +47,77 @@
   }
 }
 
+// Cible d'un lien #ancre : on s'arrête sous le menu fixe, pas derrière
+.anchor {
+  scroll-margin-top: calc(var(--header-height) + 24px);
+}
+
+// Surtitre + titre (+ texte) empilés
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lead-text {
+  max-width: 680px;
+  font-size: 18px;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.section-head__aside {
+  max-width: 420px;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+// --- Bandeau pleine largeur sur fond clair (Comment ça se passe, Hygiène) ---
+.band {
+  margin-top: var(--section);
+  padding-block: var(--band-padding);
+  background: var(--surface);
+  border-block: 1px solid var(--line);
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 64px;
+    text-align: center;
+  }
+
+  &__more {
+    margin-top: 56px;
+    text-align: center;
+  }
+}
+
+// --- L'atelier : sommaire sous le titre ---
+.atelier-toc {
+  margin-top: 16px;
+}
+
+// --- Appel final (bas de L'atelier) ---
+.cta-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: clamp(40px, 6vw, 88px) clamp(28px, 5vw, 72px);
+  border: 1px solid var(--cyan);
+  border-radius: 16px;
+  box-shadow: 0 0 60px rgba(34, 211, 238, 0.15);
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
 // --- Réalisations : filtres ---
 .filters {
   display: flex;

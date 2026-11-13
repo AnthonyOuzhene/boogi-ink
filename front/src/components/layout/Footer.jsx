@@ -34,6 +34,7 @@ const Footer = () => {
         <nav aria-label="Pied de page" className="site-footer__links">
           <Link to="/realisations">Réalisations</Link>
           <Link to="/atelier">L'atelier</Link>
+          <Link to="/flashs">Flashs</Link>
           <Link to="/livre-d-or">Livre d'or</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/contact">Contact</Link>

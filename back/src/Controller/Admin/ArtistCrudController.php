@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -61,9 +62,17 @@ class ArtistCrudController extends AbstractCrudController
             ->setHelp('Une phrase courte, mise en avant sous le nom (300 caractères maximum).')
             ->setNumOfRows(3)
             ->hideOnIndex();
-        yield TextareaField::new('biography', 'Présentation')
-            ->setHelp('Parcours, façon de travailler… Laissez une ligne vide entre deux paragraphes.')
+        yield TextareaField::new('shortBio', "Présentation courte (page d'accueil)")
+            ->setHelp('Deux ou trois phrases : son style, ce qui le distingue (400 caractères maximum).')
+            ->setNumOfRows(3)
+            ->hideOnIndex();
+        yield TextareaField::new('biography', "Biographie complète (page L'atelier)")
+            ->setHelp('Débuts, formation, façon de travailler… Laissez une ligne vide entre deux paragraphes. Les dates clés de son parcours se saisissent dans « Frises ».')
             ->setNumOfRows(12)
+            ->hideOnIndex();
+        // ArrayField : une ligne de saisie par élément, avec des boutons Ajouter / Supprimer
+        yield ArrayField::new('influences', 'Influences')
+            ->setHelp('Affichées en pastilles sous la biographie. Exemple : « Old school américain ». Pas de virgule dans un élément.')
             ->hideOnIndex();
     }
 }

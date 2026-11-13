@@ -92,6 +92,16 @@ class Home
     #[Assert\Length(max: 100)]
     private ?string $heroHighlight = null;
 
+    /** L'atelier : introduction de "L'histoire" (naissance du salon, origine du nom) */
+    #[Groups(['home:read'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $storyIntro = null;
+
+    /** L'atelier : phrase sur l'ambiance du lieu, à côté des photos */
+    #[Groups(['home:read'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $placeDescription = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -263,6 +273,30 @@ class Home
     public function setHeroHighlight(?string $heroHighlight): static
     {
         $this->heroHighlight = $heroHighlight;
+
+        return $this;
+    }
+
+    public function getStoryIntro(): ?string
+    {
+        return $this->storyIntro;
+    }
+
+    public function setStoryIntro(?string $storyIntro): static
+    {
+        $this->storyIntro = $storyIntro;
+
+        return $this;
+    }
+
+    public function getPlaceDescription(): ?string
+    {
+        return $this->placeDescription;
+    }
+
+    public function setPlaceDescription(?string $placeDescription): static
+    {
+        $this->placeDescription = $placeDescription;
 
         return $this;
     }

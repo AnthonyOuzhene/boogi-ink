@@ -6,11 +6,16 @@ use App\Entity\Artist;
 use App\Entity\Category;
 use App\Entity\Comment;
 use App\Entity\Faq;
+use App\Entity\Flash;
 use App\Entity\Gallery;
 use App\Entity\Home;
+use App\Entity\HygieneCommitment;
+use App\Entity\Milestone;
 use App\Entity\Page;
 use App\Entity\Picture;
 use App\Entity\Service;
+use App\Entity\SessionStep;
+use App\Entity\StudioPhoto;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -54,6 +59,8 @@ class AppFixtures extends Fixture
             ->setPicture($this->copyImage('banner.jpg', Home::UPLOAD_PATH))
             ->setHeroTitle("L'encre qui")
             ->setHeroHighlight('vous ressemble')
+            ->setStoryIntro("[Comment est né Boogi'ink, et d'où vient le nom.]")
+            ->setPlaceDescription("[Une phrase sur l'ambiance du lieu.]")
             ->setIsOpen(true);
         $manager->persist($home);
 
@@ -63,6 +70,8 @@ class AppFixtures extends Fixture
             ->setLastName('Bourgarit')
             ->setPicture($this->copyImage('artist.jpg', Artist::UPLOAD_PATH))
             ->setQuote('[Une phrase du tatoueur qui résume sa vision du tatouage.]')
+            ->setShortBio("[Deux lignes d'accroche sur Julien : son style, ce qui le distingue.]")
+            ->setInfluences(['[Influence 1]', '[Influence 2]', '[Influence 3]'])
             ->setBiography("[Son parcours : depuis quand il tatoue, comment il a appris, ce qui l'a amené à ouvrir Boogi'ink.]\n\n[Sa façon de travailler : l'échange avec le client, le dessin sur mesure, l'accompagnement jusqu'à la cicatrisation.]"));
 
         // --- FAQ (réponses à rédiger dans le backoffice) ---
@@ -104,8 +113,9 @@ class AppFixtures extends Fixture
             ['Recouvrement (cover)', null, "Recouvrir ou retravailler un ancien tatouage. Sur devis après rendez-vous.", null],
             ['Retouche', '40.00', "Retouche d'un tatouage réalisé au salon.", null],
         ];
-        foreach ($services as [$name, $price, $description, $category]) {
+        foreach ($services as $position => [$name, $price, $description, $category]) {
             $manager->persist((new Service())
+                ->setPosition(($position + 1) * 10)
                 ->setName($name)
                 ->setPrice($price)
                 ->setDescription($description)
@@ -133,6 +143,90 @@ class AppFixtures extends Fixture
                     ->setPosition($position + 1));
             }
             $manager->persist($gallery); // les photos suivent grâce à cascade: ['persist']
+        }
+
+        // --- L'atelier : frises (dates à compléter avec le salon) ---
+        $milestones = [
+            [Milestone::TIMELINE_SALON, '[Année]', '[Les débuts]', '[Premier atelier, premiers clients…]'],
+            [Milestone::TIMELINE_SALON, '[Année]', "[Ouverture de Boogi'ink]", "[L'installation à Beuzeville, rue Louis Gillain.]"],
+            [Milestone::TIMELINE_SALON, '[Année]', '[Une étape marquante]', '[Agrandissement, nouveau style, récompense…]'],
+            [Milestone::TIMELINE_SALON, "Aujourd'hui", '[Le salon aujourd\'hui]', "[Ce qui fait Boogi'ink en quelques mots.]"],
+            [Milestone::TIMELINE_ARTIST, '[Année]', 'Premier tatouage', '[Détail]'],
+            [Milestone::TIMELINE_ARTIST, '[Année]', 'Apprentissage', '[Où, avec qui]'],
+            [Milestone::TIMELINE_ARTIST, '[Année]', 'Conventions', '[Lesquelles]'],
+            [Milestone::TIMELINE_ARTIST, '[Année]', "Boogi'ink", '[Ouverture du salon]'],
+        ];
+        foreach ($milestones as $position => [$timeline, $year, $title, $description]) {
+            $manager->persist((new Milestone())
+                ->setTimeline($timeline)
+                ->setYear($year)
+                ->setTitle($title)
+                ->setDescription($description)
+                ->setPosition(($position + 1) * 10));
+        }
+
+        // --- L'atelier : photos du lieu (images de démo, à remplacer par de vraies photos du salon) ---
+        $studioPhotos = [
+            ['banner.jpg', "[À remplacer] L'entrée du salon"],
+            ['tattoo1.jpg', '[À remplacer] Le poste de travail'],
+            ['tattoo3.jpg', '[À remplacer] Le matériel'],
+            ['tattoo5.jpg', "[À remplacer] L'espace d'attente"],
+            ['tattoo6.jpg', '[À remplacer] Un détail de déco'],
+        ];
+        foreach ($studioPhotos as $position => [$file, $caption]) {
+            $manager->persist((new StudioPhoto())
+                ->setPicture($this->copyImage($file, StudioPhoto::UPLOAD_PATH))
+                ->setCaption($caption)
+                ->setPosition(($position + 1) * 10));
+        }
+
+        // --- L'atelier : déroulé d'une séance ---
+        $steps = [
+            ['On parle de votre projet', 'Votre idée, l\'emplacement, la taille.', "Par message ou au salon : votre idée, l'emplacement, la taille, vos références."],
+            ['Julien dessine votre motif', 'Un dessin créé sur mesure.', "Un dessin sur mesure, ajusté avec vous jusqu'à ce qu'il vous ressemble."],
+            ['Devis et rendez-vous', 'Prix et date validés ensemble.', 'Le prix et la date de la séance sont fixés ensemble. [Acompte : montant et conditions.]'],
+            ['Le jour J', 'Dans un cadre propre et serein.', "Pose du calque, dernières retouches, puis la séance. [Conseils : bien manger, dormir, éviter l'alcool la veille…]"],
+            ['Les soins à la maison', 'Les conseils de cicatrisation.', 'Vous repartez avec les consignes de cicatrisation. [Fiche de soins à télécharger.]'],
+            ['La retouche', 'Pour un résultat parfait.', '[Conditions de la retouche : délai, gratuite ou non.]'],
+        ];
+        foreach ($steps as $position => [$title, $summary, $description]) {
+            $manager->persist((new SessionStep())
+                ->setTitle($title)
+                ->setSummary($summary)
+                ->setDescription($description)
+                ->setPosition(($position + 1) * 10));
+        }
+
+        // --- L'atelier : hygiène & sécurité (engagements à faire valider par le salon) ---
+        $commitments = [
+            ['shield', 'Matériel stérile', 'Aiguilles et cartouches à usage unique, ouvertes devant vous.'],
+            ['ink', 'Encres conformes', 'Des encres respectant la réglementation européenne.'],
+            ['training', 'Formation hygiène', 'Formation hygiène et salubrité suivie par le tatoueur.'],
+            ['clean', 'Poste désinfecté', 'Surfaces nettoyées et protégées entre chaque client.'],
+        ];
+        foreach ($commitments as $position => [$icon, $title, $description]) {
+            $manager->persist((new HygieneCommitment())
+                ->setIcon($icon)
+                ->setTitle($title)
+                ->setDescription($description)
+                ->setPosition(($position + 1) * 10));
+        }
+
+        // --- Flashs (prix à définir : vides = « Sur devis ») ---
+        $flashes = [
+            ['Montre à gousset', 'tattoo2.png', 'Environ 12 cm', 'Avant-bras, mollet', null, true],
+            ['Calavera', 'tattoo4.jpg', 'Environ 15 cm', 'Bras, cuisse', null, true],
+            ['Montre à gousset — mini', 'tattoo2.png', 'Environ 6 cm', 'Poignet, cheville', null, false],
+        ];
+        foreach ($flashes as $position => [$name, $file, $size, $placement, $price, $available]) {
+            $manager->persist((new Flash())
+                ->setName($name)
+                ->setPicture($this->copyImage($file, Flash::UPLOAD_PATH))
+                ->setSize($size)
+                ->setPlacement($placement)
+                ->setPrice($price)
+                ->setIsAvailable($available)
+                ->setPosition(($position + 1) * 10));
         }
 
         // --- Utilisateurs ---

@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import RealisationsPage from './pages/RealisationsPage';
 import GalleryDetailPage from './pages/GalleryDetailPage';
 import AtelierPage from './pages/AtelierPage';
+import FlashsPage from './pages/FlashsPage';
 import FaqPage from './pages/FaqPage';
 import ContentPage from './pages/ContentPage';
 import VisitorBookPage from './pages/VisitorBookPage';
@@ -21,13 +22,14 @@ import AccountSecurity from './pages/account/AccountSecurity';
 import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const isHome = pathname === '/';
 
-  // Changement de page : on remonte en haut (sinon on garde le défilement de la page précédente)
+  // Changement de page : on remonte en haut (sinon on garde le défilement de la page précédente).
+  // Sauf si l'URL vise une section (/atelier#tarifs) : la page s'en charge (hook useScrollToHash).
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
 
   return (
     <div className="app">
@@ -42,6 +44,7 @@ const App = () => {
           <Route path="/realisations" element={<RealisationsPage />} />
           <Route path="/realisations/:id" element={<GalleryDetailPage />} />
           <Route path="/atelier" element={<AtelierPage />} />
+          <Route path="/flashs" element={<FlashsPage />} />
           <Route path="/livre-d-or" element={<VisitorBookPage />} />
           <Route path="/faq" element={<FaqPage />} />
           {/* Pages gérées dans le backoffice : mentions légales, confidentialité… */}

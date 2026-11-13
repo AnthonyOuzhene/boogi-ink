@@ -57,6 +57,14 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(CategoryCrudController::class, 'Catégories', 'fa fa-tags');
         yield MenuItem::linkTo(GalleryCrudController::class, 'Réalisations', 'fa fa-images');
 
+        yield MenuItem::linkTo(FlashCrudController::class, 'Flashs', 'fa fa-bolt');
+
+        yield MenuItem::section("Page L'atelier");
+        yield MenuItem::linkTo(MilestoneCrudController::class, 'Frises (histoire & parcours)', 'fa fa-timeline');
+        yield MenuItem::linkTo(StudioPhotoCrudController::class, 'Photos du salon', 'fa fa-camera');
+        yield MenuItem::linkTo(SessionStepCrudController::class, "Déroulé d'une séance", 'fa fa-list-ol');
+        yield MenuItem::linkTo(HygieneCommitmentCrudController::class, 'Hygiène & sécurité', 'fa fa-shield-halved');
+
         yield MenuItem::section('Site');
         yield MenuItem::linkTo(FaqCrudController::class, 'FAQ', 'fa fa-circle-question');
         yield MenuItem::linkTo(PageCrudController::class, 'Pages', 'fa fa-file-lines');

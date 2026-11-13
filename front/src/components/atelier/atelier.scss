@@ -1,0 +1,196 @@
+// Composants de la page L'atelier
+
+// --- Frises ---
+.timeline {
+  list-style: none;
+  padding: 0;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__year {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 1;
+    color: var(--cyan);
+  }
+
+  &__title {
+    font-size: 22px;
+  }
+
+  &__text {
+    font-size: 17px;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+
+  // Verticale : une ligne cyan qui s'estompe, un point lumineux par date
+  &--vertical {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+    padding-left: 56px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(var(--cyan), rgba(34, 211, 238, 0.1));
+    }
+
+    .timeline__item {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -53px;
+        top: 10px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 3px solid var(--cyan);
+        box-shadow: 0 0 18px rgba(34, 211, 238, 0.7);
+      }
+
+      &:last-child .timeline__year {
+        text-shadow: 0 0 30px rgba(34, 211, 238, 0.6);
+      }
+    }
+  }
+
+  // Horizontale : colonnes séparées par un trait, sous une ligne cyan
+  &--horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    border-top: 2px solid var(--cyan);
+
+    .timeline__item {
+      padding: 32px 28px 0;
+      border-left: 1px solid var(--line);
+
+      &:first-child {
+        padding-left: 0;
+        border-left: 0;
+      }
+    }
+
+    .timeline__title {
+      font-size: 19px;
+    }
+
+    .timeline__text {
+      font-size: 15px;
+    }
+
+    // Une colonne par ligne sur mobile : on retire les traits verticaux
+    @media (max-width: 700px) {
+      .timeline__item {
+        padding-left: 0;
+        border-left: 0;
+      }
+    }
+  }
+}
+
+// --- Le lieu en images ---
+.studio-gallery {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 260px;
+  grid-auto-flow: dense;
+  gap: 20px;
+
+  &__item {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+
+    &.is-main {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__caption {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    max-width: calc(100% - 32px);
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: var(--bg);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 220px;
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+
+    &__item.is-main {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+}
+
+// --- Hygiène & sécurité ---
+.hygiene-cards {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 20px;
+}
+
+.hygiene-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 36px 28px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  font-size: 16px;
+  line-height: 1.6;
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid rgba(34, 211, 238, 0.4);
+    background: rgba(34, 211, 238, 0.08);
+    color: var(--cyan);
+  }
+
+  &__title {
+    font-size: 20px;
+  }
+}

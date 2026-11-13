@@ -93,5 +93,15 @@ class HomeCrudController extends AbstractCrudController
         yield TextField::new('heroHighlight', 'Accroche — seconde ligne')
             ->setHelp('En cyan lumineux. Exemple : « vous ressemble »')
             ->hideOnIndex();
+
+        yield FormField::addFieldset("Page L'atelier")->setIcon('fa fa-store');
+        yield TextareaField::new('storyIntro', "Introduction de « L'histoire »")
+            ->setHelp('Comment est né le salon, d\'où vient le nom… Les dates se saisissent dans « Frises ».')
+            ->setNumOfRows(5)
+            ->hideOnIndex();
+        yield TextareaField::new('placeDescription', "Texte de « Le lieu »")
+            ->setHelp('Une ou deux phrases sur l\'ambiance du salon, à côté des photos.')
+            ->setNumOfRows(3)
+            ->hideOnIndex();
     }
 }

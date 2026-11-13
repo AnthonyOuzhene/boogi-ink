@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(),
         new GetCollection(
-            order: ['name' => 'ASC'],
+            order: ['position' => 'ASC', 'name' => 'ASC'],
             // GET /api/services?category=3
             parameters: ['category' => new QueryParameter(filter: new ExactFilter(), property: 'category')],
         ),
@@ -54,6 +54,10 @@ class Service
     #[Groups(['service:read'])]
     #[ORM\ManyToOne(inversedBy: 'services')]
     private ?Category $category = null;
+
+    /** Ordre d'affichage : la plus petite valeur en premier (les 3 premières sont sur l'accueil) */
+    #[ORM\Column(options: ['default' => 0])]
+    private int $position = 0;
 
     public function getId(): ?int
     {
@@ -129,5 +133,17 @@ class Service
     public function getPictureUrl(): ?string
     {
         return $this->picture ? '/'.self::UPLOAD_PATH.'/'.$this->picture : null;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?int $position): static
+    {
+        $this->position = $position ?? 0;
+
+        return $this;
     }
 }

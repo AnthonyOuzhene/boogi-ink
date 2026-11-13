@@ -11,6 +11,7 @@ import './Header.scss';
 const LINKS = [
   { to: '/realisations', label: 'Réalisations' },
   { to: '/atelier', label: "L'atelier" },
+  { to: '/flashs', label: 'Flashs' },
   { to: '/livre-d-or', label: "Livre d'or" },
   { to: '/faq', label: 'FAQ' },
   { to: '/contact', label: 'Contact' },
