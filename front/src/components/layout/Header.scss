@@ -42,6 +42,7 @@
 
 .brand {
   display: flex;
+  flex-shrink: 0; // le logo ne se tasse jamais : c'est le menu qui doit s'adapter
   align-items: center;
   gap: 14px;
   color: var(--text);
@@ -69,15 +70,18 @@
 .site-nav {
   display: flex;
   align-items: center;
-  // L'espace entre les liens se resserre sur les écrans moyens
-  gap: clamp(24px, 2.6vw, 44px);
+  // L'espace entre les liens et leur taille se resserrent sur les écrans moyens :
+  // 52 px / 23 px sur grand écran, environ 28 px / 20 px à 1 025 px (juste avant le burger)
+  gap: clamp(24px, 3.6vw, 52px);
 
+  // Liens en Anton, la police du logo et des grands titres (menu burger : 40 px, plus bas)
   &__link {
     color: var(--text);
     text-decoration: none;
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    font-family: var(--font-display);
+    font-size: clamp(20px, 1.6vw, 23px);
+    font-weight: 400;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     padding-block: 8px;
     border-bottom: 2px solid transparent;
@@ -104,8 +108,9 @@
     background: none;
     border: 0;
     color: var(--text);
-    font: 500 15px var(--font-body);
-    letter-spacing: 0.08em;
+    // Même police et même taille que les liens du menu
+    font: 400 clamp(20px, 1.6vw, 23px) var(--font-display);
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     cursor: pointer;
     padding: 8px 0;
@@ -161,14 +166,74 @@
   }
 }
 
+// Connexion : icône seule sur ordinateur
+.site-nav__login {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (min-width: 1025px) {
+  // Texte masqué visuellement mais toujours lu par les lecteurs d'écran
+  .site-nav__login-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
 // Le bouton "Prendre rendez-vous" ne se coupe pas non plus
 .site-nav__cta,
 .account__toggle {
   white-space: nowrap;
 }
 
+// Un prénom très long est coupé avec "…" pour ne jamais pousser le menu hors de l'écran
+.account__name {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// --- Écrans moyens (1 025 à 1 240 px) : menu horizontal plus compact ---
+@media (min-width: 1025px) and (max-width: 1240px) {
+  .site-header__inner {
+    gap: 20px;
+  }
+
+  .site-nav {
+    gap: 18px;
+  }
+
+  .site-nav__cta {
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+
+  .account__name {
+    max-width: 100px;
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .brand__logo {
+    width: 44px;
+    height: 44px;
+  }
+
+  .brand__name {
+    font-size: 24px;
+  }
+}
+
 // --- Mobile et tablette : menu en panneau plein écran ---
-@media (max-width: 1240px) {
+// (avec 4 liens, le menu horizontal tient jusqu'à 1 025 px de large)
+@media (max-width: 1024px) {
   .site-header__burger {
     display: inline-flex;
   }

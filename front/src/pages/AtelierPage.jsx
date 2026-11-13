@@ -123,6 +123,7 @@ const AtelierPage = () => {
             <h2 className="section-title">Une séance <span className="text-cyan">chez nous</span></h2>
             <p className="muted lead-text">De la première idée à la cicatrisation complète : voici comment se passe un tatouage chez Boogi'ink.</p>
             <Link to="/contact" className="btn btn--primary">Commencer mon projet</Link>
+            <p className="muted">Une question avant de vous lancer ? <Link to="/faq">Consultez la FAQ</Link></p>
           </div>
           <div className="split__list">
             <SessionSteps steps={steps} />

@@ -8,18 +8,19 @@ import { BACKEND_URL } from '../../api/client';
 import logo from '../../assets/images/logo.png';
 import './Header.scss';
 
+// Menu volontairement court. Les autres pages restent accessibles ailleurs :
+// - Contact : bouton "Prendre rendez-vous" (même page) et pied de page
+// - FAQ : pied de page, aperçu sur l'accueil, L'atelier (« Une séance ») et page Contact
 const LINKS = [
   { to: '/realisations', label: 'Réalisations' },
-  { to: '/atelier', label: "L'atelier" },
   { to: '/flashs', label: 'Flashs' },
+  { to: '/atelier', label: "L'atelier" },
   { to: '/livre-d-or', label: "Livre d'or" },
-  { to: '/faq', label: 'FAQ' },
-  { to: '/contact', label: 'Contact' },
 ];
 
 // Menu de bureau (horizontal) + souris : seul cas où le sous-menu du compte s'ouvre au survol.
-// 1241px = juste au-dessus du seuil du menu burger (@media (max-width: 1240px) dans Header.scss)
-const DESKTOP_HOVER_QUERY = '(min-width: 1241px) and (hover: hover) and (pointer: fine)';
+// 1025px = juste au-dessus du seuil du menu burger (@media (max-width: 1024px) dans Header.scss)
+const DESKTOP_HOVER_QUERY = '(min-width: 1025px) and (hover: hover) and (pointer: fine)';
 
 const Header = () => {
   const { isConnected, isAdmin, user, logout } = useAuth();
@@ -34,7 +35,7 @@ const Header = () => {
   };
 
   // --- Sous-menu du compte : ouverture au survol, UNIQUEMENT sur le menu de bureau ---
-  // Conditions : écran large (menu horizontal, au-delà de 1240 px, même seuil que Header.scss)
+  // Conditions : écran large (menu horizontal, au-delà de 1024 px, même seuil que Header.scss)
   // ET pointeur qui sait survoler (souris). Dans le menu mobile (burger), on reste au clic/appui.
   const isDesktopHover = () => window.matchMedia(DESKTOP_HOVER_QUERY).matches;
 
@@ -130,7 +131,7 @@ const Header = () => {
                 aria-haspopup="true"
                 onClick={handleAccountClick}
               >
-                <AiOutlineUser size={20} aria-hidden="true" /> {user.name}
+                <AiOutlineUser size={26} aria-hidden="true" /> <span className="account__name">{user.name}</span>
               </button>
               {accountOpen && (
                 <ul className="account__menu">
@@ -145,7 +146,12 @@ const Header = () => {
               )}
             </div>
           ) : (
-            <NavLink to="/connexion" className="site-nav__link" onClick={closeMenus}>Connexion</NavLink>
+            // Ordinateur : simple icône (le texte "Connexion" est lu par les lecteurs d'écran et
+            // s'affiche au survol) ; menu burger : icône + texte
+            <NavLink to="/connexion" className="site-nav__link site-nav__login" title="Connexion" onClick={closeMenus}>
+              <AiOutlineUser size={26} aria-hidden="true" />
+              <span className="site-nav__login-label">Connexion</span>
+            </NavLink>
           )}
 
           <Link to="/contact" className="btn btn--primary site-nav__cta" onClick={closeMenus}>

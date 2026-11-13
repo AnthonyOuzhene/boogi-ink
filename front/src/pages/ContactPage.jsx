@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { useSalon } from '../context/SalonContext';
 import { toLines } from '../utils/format';
 import PageHero from '../components/PageHero';
@@ -56,6 +57,11 @@ const ContactPage = () => {
               </p>
             </div>
           )}
+          {/* La FAQ n'est plus dans le menu : on la rappelle ici, là où l'on se pose des questions */}
+          <div>
+            <h2 className="contact__label">Une question ?</h2>
+            <p>La réponse est peut-être dans la <Link to="/faq">FAQ</Link>.</p>
+          </div>
           {(salon?.instagramUrl || salon?.facebookUrl) && (
             <div>
               <h2 className="contact__label">Suivez-nous</h2>
