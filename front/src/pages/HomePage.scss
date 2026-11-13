@@ -13,6 +13,11 @@
     height: 100%;
     object-fit: cover;
     filter: grayscale(1) contrast(1.15);
+    // Zoom très lent (effet "Ken Burns") : la photo avance puis recule, en boucle.
+    // 25 s dans chaque sens : assez lent pour donner de la vie sans attirer l'œil
+    // plus que l'animation du titre. "alternate" évite un saut au retour à l'image de départ.
+    transform-origin: 50% 40%;
+    animation: hero-zoom 25s ease-in-out infinite alternate;
   }
 
   // Deux calques : un bleu pétrole en "multiply" (duotone) + un voile sombre pour la lisibilité
@@ -121,6 +126,7 @@
 
   // Réglage système "réduire les animations" : tout s'affiche directement dans l'état final
   @media (prefers-reduced-motion: reduce) {
+    &__img,
     &__ink,
     &__underline,
     &__actions {
@@ -131,6 +137,13 @@
       display: none;
     }
   }
+}
+
+// Agrandissement de 10 % : visible sur la durée, jamais flou (la photo du backoffice fait
+// au moins 1 920 px de large) ; translate3d confie l'animation à la carte graphique (fluide)
+@keyframes hero-zoom {
+  from { transform: scale(1) translate3d(0, 0, 0); }
+  to { transform: scale(1.1) translate3d(-1%, -1%, 0); }
 }
 
 // La zone dévoilée déborde de 60 px autour du texte : le halo lumineux du mot cyan
