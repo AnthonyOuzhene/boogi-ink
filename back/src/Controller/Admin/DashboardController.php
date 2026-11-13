@@ -130,6 +130,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(HygieneCommitmentCrudController::class, 'Hygiène & sécurité', 'fa fa-shield-halved');
 
         yield MenuItem::section('Site');
+        yield MenuItem::linkTo(HomeCardCrudController::class, "Cartes de l'accueil", 'fa fa-layer-group');
         yield MenuItem::linkTo(FaqCrudController::class, 'FAQ', 'fa fa-circle-question');
         yield MenuItem::linkTo(PageCrudController::class, 'Pages', 'fa fa-file-lines');
 

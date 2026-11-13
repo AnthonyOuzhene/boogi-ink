@@ -9,6 +9,7 @@ use App\Entity\Faq;
 use App\Entity\Flash;
 use App\Entity\Gallery;
 use App\Entity\Home;
+use App\Entity\HomeCard;
 use App\Entity\HygieneCommitment;
 use App\Entity\Milestone;
 use App\Entity\Page;
@@ -104,6 +105,21 @@ class AppFixtures extends Fixture
         foreach (['Graphique', 'Sketch', 'Mandala', 'Pattern', 'Pop culture', 'Dotwork', 'Fine line', 'Floral'] as $name) {
             $categories[$name] = (new Category())->setName($name);
             $manager->persist($categories[$name]);
+        }
+
+        // --- Accueil : cartes à jouer sous la grande photo (textes à valider avec le salon) ---
+        $homeCards = [
+            ['quill', 'Dessins sur mesure', 'Chaque tatouage est dessiné pour vous, à partir de votre idée. Pas de copie, pas de modèle tout fait.'],
+            ['swallow', 'Sur rendez-vous', "On prend le temps d'échanger sur votre projet avant de tatouer, au calme et sans attente."],
+            ['needle', 'Hygiène irréprochable', 'Aiguilles stériles à usage unique, poste désinfecté à chaque séance : votre peau est entre de bonnes mains.'],
+            ['anchor', 'À Beuzeville', 'Un salon chaleureux, rue Louis Gillain. Passez nous voir ou écrivez-nous.'],
+        ];
+        foreach ($homeCards as $position => [$icon, $title, $text]) {
+            $manager->persist((new HomeCard())
+                ->setPosition(($position + 1) * 10)
+                ->setIcon($icon)
+                ->setTitle($title)
+                ->setText($text));
         }
 
         // --- Prestations (prix null = sur devis) ---
