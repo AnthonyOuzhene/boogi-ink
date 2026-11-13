@@ -1,6 +1,9 @@
 // Section pleine largeur, sur un fond légèrement plus clair pour la détacher du reste
 .artist-section {
-  background: var(--surface);
+  // Dégradé vertical + halo cyan côté droit (derrière la photo de l'artiste)
+  background:
+    radial-gradient(ellipse 50% 80% at 85% 50%, var(--glow), transparent 70%),
+    var(--band-gradient);
   border-block: 1px solid var(--line);
   padding-block: var(--band-padding);
   overflow: hidden;

@@ -119,7 +119,9 @@ const Header = () => {
 
           {isConnected ? (
             <div
-              className="account"
+              // "account--current" : on est sur une page du compte (/profil, /profil/avis…),
+              // le bloc est alors souligné comme un lien actif du menu
+              className={`account ${pathname.startsWith('/profil') ? 'account--current' : ''}`}
               onPointerEnter={handleAccountEnter}
               onPointerLeave={handleAccountLeave}
               onKeyDown={handleAccountKeyDown}
@@ -131,7 +133,12 @@ const Header = () => {
                 aria-haspopup="true"
                 onClick={handleAccountClick}
               >
-                <AiOutlineUser size={26} aria-hidden="true" /> <span className="account__name">{user.name}</span>
+                {/* Avatar rond bordé de cyan (rappel du logo) + point vert "connecté" */}
+                <span className="account__avatar" aria-hidden="true">
+                  <AiOutlineUser size={22} />
+                  <span className="account__status" />
+                </span>
+                <span className="account__name">{user.name}</span>
               </button>
               {accountOpen && (
                 <ul className="account__menu">

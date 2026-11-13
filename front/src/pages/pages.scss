@@ -76,7 +76,10 @@
 .band {
   margin-top: var(--section);
   padding-block: var(--band-padding);
-  background: var(--surface);
+  // Dégradé vertical + halo cyan en haut à gauche, au lieu d'un aplat
+  background:
+    radial-gradient(ellipse 60% 70% at 15% 0%, var(--glow), transparent 70%),
+    var(--band-gradient);
   border-block: 1px solid var(--line);
 
   &__head {

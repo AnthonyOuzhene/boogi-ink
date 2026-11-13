@@ -15,7 +15,7 @@
   &--solid {
     // Pas de backdrop-filter : il rendrait le menu mobile (position: fixed)
     // relatif à l'en-tête au lieu de l'écran
-    background: rgba(7, 10, 12, 0.97);
+    background: rgba(11, 18, 21, 0.97); // = --bg, légèrement transparent
     border-bottom-color: var(--line);
   }
 
@@ -104,9 +104,10 @@
   &__toggle {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     background: none;
     border: 0;
+    border-bottom: 2px solid transparent; // même soulignement que les liens actifs du menu
     color: var(--text);
     // Même police et même taille que les liens du menu
     font: 400 clamp(20px, 1.6vw, 23px) var(--font-display);
@@ -118,6 +119,47 @@
     &:hover {
       color: var(--cyan);
     }
+
+    // Survol (ou menu ouvert) : le cercle se remplit de cyan, l'icône passe en sombre
+    &:hover .account__avatar,
+    &[aria-expanded='true'] .account__avatar {
+      background: var(--cyan);
+      color: var(--ink);
+    }
+  }
+
+  // Avatar : cercle bordé de cyan, comme le logo Boogi'ink (.brand__logo)
+  &__avatar {
+    position: relative;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--cyan);
+    color: var(--cyan);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  // Point vert "connecté", en bas à droite du cercle.
+  // La bordure couleur du fond le détache visuellement de l'avatar.
+  &__status {
+    position: absolute;
+    right: -3px;
+    bottom: -3px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--online);
+    border: 2px solid var(--bg);
+  }
+
+  // Sur une page du compte : nom en cyan et souligné, comme NavLink.active
+  &--current .account__toggle {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
   }
 
   &__menu {
@@ -159,7 +201,7 @@
       cursor: pointer;
 
       &:hover {
-        background: var(--line);
+        background: var(--surface-2);
         color: var(--cyan);
       }
     }
@@ -215,6 +257,15 @@
 
   .account__name {
     max-width: 100px;
+  }
+
+  .account__toggle {
+    gap: 10px;
+  }
+
+  .account__avatar {
+    width: 36px;
+    height: 36px;
   }
 
   .brand {

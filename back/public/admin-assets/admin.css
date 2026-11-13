@@ -14,6 +14,52 @@
     --bo-warning: #f59e0b;
 }
 
+/*
+ * Mode sombre (mode par défaut, cf. setDefaultColorScheme('dark')) : fonds bleu nuit du site.
+ * EasyAdmin construit tout son thème sombre sur une échelle de gris (--gray-50 à --gray-950) :
+ * en remplaçant cette échelle par les couleurs du front (front/src/styles/global.scss),
+ * barre latérale, contenu, tableaux, menus et champs suivent automatiquement.
+ * Les styles d'EasyAdmin sont dans des "@layer" : nos règles hors layer passent toujours devant.
+ */
+.ea-dark-scheme {
+    --gray-950: #060a0c; /* --bg-deep : barre latérale, fond de page */
+    --gray-900: #0b1215; /* --bg : zone de contenu */
+    --gray-800: #131d22; /* --surface : en-têtes, recherche, cellules sélectionnées */
+    --gray-700: #23323a; /* --line : séparateurs, survols */
+    --gray-600: #3e5058; /* --line-strong : bordures marquées */
+    --gray-500: #6b8188;
+    --gray-400: #a9bcc1; /* --muted : texte secondaire */
+    --gray-300: #c8d8dc;
+    --gray-200: #dce9ec;
+    --gray-100: #e6f4f6; /* --text */
+    --gray-50: #f3fafb;
+
+    --glow: rgba(34, 211, 238, 0.07); /* halo cyan très discret, comme sur le site */
+}
+
+/* Barre latérale : dégradé du bleu nuit vers le noir profond */
+.ea-dark-scheme .ea-sidebar,
+.ea-dark-scheme .ea-sidebar-footer {
+    background: linear-gradient(180deg, #0f191d 0%, var(--gray-950) 100%);
+}
+
+/* Zone de contenu : halo cyan en haut + léger dégradé vers le bas */
+.ea-dark-scheme .main-content {
+    background:
+        radial-gradient(ellipse 70% 420px at 50% 0%, var(--glow), transparent 70%),
+        linear-gradient(180deg, #0f191d 0%, var(--gray-900) 40%, #080d10 100%);
+}
+
+/* L'en-tête du contenu a son propre fond uni qui masquerait le halo : on le rend transparent */
+.ea-dark-scheme .content-header {
+    background: transparent;
+}
+
+/* Cartes du tableau de bord : même dégradé que les bandeaux du site */
+.ea-dark-scheme .bo-card {
+    background: linear-gradient(180deg, #17232a 0%, #111a1f 100%);
+}
+
 /* Fond clair : le cyan pur manque de contraste pour du texte, on le fonce un peu */
 body:not(.ea-dark-scheme) {
     --ea-primary-on-surface: #0e7490;

@@ -5,16 +5,24 @@
 // =============================================================================
 
 :root {
-  --bg: #070a0c;          // fond quasi noir
-  --surface: #0d1316;     // cartes, champs
-  --line: #1e2a2f;        // séparateurs
-  --line-strong: #3a4a50;
+  // Échelle de fonds bleu nuit, du plus profond au plus clair
+  --bg-deep: #060a0c;     // bas de page, pied de page
+  --bg: #0b1215;          // fond général
+  --surface: #131d22;     // bandeaux, cartes, champs
+  --surface-2: #1a272d;   // survols, éléments posés sur --surface
+  --line: #23323a;        // séparateurs
+  --line-strong: #3e5058;
+
+  // Dégradés d'ambiance (voir body et les bandeaux .band, .artist-section, .faq-band)
+  --glow: rgba(34, 211, 238, 0.07);  // halo cyan très discret
+  --band-gradient: linear-gradient(180deg, #17232a 0%, #111a1f 100%);
   --text: #e6f4f6;
   --muted: #a9bcc1;       // texte secondaire (contraste AA sur --bg)
   --cyan: #22d3ee;        // couleur de marque
   --cyan-light: #67e8f9;
   --ink: #041014;         // texte posé sur du cyan
   --danger: #fda4af;
+  --online: #4ade80;      // point vert "connecté" (avatar du menu)
 
   --font-display: 'Anton', Impact, 'Arial Narrow', sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
@@ -43,11 +51,18 @@
 
 html {
   scroll-behavior: smooth;
+  // Sur une page courte, le dégradé du body couvre quand même tout l'écran (sinon il se répète)
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
+  // Fond en dégradé sur toute la hauteur de la page : bleu nuit en haut (avec un halo cyan
+  // derrière le titre des pages), noir profond en bas. Le dégradé suit le défilement.
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 600px at 50% 0%, var(--glow), transparent 70%),
+    linear-gradient(180deg, #0f191d 0%, var(--bg) 35%, var(--bg-deep) 100%);
   color: var(--text);
   font-family: var(--font-body);
   font-size: 17px;
