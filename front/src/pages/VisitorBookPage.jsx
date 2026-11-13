@@ -14,7 +14,7 @@ const VisitorBookPage = () => {
   return (
     <>
       <PageHero
-        eyebrow="Ils nous ont fait confiance"
+        eyebrow="Ils m'ont fait confiance"
         title={<>Livre <span className="text-cyan">d'or</span></>}
       />
 

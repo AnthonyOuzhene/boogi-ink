@@ -1,24 +1,48 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
+import { toast } from 'react-toastify';
+import { FaFacebookMessenger, FaInstagram, FaRegCopy } from 'react-icons/fa';
 import { useSalon } from '../context/SalonContext';
 import { toLines } from '../utils/format';
+import { instagramMessageUrl, messengerUrl } from '../utils/social';
 import PageHero from '../components/PageHero';
-import SocialLinks from '../components/SocialLinks';
 import './pages.scss';
 
+// Ce que l'artiste a besoin de savoir pour répondre (affiché en liste, et repris dans le modèle)
+const CHECKLIST = [
+  'Ton idée ou le style qui te plaît',
+  "L'emplacement sur le corps",
+  'La taille approximative',
+  'Tes références : photos, dessins, inspirations',
+  'Tes disponibilités',
+];
+
+// Modèle à coller dans la messagerie (Instagram et Messenger ne permettent pas de pré-remplir un message)
+const MESSAGE_TEMPLATE = `Salut ! J'ai un projet de tatouage :
+- Mon idée / le style :
+- L'emplacement :
+- La taille approximative :
+- Mes références : (photos jointes)
+- Mes disponibilités : `;
+
+/**
+ * Page Contact : pas de formulaire, l'artiste répond lui-même sur Instagram et Messenger.
+ * La page explique quoi envoyer avant d'ouvrir la messagerie (moins d'allers-retours).
+ * Coordonnées, horaires et réseaux : backoffice, menu "Salon".
+ */
 const ContactPage = () => {
-  // Coordonnées, horaires et réseaux : backoffice, menu "Salon"
   const { salon } = useSalon();
   const fullAddress = salon ? `${salon.address}, ${salon.zipCode} ${salon.city}` : null;
+  const instagram = instagramMessageUrl(salon?.instagramUrl);
+  const messenger = messengerUrl(salon?.facebookUrl);
 
-  // Pas encore d'envoi d'email côté Symfony : le formulaire ouvre la messagerie
-  // du visiteur avec le message pré-rempli (lien "mailto:")
-  const [form, setForm] = useState({ name: '', subject: '', message: '' });
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const body = `${form.message}\n\n${form.name}`;
-    window.location.href = `mailto:${salon?.email ?? ''}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(body)}`;
+  const copyTemplate = async () => {
+    try {
+      await navigator.clipboard.writeText(MESSAGE_TEMPLATE);
+      toast.success('Modèle copié ! Colle-le dans ton message.');
+    } catch {
+      // Presse-papier refusé (ancien navigateur, page non sécurisée…)
+      toast.error("La copie n'a pas marché : recopie simplement la liste ci-dessus.");
+    }
   };
 
   return (
@@ -26,10 +50,44 @@ const ContactPage = () => {
       <PageHero
         eyebrow="Prendre rendez-vous"
         title={<>Par<span className="text-cyan">lons-en</span></>}
-        lead="Décris ton projet : style, emplacement, taille, références. On revient vers toi pour en discuter."
+        lead="Le plus simple : écris-moi sur Instagram ou sur Messenger, je te réponds moi-même pour qu'on parle de ton projet."
       />
 
       <section className="container section section--tight contact">
+        <div className="neon-card contact__dm">
+          {(instagram || messenger) ? (
+            <>
+              <h2 className="contact__title">Écris-moi</h2>
+              <div className="dm-buttons">
+                {instagram && (
+                  <a href={instagram} target="_blank" rel="noreferrer" className="dm-btn dm-btn--instagram">
+                    <FaInstagram size={24} aria-hidden="true" /> Écrire sur Instagram
+                  </a>
+                )}
+                {messenger && (
+                  <a href={messenger} target="_blank" rel="noreferrer" className="dm-btn dm-btn--messenger">
+                    <FaFacebookMessenger size={24} aria-hidden="true" /> Écrire sur Messenger
+                  </a>
+                )}
+              </div>
+            </>
+          ) : (
+            // Aucun réseau renseigné dans le backoffice : on renvoie vers le téléphone et l'e-mail
+            <h2 className="contact__title">Appelle le salon ou écris-moi par e-mail</h2>
+          )}
+
+          <div className="contact__checklist">
+            <h3 className="contact__label">Dans ton message, indique-moi</h3>
+            <ul>
+              {CHECKLIST.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+            <p className="muted">Pour un flash, donne-moi simplement son numéro (N°01, N°02…).</p>
+            <button type="button" className="btn btn--ghost contact__copy" onClick={copyTemplate}>
+              <FaRegCopy aria-hidden="true" /> Copier un modèle de message
+            </button>
+          </div>
+        </div>
+
         <div className="contact__info">
           {salon && (
             <>
@@ -39,7 +97,7 @@ const ContactPage = () => {
                 {!salon.isOpen && <p className="field__error">Le salon est actuellement fermé.</p>}
               </div>
               <div>
-                <h2 className="contact__label">Téléphone</h2>
+                <h2 className="contact__label">Téléphone du salon</h2>
                 <p><a href={`tel:${salon.phoneNumber.replace(/\s/g, '')}`}>{salon.phoneNumber}</a></p>
               </div>
             </>
@@ -63,32 +121,7 @@ const ContactPage = () => {
             <h2 className="contact__label">Une question ?</h2>
             <p>La réponse est peut-être dans la <Link to="/faq">FAQ</Link>.</p>
           </div>
-          {(salon?.instagramUrl || salon?.facebookUrl) && (
-            <div>
-              <h2 className="contact__label">Suis-nous</h2>
-              <SocialLinks />
-            </div>
-          )}
         </div>
-
-        <form className="form neon-card contact__form" onSubmit={handleSubmit}>
-          <div className="field">
-            <label htmlFor="name">Nom et prénom</label>
-            <input id="name" name="name" type="text" required autoComplete="name" value={form.name} onChange={handleChange} />
-          </div>
-          <div className="field">
-            <label htmlFor="subject">Sujet</label>
-            <input id="subject" name="subject" type="text" required placeholder="Ex. : projet de tatouage réaliste"
-              value={form.subject} onChange={handleChange} />
-          </div>
-          <div className="field">
-            <label htmlFor="message">Ton projet</label>
-            <textarea id="message" name="message" required value={form.message} onChange={handleChange} />
-          </div>
-          <div>
-            <button type="submit" className="btn btn--primary">Envoyer</button>
-          </div>
-        </form>
       </section>
 
       {fullAddress && (

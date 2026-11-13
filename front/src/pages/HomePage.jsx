@@ -63,7 +63,7 @@ const HomePage = () => {
             )}
           </h1>
           <div className="hero__actions">
-            <Link to="/contact" className="btn btn--primary">Parle-nous de ton projet</Link>
+            <Link to="/contact" className="btn btn--primary">Parle-moi de ton projet</Link>
             <Link to="/realisations" className="btn btn--ghost">Voir les réalisations</Link>
             {/* Annotation au feutre (masquée sur téléphone, où les boutons sont empilés) */}
             <Scribble arrow="left" className="hero__scribble">c'est par ici !</Scribble>

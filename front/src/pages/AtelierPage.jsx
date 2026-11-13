@@ -121,7 +121,7 @@ const AtelierPage = () => {
           <div className="container split">
             <div className="split__intro">
               <p className="eyebrow">{number('seance')} — Pas à pas</p>
-              <h2 className="section-title">Une séance <span className="text-cyan">chez nous</span></h2>
+              <h2 className="section-title">Une séance <span className="text-cyan">au salon</span></h2>
               <p className="muted lead-text">De la première idée à la cicatrisation complète : voici comment se passe un tatouage chez Boogi'ink.</p>
               <Link to="/contact" className="btn btn--primary">Commencer mon projet</Link>
               <p className="muted">Une question avant de te lancer ? <Link to="/faq">Consulte la FAQ</Link></p>

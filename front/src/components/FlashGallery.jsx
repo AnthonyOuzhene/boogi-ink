@@ -75,7 +75,7 @@ const FlashGallery = ({ flashes }) => {
         : <p className="muted">Aucun flash {filter === 'reserved' ? 'réservé' : 'disponible'} pour le moment.</p>}
 
       <div className="flash-cta">
-        <p>Un flash te plaît ? <span className="muted">Réserve-le en nous indiquant son nom.</span></p>
+        <p>Un flash te plaît ? <span className="muted">Écris-moi en indiquant son numéro, je te le réserve.</span></p>
         <Link to="/contact" className="btn btn--primary">Réserver un flash</Link>
       </div>
     </>

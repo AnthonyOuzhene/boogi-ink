@@ -63,7 +63,7 @@ const GuestbookCarousel = ({ className = '' }) => {
     >
       <div className="container guestbook__head">
         <div>
-          <p className="eyebrow">Ils nous ont fait confiance</p>
+          <p className="eyebrow">Ils m'ont fait confiance</p>
           <h2 id="guestbook-title" className="section-title">Livre <span className="text-cyan">d'or</span></h2>
         </div>
         <Link to="/livre-d-or" className="link-arrow">Tous les avis →</Link>

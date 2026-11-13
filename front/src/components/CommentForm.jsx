@@ -81,7 +81,7 @@ const CommentForm = () => {
 
         <div className="field">
           <label htmlFor="message">Ton avis</label>
-          <textarea id="message" name="message" placeholder="Raconte-nous ton expérience" required maxLength={5000}
+          <textarea id="message" name="message" placeholder="Raconte-moi ton expérience" required maxLength={5000}
             value={form.message} onChange={handleChange} />
           {errors.message && <p className="field__error">{errors.message}</p>}
         </div>

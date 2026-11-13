@@ -29,7 +29,7 @@ const FaqSection = () => {
           <Link to="/faq" className="btn btn--ghost">
             {faqs.length > PREVIEW_COUNT ? `Voir les ${faqs.length} questions` : 'Toutes les questions'}
           </Link>
-          <span className="muted">Une autre question ? <Link to="/contact">Écris-nous</Link></span>
+          <span className="muted">Une autre question ? <Link to="/contact">Écris-moi</Link></span>
         </div>
       </div>
     </section>
