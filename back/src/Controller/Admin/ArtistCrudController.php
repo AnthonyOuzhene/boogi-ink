@@ -49,13 +49,21 @@ class ArtistCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield ImageField::new('picture', 'Photo')
+        yield ImageField::new('picture', "Photo de la page d'accueil")
             ->setBasePath(Artist::UPLOAD_PATH)
             ->setUploadDir('public/'.Artist::UPLOAD_PATH)
             ->setUploadedFileNamePattern('[randomhash].[extension]')
             ->setFileConstraints(new Image(maxSize: '8M'))
             ->setRequired(false)
-            ->setHelp('Portrait vertical de préférence. Il est affiché en entier, sans recadrage, et passé en noir et blanc sur le site.');
+            ->setHelp("Photo de la page d'accueil. Portrait vertical de préférence : il est affiché en entier, sans recadrage, et passé en noir et blanc sur le site.");
+        yield ImageField::new('atelierPicture', "Photo de la page L'atelier")
+            ->setBasePath(Artist::UPLOAD_PATH)
+            ->setUploadDir('public/'.Artist::UPLOAD_PATH)
+            ->setUploadedFileNamePattern('[randomhash].[extension]')
+            ->setFileConstraints(new Image(maxSize: '8M'))
+            ->setRequired(false)
+            ->setHelp("Facultative : si elle est vide, L'atelier reprend la photo de l'accueil. Mêmes conseils de format.")
+            ->hideOnIndex();
         yield TextField::new('firstName', 'Prénom');
         yield TextField::new('lastName', 'Nom');
         yield TextareaField::new('quote', 'Citation')

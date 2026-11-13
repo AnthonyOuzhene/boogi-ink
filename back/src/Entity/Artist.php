@@ -71,6 +71,9 @@ class Artist
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     private ?array $influences = null;
 
+    /** Photo de la page L'atelier. Vide = on reprend la photo principale ($picture, utilisée sur l'accueil) */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $atelierPicture = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -169,5 +172,23 @@ class Artist
         $this->influences = $influences;
 
         return $this;
+    }
+
+    public function getAtelierPicture(): ?string
+    {
+        return $this->atelierPicture;
+    }
+
+    public function setAtelierPicture(?string $atelierPicture): static
+    {
+        $this->atelierPicture = $atelierPicture;
+
+        return $this;
+    }
+
+    #[Groups(['artist:read'])]
+    public function getAtelierPictureUrl(): ?string
+    {
+        return $this->atelierPicture ? '/'.self::UPLOAD_PATH.'/'.$this->atelierPicture : null;
     }
 }

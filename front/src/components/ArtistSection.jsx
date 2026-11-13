@@ -22,6 +22,8 @@ const ArtistSection = ({ artist, variant = 'short', id, eyebrow = "L'artiste der
   if (!artist) return null; // pas encore de fiche (ou chargement en cours)
 
   const isFull = variant === 'full';
+  // L'atelier peut avoir sa propre photo (backoffice) ; sinon, même photo que l'accueil
+  const pictureUrl = (isFull && artist.atelierPictureUrl) || artist.pictureUrl;
   // Version courte : si la présentation courte est vide, on reprend le 1er paragraphe de la biographie
   const paragraphs = isFull ? toParagraphs(artist.biography) : toParagraphs(artist.shortBio ?? artist.biography).slice(0, 1);
 
@@ -31,7 +33,7 @@ const ArtistSection = ({ artist, variant = 'short', id, eyebrow = "L'artiste der
         <div className="artist-section__inner">
           <div className="artist-section__photo">
             <img
-              src={artist.pictureUrl ? assetUrl(artist.pictureUrl) : defaultPhoto}
+              src={pictureUrl ? assetUrl(pictureUrl) : defaultPhoto}
               alt={`Portrait de ${artist.firstName} ${artist.lastName}, tatoueur de Boogi'ink`}
               loading="lazy"
             />
