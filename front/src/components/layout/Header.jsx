@@ -34,6 +34,14 @@ const Header = () => {
     setAccountOpen(false);
   };
 
+  // Logo : depuis une autre page, le lien mène à l'accueil (et App.jsx remonte en haut).
+  // Déjà sur l'accueil, l'adresse ne change pas : on remonte nous-mêmes, en douceur
+  // (scroll-behavior: smooth dans global.scss)
+  const handleBrandClick = () => {
+    closeMenus();
+    if (pathname === '/') window.scrollTo({ top: 0 });
+  };
+
   // --- Sous-menu du compte : ouverture au survol, UNIQUEMENT sur le menu de bureau ---
   // Conditions : écran large (menu horizontal, au-delà de 1024 px, même seuil que Header.scss)
   // ET pointeur qui sait survoler (souris). Dans le menu mobile (burger), on reste au clic/appui.
@@ -94,7 +102,7 @@ const Header = () => {
   return (
     <header className={`site-header ${overlay ? 'site-header--overlay' : 'site-header--solid'}`}>
       <div className="container site-header__inner">
-        <Link to="/" className="brand" onClick={closeMenus}>
+        <Link to="/" className="brand" onClick={handleBrandClick}>
           <img src={logo} alt="" className="brand__logo" />
           <span className="brand__name">Boogi'ink</span>
         </Link>
