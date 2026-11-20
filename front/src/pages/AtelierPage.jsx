@@ -78,7 +78,7 @@ const AtelierPage = () => {
         <section id="histoire" className="container section split anchor">
           <div className="split__intro">
             <p className="eyebrow">{number('histoire')} — {historyEyebrow}</p>
-            <h2 className="section-title">L'his<span className="text-cyan">toire</span></h2>
+            <h2 className="section-title section-title--small">L'his<span className="text-cyan">toire</span></h2>
             {toParagraphs(salon?.storyIntro).map((paragraph) => (
               <p key={paragraph} className="muted lead-text">{paragraph}</p>
             ))}
@@ -121,7 +121,7 @@ const AtelierPage = () => {
           <div className="container split">
             <div className="split__intro">
               <p className="eyebrow">{number('seance')} — Pas à pas</p>
-              <h2 className="section-title">Une séance <span className="text-cyan">au salon</span></h2>
+              <h2 className="section-title section-title--small">Une séance <span className="text-cyan">au salon</span></h2>
               <p className="muted lead-text">De la première idée à la cicatrisation complète : voici comment se passe un tatouage chez Boogi'ink.</p>
               <Link to="/contact" className="btn btn--primary">Commencer mon projet</Link>
               <p className="muted">Une question avant de te lancer ? <Link to="/faq">Consulte la FAQ</Link></p>
@@ -139,7 +139,7 @@ const AtelierPage = () => {
           <div className="container">
             <div className="band__head">
               <p className="eyebrow">{number('hygiene')} — En toute confiance</p>
-              <h2 className="section-title">Hygiène <span className="text-cyan">&amp; sécurité</span></h2>
+              <h2 className="section-title section-title--small">Hygiène <span className="text-cyan">&amp; sécurité</span></h2>
             </div>
             <HygieneCards commitments={commitments} />
             <p className="band__more">
@@ -173,7 +173,7 @@ const AtelierPage = () => {
         <section id="tarifs" className="container section split anchor">
           <div className="split__intro">
             <p className="eyebrow">{number('tarifs')} — Tarifs</p>
-            <h2 className="section-title">Presta<span className="text-cyan">tions</span></h2>
+            <h2 className="section-title section-title--small">Presta<span className="text-cyan">tions</span></h2>
             <p className="muted">Tarifs indicatifs. Chaque projet commence par un échange pour établir un prix précis.</p>
             <Link to="/contact" className="btn btn--primary">Demander un devis</Link>
           </div>

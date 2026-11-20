@@ -27,8 +27,10 @@ const HomePage = () => {
   // Styles affichés au-dessus des réalisations : seulement ceux qui ont au moins une réalisation
   const styles = categories?.filter((category) => category.galleryCount > 0) ?? [];
 
-  // L'API liste les flashs disponibles en premier : l'aperçu n'affiche que ceux-là
-  const availableFlashes = flashes?.filter((flash) => flash.isAvailable).slice(0, 4) ?? [];
+  // Aperçu de 4 flashs. L'API liste les disponibles en premier : s'il y en a moins de 4,
+  // les réservés complètent la planche (avec leur tampon), ils montrent quand même le style.
+  // On prend le début de la liste : chaque flash garde son numéro de la planche complète.
+  const previewFlashes = flashes?.slice(0, 4) ?? [];
 
   return (
     <>
@@ -97,7 +99,7 @@ const HomePage = () => {
 
       {/* --- Flashs disponibles : aperçu, la liste complète est sur /flashs ---
           Bandeau "papier" (fond clair) : les dessins sont sur papier blanc, ils s'y fondent */}
-      {availableFlashes.length > 0 && (
+      {previewFlashes.length > 0 && (
         <section className="band paper">
           <div className="container">
             <div className="section-head">
@@ -109,7 +111,7 @@ const HomePage = () => {
               </div>
               <Link to="/flashs" className="link-arrow">Tous les flashs →</Link>
             </div>
-            <FlashGrid flashes={availableFlashes} />
+            <FlashGrid flashes={previewFlashes} />
           </div>
         </section>
       )}
@@ -120,7 +122,7 @@ const HomePage = () => {
           <div className="container">
             <div className="band__head">
               <p className="eyebrow">De l'idée à la cicatrisation</p>
-              <h2 className="section-title">Comment ça <span className="text-cyan">se passe</span></h2>
+              <h2 className="section-title section-title--small">Comment ça <span className="text-cyan">se passe</span></h2>
             </div>
             <SessionSteps steps={steps.slice(0, 5)} variant="preview" />
             <p className="band__more">
@@ -134,7 +136,7 @@ const HomePage = () => {
       <section className="band paper">
         <div className="container split">
           <div className="split__intro">
-            <h2 className="section-title">Presta<span className="text-cyan">tions</span></h2>
+            <h2 className="section-title section-title--small">Presta<span className="text-cyan">tions</span></h2>
             <p className="muted">Chaque projet est dessiné sur mesure. Les grandes pièces et les recouvrements sont établis sur devis.</p>
             <Link to="/atelier#tarifs" className="link-arrow">Tous les tarifs →</Link>
           </div>

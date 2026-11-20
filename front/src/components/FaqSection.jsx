@@ -20,7 +20,7 @@ const FaqSection = () => {
       <div className="container faq-band__inner">
         <header className="faq-band__head">
           <p className="eyebrow">Avant ta séance</p>
-          <h2 id="faq-title" className="section-title">Questions <span className="text-cyan">fréquentes</span></h2>
+          <h2 id="faq-title" className="section-title section-title--small">Questions <span className="text-cyan">fréquentes</span></h2>
         </header>
 
         <FaqList faqs={faqs.slice(0, PREVIEW_COUNT)} />

@@ -41,6 +41,12 @@
     --band-padding: 96px;
     --header-height: 88px;
   }
+
+  // Téléphone : espaces entre sections resserrés (la page d'accueil restait très longue)
+  @media (max-width: 600px) {
+    --section: 88px;
+    --band-padding: 72px;
+  }
 }
 
 // --- Base -------------------------------------------------------------------
@@ -165,6 +171,12 @@ ul {
 .section-title {
   @extend .display;
   font-size: clamp(52px, 7vw, 88px);
+
+  // Titre secondaire : le grand format est réservé aux sections phares
+  // (Réalisations, Flashs, Livre d'or), pour que la page ait des temps forts
+  &--small {
+    font-size: clamp(38px, 4.6vw, 58px);
+  }
 }
 
 .text-cyan {

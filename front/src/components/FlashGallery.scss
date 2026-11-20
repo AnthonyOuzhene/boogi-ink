@@ -104,6 +104,58 @@
   }
 }
 
+// Téléphone : planche sur 2 colonnes, dessins et légendes plus compacts
+// (en une colonne, chaque flash prenait presque un écran entier)
+@media (max-width: 600px) {
+  .flash-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 16px;
+  }
+
+  .flash-card {
+    gap: 10px;
+
+    &__img {
+      height: 150px;
+      padding: 4px;
+    }
+
+    &__body {
+      padding-top: 8px;
+    }
+
+    &__name {
+      font-size: 16px;
+    }
+
+    &__number {
+      display: block; // le numéro sur sa propre ligne, au-dessus du nom
+      margin: 0 0 2px;
+    }
+
+    &__details {
+      font-size: 12px;
+    }
+
+    &__price {
+      font-size: 18px;
+    }
+
+    &__stamp {
+      padding: 4px 10px;
+      font-size: 18px;
+      border-width: 2px;
+    }
+  }
+
+  // Cœur un peu plus petit sur les vignettes
+  .flash-card .favorite-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .flash-card__img img {
     transition: none;

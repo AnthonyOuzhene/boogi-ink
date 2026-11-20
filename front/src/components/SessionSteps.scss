@@ -34,6 +34,30 @@
   &__title {
     font-size: 19px;
   }
+
+  // Téléphone : les étapes défilent à l'horizontale (comme une frise) au lieu de s'empiler ;
+  // on voit le bord de l'étape suivante, ce qui invite à faire glisser
+  @media (max-width: 600px) {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 74%;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    // Le défilement va jusqu'au bord de l'écran (au-delà de la marge du .container)
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &__item {
+      scroll-snap-align: start;
+    }
+  }
 }
 
 // --- Version complète (L'atelier) : liste numérotée ---
