@@ -55,7 +55,6 @@ class AppFixtures extends Fixture
             ->setInstagramUrl('https://www.instagram.com/julienbourgarit/')
             ->setFacebookUrl('https://www.facebook.com/julienbourgarit/')
             ->setOpeningHours("[Mardi – Samedi : horaires à préciser]\n[Dimanche et lundi : fermé]")
-            ->setPicture($this->copyImage('banner.jpg', Home::UPLOAD_PATH))
             ->setHeroTitle("L'encre qui")
             ->setHeroHighlight('te ressemble')
             ->setStoryIntro("[Comment est né Boogi'ink, et d'où vient le nom.]")

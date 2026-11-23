@@ -19,10 +19,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: HomeRepository::class)]
 class Home
 {
-    /** Dossier des images, relatif à public/ (utilisé par l'API et par EasyAdmin) */
-    // La photo du salon sert de grande image en haut de l'accueil
-    public const UPLOAD_PATH = 'uploads/home';
-
     #[Groups(['home:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -53,9 +49,6 @@ class Home
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank]
     private ?string $phoneNumber = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $picture = null;
 
     #[ORM\Column]
     private bool $isOpen = true;
@@ -167,18 +160,6 @@ class Home
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(?string $picture): static
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
-
     // Le getter s'appelle isOpen() : sans SerializedName, le JSON l'exposerait sous le nom "open"
     #[Groups(['home:read'])]
     #[SerializedName('isOpen')]
@@ -197,12 +178,6 @@ class Home
     public function __toString(): string
     {
         return (string) $this->name;
-    }
-
-    #[Groups(['home:read'])]
-    public function getPictureUrl(): ?string
-    {
-        return $this->picture ? '/'.self::UPLOAD_PATH.'/'.$this->picture : null;
     }
 
     public function getEmail(): ?string

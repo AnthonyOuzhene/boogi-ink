@@ -11,12 +11,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
-use Symfony\Component\Validator\Constraints\Image;
 
 /**
  * Fiche unique du salon : coordonnées, horaires, réseaux sociaux et haut de la page d'accueil.
@@ -84,15 +82,9 @@ class HomeCrudController extends AbstractCrudController
             ->setFormTypeOption('label_html', true)
             ->hideOnIndex();
 
-        yield FormField::addFieldset("Haut de la page d'accueil")->setIcon('fa fa-image');
-        yield ImageField::new('picture', 'Grande photo')
-            ->setBasePath(Home::UPLOAD_PATH)
-            ->setUploadDir('public/'.Home::UPLOAD_PATH)
-            ->setUploadedFileNamePattern('[randomhash].[extension]')
-            ->setFileConstraints(new Image(maxSize: '10M'))
-            ->setRequired(false)
-            ->setHelp('Format paysage, au moins 1920 px de large. Elle est passée en noir et blanc teinté de bleu sur le site.')
-            ->hideOnIndex();
+        // La vidéo du haut de l'accueil est un fichier fixe du site (front/src/assets/videos) :
+        // seule l'accroche se règle ici
+        yield FormField::addFieldset("Haut de la page d'accueil")->setIcon('fa fa-heading');
         yield TextField::new('heroTitle', 'Accroche — première ligne')
             ->setHelp('En blanc. Exemple : « L\'encre qui »')
             ->hideOnIndex();
