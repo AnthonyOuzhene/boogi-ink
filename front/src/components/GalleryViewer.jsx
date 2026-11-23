@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import { FaChevronLeft, FaChevronRight, FaPlay, FaTimes } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaInstagram, FaPlay, FaTimes } from 'react-icons/fa';
 import { assetUrl } from '../api/client';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { formatDate, toParagraphs } from '../utils/format';
@@ -181,8 +181,11 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
         ))}
 
         <div className="viewer__actions">
-          {gallery.video && (
-            <a href={gallery.video} target="_blank" rel="noreferrer" className="btn btn--ghost">Voir la vidéo</a>
+          {/* Post Instagram de la réalisation (backoffice) : s'ouvre dans un nouvel onglet */}
+          {gallery.instagramUrl && (
+            <a href={gallery.instagramUrl} target="_blank" rel="noreferrer" className="btn btn--ghost btn--instagram">
+              <FaInstagram size={20} aria-hidden="true" /> Voir sur Instagram
+            </a>
           )}
           <Link to="/contact" className="btn btn--primary">Un projet similaire ?</Link>
         </div>

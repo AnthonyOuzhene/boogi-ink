@@ -50,6 +50,17 @@
     }
   }
 
+  // Bouton × : comme les flèches au repos (contour de focus cyan), plein deep pink au survol
+  &__close {
+    transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+
+    &:hover {
+      color: #fff;
+      border-color: var(--pink);
+      background: var(--pink);
+    }
+  }
+
   // --- Photo ---
   &__stage {
     position: relative;

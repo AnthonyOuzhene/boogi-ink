@@ -8,6 +8,15 @@
   // d'écraser le texte contre le menu (voir le padding-top de .hero__content)
   min-height: max(600px, 100vh);
   min-height: max(600px, 100svh);
+
+  // Écran en portrait (téléphone, tablette debout) : la vidéo, au format cinéma, serait très
+  // agrandie et floue pour remplir toute la hauteur, avec un grand vide au-dessus du texte.
+  // On s'arrête aux 3/4 de l'écran : le texte remonte, les cartes apparaissent plus tôt.
+  // (À revoir avec une version verticale de la vidéo : elle pourra reprendre tout l'écran.)
+  @media (orientation: portrait) {
+    min-height: max(520px, 75vh);
+    min-height: max(520px, 75svh);
+  }
   display: flex;
   flex-direction: column;
   overflow: hidden;

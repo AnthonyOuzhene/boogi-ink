@@ -48,9 +48,15 @@ class Gallery
     #[Assert\NotBlank]
     private ?string $mainPicture = null;
 
+    /** Lien vers le post Instagram de la réalisation (photo, carrousel ou reel) : facultatif */
     #[Groups(['gallery:read'])]
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $video = null;
+    #[Assert\Url(requireTld: true)]
+    #[Assert\Regex(
+        pattern: '#^https?://(www\.)?instagram\.com/#',
+        message: 'Le lien doit être une adresse Instagram (https://www.instagram.com/…).',
+    )]
+    private ?string $instagramUrl = null;
 
     #[Groups(['gallery:read'])]
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
@@ -125,14 +131,14 @@ class Gallery
         return $this;
     }
 
-    public function getVideo(): ?string
+    public function getInstagramUrl(): ?string
     {
-        return $this->video;
+        return $this->instagramUrl;
     }
 
-    public function setVideo(?string $video): static
+    public function setInstagramUrl(?string $instagramUrl): static
     {
-        $this->video = $video;
+        $this->instagramUrl = $instagramUrl;
 
         return $this;
     }

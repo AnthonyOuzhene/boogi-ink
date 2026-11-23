@@ -375,6 +375,16 @@ a.chip:hover {
     }
   }
 
+  // Lien vers Instagram (à ajouter à btn--ghost) : au survol, le dégradé officiel d'Instagram,
+  // comme les icônes des réseaux du menu (SocialLinks.scss)
+  &--instagram:hover,
+  &--instagram:focus-visible {
+    color: #fff;
+    border-color: transparent;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+    box-shadow: 0 0 20px rgba(214, 36, 159, 0.4);
+  }
+
   &:disabled {
     opacity: 0.6;
     cursor: wait;

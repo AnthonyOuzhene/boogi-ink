@@ -72,8 +72,9 @@ class GalleryCrudController extends AbstractCrudController
             ->setRequired(false)
             ->setHelp('Facultatif. Fichier MP4, 20 Mo maximum (export 720p ou 1080p, de préférence sans son : la vidéo est lue en muet). Sur le site, la vignette affiche « Timelapse » et la vidéo s\'ajoute aux photos de la réalisation.')
             ->hideOnIndex();
-        yield UrlField::new('video', 'Lien vidéo')
-            ->setHelp('Lien Instagram, YouTube… vers la version complète (facultatif) : bouton « Voir la vidéo » sur le site.')
+        yield UrlField::new('instagramUrl', '<i class="fa-brands fa-instagram"></i> Lien Instagram')
+            ->setFormTypeOption('label_html', true) // libellé avec le logo Instagram (comme dans la fiche Salon)
+            ->setHelp('Facultatif. Le post Instagram de cette réalisation (photo, carrousel ou reel) : bouton « Voir sur Instagram » sur le site.')
             ->hideOnIndex();
         // Chaque photo supplémentaire est éditée avec le formulaire de PictureCrudController.
         // by_reference=false : Symfony appelle addPicture()/removePicture(),
