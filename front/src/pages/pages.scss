@@ -201,9 +201,82 @@
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
   gap: 48px 36px; // plus d'espace vertical : place pour les punaises
   padding-top: 12px;
+  // Changement de page : on remonte ici ; le header est fixe, on garde de la marge pour lui
+  scroll-margin-top: calc(var(--header-height) + 24px);
+  // Rejouée à chaque page (la grille est recréée, voir key={page} dans VisitorBookPage)
+  animation: comments-in 0.4s ease;
+}
+
+@keyframes comments-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+// Pagination sous la grille : flèches rondes + numéros de page
+.pagination {
+  padding-top: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  &__pages {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  // 44 px : cible tactile confortable
+  &__arrow,
+  &__page {
+    min-width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+
+    &:hover:not(:disabled, [aria-current='page']) {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  // Numéros sans bordure, sauf la page courante, pleine en cyan
+  &__page {
+    border-color: transparent;
+
+    &[aria-current='page'] {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: var(--surface);
+      cursor: default;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .comments {
+    animation: none;
+  }
+
   .comment {
     transition: none;
   }
@@ -242,7 +315,7 @@
     font-family: var(--font-display);
     font-size: 72px;
     line-height: 0.5;
-    color: var(--cyan);
+    color: var(--pink); // touche de rose (accent secondaire), comme une annotation au feutre
   }
 
   &__title {
