@@ -44,7 +44,8 @@ const ArtistSection = ({ artist, variant = 'short', id, eyebrow = "L'artiste der
           </div>
 
           <div className="artist-section__text">
-            <p className="eyebrow">{eyebrow}</p>
+            {/* Version complète (L'atelier) : surtitre numéroté en rose, comme les autres sections */}
+            <p className={`eyebrow ${isFull ? 'eyebrow--pink' : ''}`}>{eyebrow}</p>
             <h2 id="artist-title" className="artist-section__name">
               {artist.firstName} <span className="glow">{artist.lastName}</span>
             </h2>

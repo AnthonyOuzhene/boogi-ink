@@ -1,10 +1,10 @@
-// Annotation "au feutre" : police Permanent Marker (--font-marker), couleur d'accent
-// (cyan vif sur fond sombre, bleu pétrole sur les zones papier), légèrement de travers
+// Annotation "au feutre" : police Permanent Marker (--font-marker), en rose
+// (rose vif sur fond sombre, rose plus foncé sur les zones papier), légèrement de travers
 .scribble {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--cyan);
+  color: var(--pink);
   font-family: var(--font-marker);
   font-size: 20px;
   line-height: 1.1;

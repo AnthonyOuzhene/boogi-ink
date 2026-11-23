@@ -4,7 +4,6 @@ import { useSalon } from '../context/SalonContext';
 import { assetUrl } from '../api/client';
 import SalonCards from '../components/SalonCards';
 import GalleryGrid from '../components/GalleryGrid';
-import ServiceList from '../components/ServiceList';
 import ArtistSection from '../components/ArtistSection';
 import Scribble from '../components/Scribble';
 import FaqSection from '../components/FaqSection';
@@ -19,7 +18,6 @@ import './HomePage.scss';
 const HomePage = () => {
   const { salon, loading: salonLoading } = useSalon();
   const { data: galleries } = useApi('/galleries');
-  const { data: services } = useApi('/services');
   const { data: artists } = useApi('/artists');
   const { data: flashes } = useApi('/flashes');
   const { data: steps } = useApi('/session_steps');
@@ -131,20 +129,6 @@ const HomePage = () => {
           </div>
         </section>
       )}
-
-      {/* --- Prestations : titre à gauche, 3 tarifs à droite (sur papier, comme une carte de tarifs) --- */}
-      <section className="band paper">
-        <div className="container split">
-          <div className="split__intro">
-            <h2 className="section-title section-title--small">Presta<span className="text-cyan">tions</span></h2>
-            <p className="muted">Chaque projet est dessiné sur mesure. Les grandes pièces et les recouvrements sont établis sur devis.</p>
-            <Link to="/atelier#tarifs" className="link-arrow">Tous les tarifs →</Link>
-          </div>
-          <div className="split__list">
-            {services && <ServiceList services={services.slice(0, 3)} />}
-          </div>
-        </div>
-      </section>
 
       {/* --- Questions fréquentes --- */}
       <FaqSection />

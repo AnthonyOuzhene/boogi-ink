@@ -30,7 +30,6 @@ class CategoryCrudController extends AbstractCrudController
     {
         yield TextField::new('name', 'Nom');
         // Sur la liste, une relation OneToMany s'affiche sous forme de compteur
-        yield AssociationField::new('services', 'Prestations')->onlyOnIndex();
         yield AssociationField::new('galleries', 'Réalisations')->onlyOnIndex();
     }
 }

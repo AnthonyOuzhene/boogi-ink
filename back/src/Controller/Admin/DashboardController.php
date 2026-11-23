@@ -118,7 +118,6 @@ class DashboardController extends AbstractDashboardController
         // Fiches uniques (salon, artiste) : le menu ouvre directement le formulaire
         yield $this->singleRecordMenuItem(HomeCrudController::class, 'Salon', 'fa fa-store', $this->homeRepository->findOneBy([]));
         yield $this->singleRecordMenuItem(ArtistCrudController::class, "L'artiste", 'fa fa-user-pen', $this->artistRepository->findOneBy([]));
-        yield MenuItem::linkTo(ServiceCrudController::class, 'Prestations', 'fa fa-pen-nib');
         yield MenuItem::linkTo(CategoryCrudController::class, 'Catégories', 'fa fa-tags');
         yield MenuItem::linkTo(GalleryCrudController::class, 'Réalisations', 'fa fa-images');
         yield MenuItem::linkTo(FlashCrudController::class, 'Flashs', 'fa fa-bolt');

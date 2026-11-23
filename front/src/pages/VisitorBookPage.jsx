@@ -5,7 +5,7 @@ import CommentForm from '../components/CommentForm';
 import './pages.scss';
 
 // Couleurs des punaises, en alternance (voir .pin dans global.scss)
-const PIN_COLORS = ['', 'pin--blue', 'pin--yellow'];
+const PIN_COLORS = ['', 'pin--pink', 'pin--blue', 'pin--yellow'];
 
 const VisitorBookPage = () => {
   // L'API ne renvoie que les avis validés dans le backoffice, du plus récent au plus ancien

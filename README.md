@@ -64,7 +64,6 @@ Déclarées par `#[ApiResource]` dans `back/src/Entity/`. Aucune écriture possi
 | `GET /api/homes`, `/api/homes/{id}` | Fiche du salon : coordonnées, horaires, réseaux, accroche et photo de l'accueil | `Home` |
 | `GET /api/artists`, `/api/artists/{id}` | Présentation du tatoueur | `Artist` |
 | `GET /api/categories`, `/api/categories/{id}` | Styles de tatouage | `Category` |
-| `GET /api/services` (`?category=2`), `/api/services/{id}` | Prestations et tarifs | `Service` |
 | `GET /api/galleries` (`?category=2`), `/api/galleries/{id}` | Réalisations et leurs photos | `Gallery`, `Picture` |
 | `GET /api/comments`, `/api/comments/{id}` | Livre d'or : **avis publiés uniquement** (filtre `Doctrine/PublishedCommentExtension`) | `Comment` |
 | `GET /api/faqs` | Questions fréquentes, triées | `Faq` |
@@ -76,7 +75,7 @@ Déclarées par `#[ApiResource]` dans `back/src/Entity/`. Aucune écriture possi
 | `GET /api/pages`, `/api/pages/{slug}` | Pages de contenu (mentions légales…), identifiées par leur slug | `Page` |
 | `GET /api/users/{id}` | Un compte : soi-même ou un admin (sert aussi à identifier les auteurs en JSON-LD) | `User` |
 
-Les champs renvoyés sont choisis par les **groupes de sérialisation** (`#[Groups(['service:read'])]`…) posés sur les propriétés des entités : un champ sans groupe n'est jamais exposé (par exemple le mot de passe).
+Les champs renvoyés sont choisis par les **groupes de sérialisation** (`#[Groups(['gallery:read'])]`…) posés sur les propriétés des entités : un champ sans groupe n'est jamais exposé (par exemple le mot de passe).
 
 ### Compte client (`AccountController`)
 

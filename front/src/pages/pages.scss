@@ -33,10 +33,6 @@
   &__list {
     flex: 2 1 560px;
     min-width: 0;
-
-    .service-list__item:first-child {
-      padding-top: 0;
-    }
   }
 }
 
@@ -421,18 +417,42 @@
       display: flex;
       gap: 12px;
 
-      // Coche cyan devant chaque point
+      // Coche rose devant chaque point (touche de rose de la page)
       &::before {
         content: '✓';
-        color: var(--cyan);
+        color: var(--pink);
         font-weight: 700;
       }
     }
   }
 
+  // Titre de la liste "Dans ton message, indique-moi" : en rose, comme les coches
+  &__label--pink {
+    color: var(--pink);
+  }
+
+  &__copy-hint {
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  // Bouton "Copier un message tout prêt" : contour rose, rempli de rose au survol.
+  // ".contact__copy.btn" (deux classes) : plus prioritaire que ".btn", qui impose
+  // une bordure transparente et l'emportait (le contour n'apparaissait pas)
   &__copy {
     align-self: flex-start;
-    margin-top: 8px;
+
+    &.btn {
+      border: 1.5px solid var(--pink);
+      background: transparent;
+      color: var(--pink);
+
+      &:hover {
+        background: var(--pink);
+        color: #fff;
+        box-shadow: 0 0 30px color-mix(in srgb, var(--pink) 45%, transparent);
+      }
+    }
   }
 
   &__map {

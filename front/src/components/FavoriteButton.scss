@@ -19,15 +19,15 @@
   transition: color 0.2s, border-color 0.2s, transform 0.2s;
 
   &:hover {
-    color: #c7372b;
-    border-color: #c7372b;
+    color: var(--pink);
+    border-color: var(--pink);
     transform: scale(1.08);
   }
 
-  // Favori : cœur plein rouge (même rouge que le tampon "Réservé" et les punaises)
+  // Favori : cœur plein rose (la couleur des annotations au feutre)
   &.is-active {
-    color: #c7372b;
-    border-color: #c7372b;
+    color: var(--pink);
+    border-color: var(--pink);
     animation: favorite-pop 0.3s ease;
   }
 }

@@ -9,7 +9,6 @@ use App\Controller\Admin\HomeCrudController;
 use App\Controller\Admin\HygieneCommitmentCrudController;
 use App\Controller\Admin\MilestoneCrudController;
 use App\Controller\Admin\PageCrudController;
-use App\Controller\Admin\ServiceCrudController;
 use App\Controller\Admin\SessionStepCrudController;
 use App\Controller\Admin\StudioPhotoCrudController;
 use App\Entity\Artist;
@@ -19,7 +18,6 @@ use App\Entity\Home;
 use App\Entity\HygieneCommitment;
 use App\Entity\Milestone;
 use App\Entity\Page;
-use App\Entity\Service;
 use App\Entity\SessionStep;
 use App\Entity\StudioPhoto;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,7 +47,6 @@ class ContentChecklist
         [HygieneCommitment::class, 'Hygiène & sécurité', HygieneCommitmentCrudController::class, ['title' => 'titre', 'description' => 'description']],
         [Faq::class, 'FAQ', FaqCrudController::class, ['question' => 'question', 'answer' => 'réponse']],
         [Page::class, 'Pages', PageCrudController::class, ['title' => 'titre', 'content' => 'contenu']],
-        [Service::class, 'Prestations', ServiceCrudController::class, ['name' => 'nom', 'description' => 'description']],
         [Flash::class, 'Flashs', FlashCrudController::class, ['name' => 'nom', 'size' => 'taille', 'placement' => 'emplacements']],
     ];
 

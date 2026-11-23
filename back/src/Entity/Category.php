@@ -23,22 +23,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['slug'], message: 'Une catégorie porte déjà ce nom (ou un nom très proche).', errorPath: 'name')]
 class Category
 {
-    #[Groups(['category:read', 'service:read', 'gallery:read'])]
+    #[Groups(['category:read', 'gallery:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['category:read', 'service:read', 'gallery:read'])]
+    #[Groups(['category:read', 'gallery:read'])]
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
     private ?string $name = null;
-
-    /**
-     * @var Collection<int, Service>
-     */
-    #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'category')]
-    private Collection $services;
 
     /**
      * @var Collection<int, Gallery>
@@ -59,7 +53,6 @@ class Category
 
     public function __construct()
     {
-        $this->services = new ArrayCollection();
         $this->galleries = new ArrayCollection();
     }
 
@@ -89,36 +82,6 @@ class Category
         $this->name = $name;
         // AsciiSlugger : retire les accents, remplace espaces et ponctuation par des tirets
         $this->slug = $name ? (new AsciiSlugger('fr'))->slug($name)->lower()->toString() : null;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Service>
-     */
-    public function getServices(): Collection
-    {
-        return $this->services;
-    }
-
-    public function addService(Service $service): static
-    {
-        if (!$this->services->contains($service)) {
-            $this->services->add($service);
-            $service->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeService(Service $service): static
-    {
-        if ($this->services->removeElement($service)) {
-            // set the owning side to null (unless already changed)
-            if ($service->getCategory() === $this) {
-                $service->setCategory(null);
-            }
-        }
 
         return $this;
     }

@@ -20,6 +20,9 @@
   --muted: #a9bcc1;       // texte secondaire (contraste AA sur --bg)
   --cyan: #22d3ee;        // couleur de marque
   --cyan-light: #67e8f9;
+  // Rose vif (deep pink) : accent SECONDAIRE, par petites touches seulement
+  // (annotations au feutre, cœur des favoris, une punaise) ; le cyan reste la couleur de marque
+  --pink: #ff1493;
   --ink: #041014;         // texte posé sur du cyan
   --danger: #fda4af;
   --online: #4ade80;      // point vert "connecté" (avatar du menu)
@@ -201,6 +204,7 @@ ul {
   --line-strong: #c3b9a5;
   --cyan: #0e7490;        // cyan foncé : le cyan vif est illisible sur du clair
   --cyan-light: #155e75;
+  --pink: #c2126b;        // rose plus foncé : le rose vif manque de contraste sur le papier
   --ink: #ffffff;         // texte posé sur le cyan foncé (boutons)
 
   color: var(--text);
@@ -227,8 +231,8 @@ ul {
 }
 
 // --- Punaise (avis du livre d'or "épinglés au mur") ---------------------------------------
-// À placer dans un élément en position: relative ; trois couleurs qui alternent
-// (rouge par défaut, puis bleu pétrole et jaune via .pin--blue / .pin--yellow).
+// À placer dans un élément en position: relative ; quatre couleurs qui alternent
+// (rouge par défaut, puis rose, bleu pétrole et jaune via .pin--pink / .pin--blue / .pin--yellow).
 .pin {
   position: absolute;
   top: -11px;
@@ -263,6 +267,10 @@ ul {
   &--yellow {
     background: radial-gradient(circle at 35% 30%, #fff1b8 0%, #e0a21a 45%, #8a5a06 100%);
   }
+
+  &--pink {
+    background: radial-gradient(circle at 35% 30%, #ff9fd2 0%, #ff1493 45%, #8f0b52 100%);
+  }
 }
 
 // Texte masqué à l'écran mais lu par les lecteurs d'écran (ex. "Disponible" sur un flash)
@@ -281,6 +289,11 @@ ul {
   font-weight: 600;
   letter-spacing: 0.3em;
   text-transform: uppercase;
+
+  // Touche de rose : surtitres numérotés de L'atelier (01 — Le salon, 02 — L'artiste…)
+  &--pink {
+    color: var(--pink);
+  }
 }
 
 .muted {

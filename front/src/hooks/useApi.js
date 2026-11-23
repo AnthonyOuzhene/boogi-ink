@@ -3,7 +3,7 @@ import api from '../api/client';
 
 /**
  * Hook maison pour charger des données en GET.
- * Usage : const { data, loading, error, reload } = useApi('/services');
+ * Usage : const { data, loading, error, reload } = useApi('/flashes');
  * - Quand "url" change (ex. filtre de catégorie), la requête est relancée.
  * - reload() relance la même requête (ex. après une modification).
  */

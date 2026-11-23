@@ -28,7 +28,7 @@ const App = () => {
   const isHome = pathname === '/';
 
   // Changement de page : on remonte en haut (sinon on garde le défilement de la page précédente).
-  // Sauf si l'URL vise une section (/atelier#tarifs) : la page s'en charge (hook useScrollToHash).
+  // Sauf si l'URL vise une section (/atelier#seance) : la page s'en charge (hook useScrollToHash).
   useEffect(() => {
     if (!hash) window.scrollTo(0, 0);
   }, [pathname, hash]);

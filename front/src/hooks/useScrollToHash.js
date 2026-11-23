@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 /**
- * Fait défiler la page jusqu'à l'élément visé par le hash de l'URL (/atelier#tarifs → id="tarifs").
+ * Fait défiler la page jusqu'à l'élément visé par le hash de l'URL (/atelier#seance → id="seance").
  * Le navigateur le fait tout seul pour une page statique, mais ici les sections n'existent
  * qu'une fois les données de l'API reçues : on attend donc que "ready" passe à true.
  */

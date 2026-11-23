@@ -38,7 +38,7 @@ const ContactPage = () => {
   const copyTemplate = async () => {
     try {
       await navigator.clipboard.writeText(MESSAGE_TEMPLATE);
-      toast.success('Modèle copié ! Colle-le dans ton message.');
+      toast.success('Message copié ! Colle-le dans ta conversation et complète-le.');
     } catch {
       // Presse-papier refusé (ancien navigateur, page non sécurisée…)
       toast.error("La copie n'a pas marché : recopie simplement la liste ci-dessus.");
@@ -72,18 +72,24 @@ const ContactPage = () => {
               </div>
             </>
           ) : (
-            // Aucun réseau renseigné dans le backoffice : on renvoie vers le téléphone et l'e-mail
-            <h2 className="contact__title">Appelle le salon ou écris-moi par e-mail</h2>
+            // Aucun réseau renseigné dans le backoffice : on renvoie vers le téléphone
+            // (pas de contact par e-mail : l'artiste répond sur les messageries)
+            <h2 className="contact__title">Appelle le salon</h2>
           )}
 
           <div className="contact__checklist">
-            <h3 className="contact__label">Dans ton message, indique-moi</h3>
+            <h3 className="contact__label contact__label--pink">Dans ton message, indique-moi</h3>
             <ul>
               {CHECKLIST.map((item) => <li key={item}>{item}</li>)}
             </ul>
             <p className="muted">Pour un flash, donne-moi simplement son numéro (N°01, N°02…).</p>
-            <button type="button" className="btn btn--ghost contact__copy" onClick={copyTemplate}>
-              <FaRegCopy aria-hidden="true" /> Copier un modèle de message
+            {/* Le bouton copie un texte à trous : il faut dire ce qu'on en fait ensuite */}
+            <p className="contact__copy-hint">
+              Pour gagner du temps : copie ce message tout prêt, colle-le dans ta conversation
+              Instagram ou Messenger, puis complète-le.
+            </p>
+            <button type="button" className="btn contact__copy" onClick={copyTemplate}>
+              <FaRegCopy aria-hidden="true" /> Copier un message tout prêt
             </button>
           </div>
         </div>
@@ -101,12 +107,6 @@ const ContactPage = () => {
                 <p><a href={`tel:${salon.phoneNumber.replace(/\s/g, '')}`}>{salon.phoneNumber}</a></p>
               </div>
             </>
-          )}
-          {salon?.email && (
-            <div>
-              <h2 className="contact__label">E-mail</h2>
-              <p><a href={`mailto:${salon.email}`}>{salon.email}</a></p>
-            </div>
           )}
           {salon?.openingHours && (
             <div>

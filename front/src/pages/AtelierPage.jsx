@@ -6,7 +6,6 @@ import { toParagraphs } from '../utils/format';
 import PageHero from '../components/PageHero';
 import ArtistSection from '../components/ArtistSection';
 import SessionSteps from '../components/SessionSteps';
-import ServiceList from '../components/ServiceList';
 import FlashGallery from '../components/FlashGallery';
 import Timeline from '../components/atelier/Timeline';
 import StudioGallery from '../components/atelier/StudioGallery';
@@ -15,7 +14,7 @@ import './pages.scss';
 
 /**
  * L'atelier : le récit complet du salon. L'accueil n'en montre que des aperçus
- * qui renvoient ici (/atelier#artiste, #seance, #tarifs).
+ * qui renvoient ici (/atelier#artiste, #seance).
  * Tout le contenu vient du backoffice ; une section sans contenu n'est pas affichée.
  */
 const AtelierPage = () => {
@@ -26,7 +25,6 @@ const AtelierPage = () => {
   const { data: steps, loading: stepsLoading } = useApi('/session_steps');
   const { data: commitments, loading: commitmentsLoading } = useApi('/hygiene_commitments');
   const { data: flashes, loading: flashesLoading } = useApi('/flashes');
-  const { data: services, loading: servicesLoading } = useApi('/services');
 
   // Une seule requête pour les deux frises, triées ensuite côté navigateur
   const salonMilestones = milestones?.filter((milestone) => milestone.timeline === 'salon') ?? [];
@@ -41,13 +39,12 @@ const AtelierPage = () => {
     steps?.length > 0 && { id: 'seance', label: 'Une séance' },
     commitments?.length > 0 && { id: 'hygiene', label: 'Hygiène' },
     flashes?.length > 0 && { id: 'flashs', label: 'Flashs' },
-    services?.length > 0 && { id: 'tarifs', label: 'Tarifs' },
   ].filter(Boolean);
   const has = (id) => sections.some((section) => section.id === id);
   const number = (id) => String(sections.findIndex((section) => section.id === id) + 1).padStart(2, '0');
 
   // Toutes les données sont là : on peut défiler jusqu'à la section demandée dans l'URL
-  useScrollToHash(![milestonesLoading, artistsLoading, photosLoading, stepsLoading, commitmentsLoading, flashesLoading, servicesLoading].includes(true));
+  useScrollToHash(![milestonesLoading, artistsLoading, photosLoading, stepsLoading, commitmentsLoading, flashesLoading].includes(true));
 
   // "Depuis 2012" si la première date du salon est une année, sinon un surtitre neutre
   const since = salonMilestones[0]?.year;
@@ -77,7 +74,7 @@ const AtelierPage = () => {
       {has('histoire') && (
         <section id="histoire" className="container section split anchor">
           <div className="split__intro">
-            <p className="eyebrow">{number('histoire')} — {historyEyebrow}</p>
+            <p className="eyebrow eyebrow--pink">{number('histoire')} — {historyEyebrow}</p>
             <h2 className="section-title section-title--small">L'his<span className="text-cyan">toire</span></h2>
             {toParagraphs(salon?.storyIntro).map((paragraph) => (
               <p key={paragraph} className="muted lead-text">{paragraph}</p>
@@ -103,7 +100,7 @@ const AtelierPage = () => {
         <section id="lieu" className="container section anchor">
           <div className="section-head">
             <div className="stack">
-              <p className="eyebrow">{number('lieu')} — Le lieu</p>
+              <p className="eyebrow eyebrow--pink">{number('lieu')} — Le lieu</p>
               <h2 className="section-title">Bienvenue <span className="text-cyan">au salon</span></h2>
             </div>
             <p className="muted section-head__aside">
@@ -120,7 +117,7 @@ const AtelierPage = () => {
         <section id="seance" className="band paper anchor">
           <div className="container split">
             <div className="split__intro">
-              <p className="eyebrow">{number('seance')} — Pas à pas</p>
+              <p className="eyebrow eyebrow--pink">{number('seance')} — Pas à pas</p>
               <h2 className="section-title section-title--small">Une séance <span className="text-cyan">au salon</span></h2>
               <p className="muted lead-text">De la première idée à la cicatrisation complète : voici comment se passe un tatouage chez Boogi'ink.</p>
               <Link to="/contact" className="btn btn--primary">Commencer mon projet</Link>
@@ -138,7 +135,7 @@ const AtelierPage = () => {
         <section id="hygiene" className="band anchor">
           <div className="container">
             <div className="band__head">
-              <p className="eyebrow">{number('hygiene')} — En toute confiance</p>
+              <p className="eyebrow eyebrow--pink">{number('hygiene')} — En toute confiance</p>
               <h2 className="section-title section-title--small">Hygiène <span className="text-cyan">&amp; sécurité</span></h2>
             </div>
             <HygieneCards commitments={commitments} />
@@ -155,7 +152,7 @@ const AtelierPage = () => {
           <div className="container">
             <div className="section-head">
               <div className="stack">
-                <p className="eyebrow">{number('flashs')} — Prêts à tatouer</p>
+                <p className="eyebrow eyebrow--pink">{number('flashs')} — Prêts à tatouer</p>
                 <h2 className="section-title">Les <span className="glow">flashs</span></h2>
                 <p className="muted lead-text">
                   Des motifs dessinés par {artist?.firstName ?? "l'artiste"}, prêts à être tatoués.
@@ -164,21 +161,6 @@ const AtelierPage = () => {
               </div>
             </div>
             <FlashGallery flashes={flashes} />
-          </div>
-        </section>
-      )}
-
-      {/* --- Tous les tarifs --- */}
-      {has('tarifs') && (
-        <section id="tarifs" className="container section split anchor">
-          <div className="split__intro">
-            <p className="eyebrow">{number('tarifs')} — Tarifs</p>
-            <h2 className="section-title section-title--small">Presta<span className="text-cyan">tions</span></h2>
-            <p className="muted">Tarifs indicatifs. Chaque projet commence par un échange pour établir un prix précis.</p>
-            <Link to="/contact" className="btn btn--primary">Demander un devis</Link>
-          </div>
-          <div className="split__list">
-            <ServiceList services={services} withDetails />
           </div>
         </section>
       )}

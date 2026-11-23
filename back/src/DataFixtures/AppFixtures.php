@@ -14,7 +14,6 @@ use App\Entity\HygieneCommitment;
 use App\Entity\Milestone;
 use App\Entity\Page;
 use App\Entity\Picture;
-use App\Entity\Service;
 use App\Entity\SessionStep;
 use App\Entity\StudioPhoto;
 use App\Entity\User;
@@ -120,24 +119,6 @@ class AppFixtures extends Fixture
                 ->setIcon($icon)
                 ->setTitle($title)
                 ->setText($text));
-        }
-
-        // --- Prestations (prix null = sur devis) ---
-        $services = [
-            ['Petit tatouage', '80.00', 'Motif de moins de 5 cm. Idéal pour un premier tatouage.', 'Graphique'],
-            ['Tatouage moyen', '150.00', 'Motif de 5 à 15 cm, dessin personnalisé inclus.', null],
-            ['Grande pièce', null, 'Bras, dos, jambe… Projet sur plusieurs séances, établi sur devis.', null],
-            ['Lettrage', '60.00', 'Prénom, date ou citation, dans la typographie de ton choix.', null],
-            ['Recouvrement (cover)', null, "Recouvrir ou retravailler un ancien tatouage. Sur devis après rendez-vous.", null],
-            ['Retouche', '40.00', "Retouche d'un tatouage réalisé au salon.", null],
-        ];
-        foreach ($services as $position => [$name, $price, $description, $category]) {
-            $manager->persist((new Service())
-                ->setPosition(($position + 1) * 10)
-                ->setName($name)
-                ->setPrice($price)
-                ->setDescription($description)
-                ->setCategory($category ? $categories[$category] : null));
         }
 
         // --- Réalisations (photos copiées dans public/uploads/galleries) ---
