@@ -41,11 +41,6 @@
             <span class="bo-kpi__value">{{ galleryCount }}</span>
             <span class="bo-kpi__link">Voir la galerie →</span>
         </a>
-        <a class="bo-card bo-kpi" href="{{ path('admin_user_index') }}">
-            <span class="bo-kpi__label">Clients inscrits</span>
-            <span class="bo-kpi__value">{{ clientCount }}</span>
-            <span class="bo-kpi__link">Voir les comptes →</span>
-        </a>
     </div>
 
     {# --- Raccourcis --- #}
@@ -110,7 +105,7 @@
                             <span class="badge badge-warning">En attente</span>
                         </div>
                         <p class="bo-muted">« {{ comment.message|length > 160 ? comment.message|slice(0, 160) ~ '…' : comment.message }} »</p>
-                        <span class="bo-meta">{{ comment.author.name }} · {{ comment.createdAt|date('d/m/Y à H:i') }}</span>
+                        <span class="bo-meta">{{ comment.authorName }} · {{ comment.createdAt|date('d/m/Y à H:i') }}</span>
                         <div class="bo-comment__actions">
                             {# Formulaire POST + jeton CSRF : voir DashboardController::publishComment() #}
                             <form method="post" action="{{ path('admin_dashboard_publish_comment', {id: comment.id}) }}">
@@ -146,22 +141,6 @@
                 {% endfor %}
             </section>
 
-            {# --- Derniers inscrits --- #}
-            <section class="bo-card">
-                <header class="bo-card__head">
-                    <h3 class="bo-card__title">Derniers inscrits</h3>
-                    <a class="bo-small" href="{{ path('admin_user_index') }}">Tous →</a>
-                </header>
-                {% for client in latestClients %}
-                    <a class="bo-row bo-row--link" href="{{ path('admin_user_edit', {entityId: client.id}) }}">
-                        <span class="bo-avatar">{{ client.name|first|upper }}</span>
-                        <span class="bo-row__detail">{{ client.name }} <span class="bo-muted">· {{ client.email }}</span></span>
-                        <span class="bo-muted bo-small">{{ client.createdAt|date('d/m/Y') }}</span>
-                    </a>
-                {% else %}
-                    <p class="bo-empty bo-muted">Aucun client inscrit.</p>
-                {% endfor %}
-            </section>
         </div>
     </div>
 </div>

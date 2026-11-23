@@ -9,14 +9,13 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     // API Platform : le livre d'or PUBLIC, en lecture seule (avis publiés uniquement,
     // voir PublishedCommentExtension).
-    // Tout ce que fait un client (déposer, lister SES avis, les modifier) : AccountController,
-    // sous /api/me/comments. Pas de suppression possible.
+    // Dépôt d'un avis par le formulaire public (sans compte) : POST /api/comments,
+    // GuestbookController. L'avis arrive en attente, publié depuis le backoffice.
     operations: [
         new Get(),
         new GetCollection(order: ['createdAt' => 'DESC']),
@@ -60,16 +59,15 @@ class Comment
     #[ORM\Column]
     private bool $isPublished = false;
 
+    /**
+     * Nom affiché sous l'avis, tapé dans le formulaire public du livre d'or.
+     * (Plus de compte client : l'avis n'est lié à aucun utilisateur.)
+     */
     #[Groups(['comment:read'])]
-    #[ORM\ManyToOne(inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\Column(length: 80)]
     #[Assert\NotBlank]
-    private ?User $author = null;
-
-    /** Date de la dernière modification par l'auteur (null si jamais modifié) */
-    #[Groups(['comment:owner'])]
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
+    #[Assert\Length(max: 80)]
+    private ?string $authorName = null;
 
     public function __construct()
     {
@@ -142,10 +140,7 @@ class Comment
         return $this;
     }
 
-    // Le getter s'appelle isPublished() : sans SerializedName, le JSON l'exposerait sous le nom "published".
-    // Groupe comment:owner : visible uniquement par l'auteur (AccountController, /api/me/comments)
-    #[Groups(['comment:owner'])]
-    #[SerializedName('isPublished')]
+    // Pas de groupe : le statut n'est jamais envoyé par l'API (seuls les avis publiés sont listés)
     public function isPublished(): ?bool
     {
         return $this->isPublished;
@@ -158,14 +153,14 @@ class Comment
         return $this;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthorName(): ?string
     {
-        return $this->author;
+        return $this->authorName;
     }
 
-    public function setAuthor(?User $author): static
+    public function setAuthorName(?string $authorName): static
     {
-        $this->author = $author;
+        $this->authorName = $authorName;
 
         return $this;
     }
@@ -173,17 +168,5 @@ class Comment
     public function __toString(): string
     {
         return (string) $this->title;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 }

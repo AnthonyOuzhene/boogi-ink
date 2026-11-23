@@ -14,13 +14,6 @@ import FaqPage from './pages/FaqPage';
 import ContentPage from './pages/ContentPage';
 import VisitorBookPage from './pages/VisitorBookPage';
 import ContactPage from './pages/ContactPage';
-import LoginPage from './pages/LoginPage';
-import SignUpPage from './pages/SignUpPage';
-import AccountLayout from './pages/account/AccountLayout';
-import AccountInfo from './pages/account/AccountInfo';
-import AccountComments from './pages/account/AccountComments';
-import AccountFavorites from './pages/account/AccountFavorites';
-import AccountSecurity from './pages/account/AccountSecurity';
 import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
@@ -52,15 +45,10 @@ const App = () => {
           {/* Pages gérées dans le backoffice : mentions légales, confidentialité… */}
           <Route path="/pages/:slug" element={<ContentPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="/connexion" element={<LoginPage />} />
-          <Route path="/inscription" element={<SignUpPage />} />
-          {/* Espace client : routes imbriquées, affichées dans le <Outlet /> du gabarit */}
-          <Route path="/profil" element={<AccountLayout />}>
-            <Route index element={<AccountInfo />} />
-            <Route path="avis" element={<AccountComments />} />
-            <Route path="favoris" element={<AccountFavorites />} />
-            <Route path="securite" element={<AccountSecurity />} />
-          </Route>
+          {/* Ancien espace client (supprimé) : les anciennes adresses ramènent à l'accueil */}
+          <Route path="/connexion" element={<Navigate to="/" replace />} />
+          <Route path="/inscription" element={<Navigate to="/" replace />} />
+          <Route path="/profil/*" element={<Navigate to="/" replace />} />
           {/* Ancienne adresse de la page de l'atelier */}
           <Route path="/atelier-tatouage" element={<Navigate to="/atelier" replace />} />
           <Route path="*" element={<NotFoundPage />} />

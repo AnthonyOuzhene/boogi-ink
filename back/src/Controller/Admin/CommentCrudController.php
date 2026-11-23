@@ -6,7 +6,6 @@ use App\Entity\Comment;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -34,9 +33,8 @@ class CommentCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield DateTimeField::new('createdAt', 'Déposé le')->hideOnForm();
-        // Rempli quand l'auteur modifie son avis depuis le site : il repasse alors "non publié"
-        yield DateTimeField::new('updatedAt', 'Modifié le')->hideOnForm();
-        yield AssociationField::new('author', 'Auteur');
+        // Nom tapé dans le formulaire public du livre d'or (pas de compte client)
+        yield TextField::new('authorName', 'Auteur');
         yield TextField::new('title', 'Titre');
         yield TextareaField::new('message', 'Message')->hideOnIndex();
         yield TextField::new('projectName', 'Projet réalisé')->hideOnIndex();

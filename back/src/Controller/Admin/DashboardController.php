@@ -8,7 +8,6 @@ use App\Repository\CommentRepository;
 use App\Repository\FlashRepository;
 use App\Repository\GalleryRepository;
 use App\Repository\HomeRepository;
-use App\Repository\UserRepository;
 use App\Service\ContentChecklist;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -26,7 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 // Cet attribut crée la route /admin (nommée "admin") et toutes les routes des CRUD :
-// admin_service_index, admin_service_edit, etc. (voir `ddev console debug:router`)
+// admin_flash_index, admin_flash_edit, etc. (voir `ddev console debug:router`)
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
@@ -35,7 +34,6 @@ class DashboardController extends AbstractDashboardController
         private readonly CommentRepository $commentRepository,
         private readonly GalleryRepository $galleryRepository,
         private readonly FlashRepository $flashRepository,
-        private readonly UserRepository $userRepository,
         private readonly ArtistRepository $artistRepository,
         private readonly HomeRepository $homeRepository,
         private readonly ContentChecklist $contentChecklist,
@@ -60,8 +58,6 @@ class DashboardController extends AbstractDashboardController
             'reservedFlashCount' => $this->flashRepository->count(['isAvailable' => false]),
             'unpricedFlashCount' => $this->flashRepository->count(['price' => null]),
             'galleryCount' => $this->galleryRepository->count(),
-            'clientCount' => $this->userRepository->countClients(),
-            'latestClients' => $this->userRepository->findLatestClients(3),
             'checklist' => $this->contentChecklist->check(),
         ]);
     }
@@ -133,12 +129,12 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(FaqCrudController::class, 'FAQ', 'fa fa-circle-question');
         yield MenuItem::linkTo(PageCrudController::class, 'Pages', 'fa fa-file-lines');
 
-        yield MenuItem::section('Clients');
+        yield MenuItem::section('Avis & accès');
         // Pastille orange avec le nombre d'avis en attente (rien quand il n'y en a pas)
         $pending = $this->commentRepository->count(['isPublished' => false]);
         $guestbook = MenuItem::linkTo(CommentCrudController::class, "Livre d'or", 'fa fa-comments');
         yield $pending > 0 ? $guestbook->setBadge($pending, 'warning') : $guestbook;
-        yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users');
+        yield MenuItem::linkTo(UserCrudController::class, 'Administrateurs', 'fa fa-user-shield');
 
         // PictureCrudController n'est pas dans le menu : les photos se gèrent
         // directement dans le formulaire d'une réalisation (Gallery).

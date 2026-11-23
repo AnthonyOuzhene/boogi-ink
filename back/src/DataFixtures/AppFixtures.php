@@ -30,9 +30,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  *
  * ⚠ Cette commande VIDE la base avant de la remplir.
  *
- * Comptes créés :
+ * Compte créé (le seul : le site n'a pas d'espace client) :
  *   - admin@boogi-ink.local / admin1234  (administrateur, accès au backoffice)
- *   - julie@example.com     / client1234 (cliente)
  */
 class AppFixtures extends Fixture
 {
@@ -222,38 +221,30 @@ class AppFixtures extends Fixture
             ['Calavera', 'tattoo4.jpg', 'Environ 15 cm', 'Bras, cuisse', '180.00', true],
             ['Montre à gousset — mini', 'tattoo2.png', 'Environ 6 cm', 'Poignet, cheville', '90.00', false],
         ];
-        $flashEntities = []; // par nom, pour les favoris de démo plus bas
         foreach ($flashes as $position => [$name, $file, $size, $placement, $price, $available]) {
-            $flashEntities[$name] = (new Flash())
+            $manager->persist((new Flash())
                 ->setName($name)
                 ->setPicture($this->copyImage($file, Flash::UPLOAD_PATH))
                 ->setSize($size)
                 ->setPlacement($placement)
                 ->setPrice($price)
                 ->setIsAvailable($available)
-                ->setPosition(($position + 1) * 10);
-            $manager->persist($flashEntities[$name]);
+                ->setPosition(($position + 1) * 10));
         }
 
-        // --- Utilisateurs ---
-        $admin = $this->createUser('admin@boogi-ink.local', 'Admin', 'admin1234', ['ROLE_ADMIN']);
-        $julie = $this->createUser('julie@example.com', 'Julie', 'client1234')
-            ->addFavoriteFlash($flashEntities['Calavera']); // démo de la section "Mes favoris"
-        $paul = $this->createUser('paul@example.com', 'Paul', 'client1234');
-        $manager->persist($admin);
-        $manager->persist($julie);
-        $manager->persist($paul);
+        // --- Administrateur (seul type de compte : le site n'a plus d'espace client) ---
+        $manager->persist($this->createUser('admin@boogi-ink.local', 'Admin', 'admin1234', ['ROLE_ADMIN']));
 
-        // --- Livre d'or ---
+        // --- Livre d'or (avis déposés par le formulaire public : un simple nom, pas de compte) ---
         $comments = [
-            [$julie, 'Une super expérience', "Accueil chaleureux, de très bons conseils et un résultat au-delà de mes attentes. Je reviendrai !", 'Rose sur l\'avant-bras', true],
-            [$paul, 'Très pro', 'Salon impeccable, respect strict de l\'hygiène, et un dessin vraiment personnalisé.', 'Ancre old school', true],
-            [$julie, 'Retouche parfaite', 'Retouche rapide et soignée, merci !', null, true],
-            [$paul, 'En attente de validation', "Cet avis n'apparaît pas sur le site tant qu'il n'est pas publié dans le backoffice.", null, false],
+            ['Julie', 'Une super expérience', "Accueil chaleureux, de très bons conseils et un résultat au-delà de mes attentes. Je reviendrai !", 'Rose sur l\'avant-bras', true],
+            ['Paul', 'Très pro', 'Salon impeccable, respect strict de l\'hygiène, et un dessin vraiment personnalisé.', 'Ancre old school', true],
+            ['Julie', 'Retouche parfaite', 'Retouche rapide et soignée, merci !', null, true],
+            ['Paul', 'En attente de validation', "Cet avis n'apparaît pas sur le site tant qu'il n'est pas publié dans le backoffice.", null, false],
         ];
-        foreach ($comments as [$author, $title, $message, $project, $published]) {
+        foreach ($comments as [$authorName, $title, $message, $project, $published]) {
             $manager->persist((new Comment())
-                ->setAuthor($author)
+                ->setAuthorName($authorName)
                 ->setTitle($title)
                 ->setMessage($message)
                 ->setProjectName($project)

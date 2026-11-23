@@ -33,34 +33,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * Les clients : tous les comptes sauf les administrateurs.
-     * "roles" est une colonne JSON (ex. ["ROLE_ADMIN"]) : un LIKE suffit pour l'exclure.
-     */
-    private function clientsQuery(): \Doctrine\ORM\QueryBuilder
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.roles NOT LIKE :admin')
-            ->setParameter('admin', '%ROLE_ADMIN%');
-    }
-
-    public function countClients(): int
-    {
-        return (int) $this->clientsQuery()->select('COUNT(u.id)')->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * @return User[] les derniers clients inscrits, du plus récent au plus ancien
-     */
-    public function findLatestClients(int $limit): array
-    {
-        return $this->clientsQuery()
-            ->orderBy('u.createdAt', 'DESC')
-            ->addOrderBy('u.id', 'DESC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
-    }
 
 //    /**
 //     * @return User[] Returns an array of User objects

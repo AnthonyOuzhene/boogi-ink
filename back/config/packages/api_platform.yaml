@@ -10,11 +10,5 @@ api_platform:
     defaults:
         stateless: true
         cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']
-    # Bouton "Authorize" dans Swagger (/api/docs) : on y colle le jeton JWT,
-    # Swagger l'envoie ensuite dans l'en-tête "Authorization: Bearer <jeton>"
-    swagger:
-        http_auth:
-            JWT:
-                scheme: bearer
-                bearerFormat: JWT
+            vary: ['Content-Type', 'Origin']
+    # API publique, sans connexion : plus de bouton "Authorize" (jeton JWT) dans Swagger (/api/docs)

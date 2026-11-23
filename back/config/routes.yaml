@@ -9,8 +9,3 @@
 
 controllers:
     resource: routing.controllers
-
-# Route interceptée par le pare-feu "api" (json_login) : aucun contrôleur n'est exécuté
-api_login:
-    path: /api/login
-    methods: [POST]

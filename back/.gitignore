@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -11,7 +10,3 @@
 
 # Fichiers envoyés depuis le backoffice (contenu, pas du code)
 /public/uploads/
-
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###

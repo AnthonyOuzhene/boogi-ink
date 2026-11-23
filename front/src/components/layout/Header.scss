@@ -98,146 +98,33 @@
   }
 }
 
-.account {
-  position: relative;
-
-  &__toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: none;
-    border: 0;
-    border-bottom: 2px solid transparent; // même soulignement que les liens actifs du menu
-    color: var(--text);
-    // Même police et même taille que les liens du menu
-    font: 400 clamp(20px, 1.6vw, 23px) var(--font-display);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    cursor: pointer;
-    padding: 8px 0;
-
-    &:hover {
-      color: var(--cyan);
-    }
-
-    // Survol (ou menu ouvert) : le cercle se remplit de cyan, l'icône passe en sombre
-    &:hover .account__avatar,
-    &[aria-expanded='true'] .account__avatar {
-      background: var(--cyan);
-      color: var(--ink);
-    }
-  }
-
-  // Avatar : cercle bordé de cyan, comme le logo Boogi'ink (.brand__logo)
-  &__avatar {
-    position: relative;
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid var(--cyan);
-    color: var(--cyan);
-    transition: background-color 0.2s, color 0.2s;
-  }
-
-  // Point vert "connecté", en bas à droite du cercle.
-  // La bordure couleur du fond le détache visuellement de l'avatar.
-  &__status {
-    position: absolute;
-    right: -3px;
-    bottom: -3px;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    background: var(--online);
-    border: 2px solid var(--bg);
-  }
-
-  // Sur une page du compte : nom en cyan et souligné, comme NavLink.active
-  &--current .account__toggle {
-    color: var(--cyan);
-    border-bottom-color: var(--cyan);
-  }
-
-  &__menu {
-    position: absolute;
-    // Centré sous le nom : bord gauche au milieu du nom, puis recul de la moitié de sa propre largeur
-    left: 50%;
-    transform: translateX(-50%);
-    top: calc(100% + 12px);
-    min-width: 200px;
-    list-style: none;
-    padding: 8px;
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
-
-    // "Passerelle" invisible qui comble les 12 px entre le nom et le menu :
-    // la souris reste "dans" le menu en traversant cet espace, il ne se ferme donc pas
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 100%;
-      height: 14px;
-    }
-
-    a,
-    button {
-      display: block;
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 6px;
-      color: var(--text);
-      text-decoration: none;
-      text-align: left;
-      background: none;
-      border: 0;
-      font: 500 15px var(--font-body);
-      cursor: pointer;
-
-      &:hover {
-        background: var(--surface-2);
-        color: var(--cyan);
-      }
-    }
-  }
-}
-
-// Connexion : icône seule sur ordinateur
-.site-nav__login {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-@media (min-width: 1025px) {
-  // Texte masqué visuellement mais toujours lu par les lecteurs d'écran
-  .site-nav__login-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-}
 
 // Le bouton "Prendre rendez-vous" ne se coupe pas non plus
-.site-nav__cta,
-.account__toggle {
+.site-nav__cta {
   white-space: nowrap;
 }
 
-// Un prénom très long est coupé avec "…" pour ne jamais pousser le menu hors de l'écran
-.account__name {
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+// Réseaux sociaux dans le menu : version compacte et discrète des logos du pied de page
+// (pas de fond, contour léger, couleur officielle du réseau au survol comme ailleurs)
+.site-nav__social {
+  gap: 6px;
+
+  .social-links__link {
+    width: 36px;
+    height: 36px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    // Au repos seulement : au survol, le style de SocialLinks.scss (couleur du réseau) s'applique
+    &:not(:hover):not(:focus-visible) {
+      border-color: transparent;
+      background: transparent;
+      color: var(--text);
+    }
+  }
 }
 
 // --- Écrans moyens (1 025 à 1 240 px) : menu horizontal plus compact ---
@@ -253,19 +140,6 @@
   .site-nav__cta {
     padding: 12px 18px;
     font-size: 15px;
-  }
-
-  .account__name {
-    max-width: 100px;
-  }
-
-  .account__toggle {
-    gap: 10px;
-  }
-
-  .account__avatar {
-    width: 36px;
-    height: 36px;
   }
 
   .brand {
@@ -314,13 +188,20 @@
     &__cta {
       margin-top: 24px;
     }
+
+    // Réseaux : tout en bas du menu burger, sous "Prendre rendez-vous", zone de clic plus grande
+    &__social {
+      order: 10;
+      margin-top: 24px;
+      gap: 14px;
+
+      .social-links__link {
+        width: 44px;
+        height: 44px;
+      }
+    }
   }
 
-  .account__menu {
-    position: static;
-    transform: none; // menu burger : aligné à gauche, sous les autres liens
-    margin-top: 8px;
-  }
 }
 
 @media (max-width: 900px) {

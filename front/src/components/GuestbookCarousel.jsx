@@ -94,7 +94,7 @@ const GuestbookCarousel = ({ className = '' }) => {
               <h3 className="guestbook__title">{comment.title}</h3>
               <blockquote className="guestbook__message">{comment.message}</blockquote>
               <p className="guestbook__meta">
-                <span>{comment.author.name}</span>
+                <span>{comment.authorName}</span>
                 {comment.projectName && <span className="text-cyan">{comment.projectName}</span>}
                 <span className="muted">{formatDate(comment.createdAt)}</span>
               </p>

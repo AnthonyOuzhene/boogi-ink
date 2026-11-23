@@ -5,14 +5,17 @@ namespace App\Controller\Api\Input;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Formulaire d'un avis du livre d'or, pour le DÉPÔT (AccountController::createComment())
- * comme pour la MODIFICATION (AccountController::updateComment()) : ce sont les mêmes champs.
+ * Formulaire PUBLIC du livre d'or (GuestbookController::create()), sans compte.
  *
- * Il ne contient QUE ce que l'auteur peut écrire : envoyer "isPublished" ou "author"
- * dans le JSON n'a donc aucun effet. L'auteur vient du jeton, le statut est fixé par le contrôleur.
+ * Il ne contient QUE ce que le visiteur peut écrire : envoyer "isPublished" dans le JSON
+ * n'a donc aucun effet, le statut "en attente" est fixé par le contrôleur.
  */
 final class CommentInput
 {
+    #[Assert\NotBlank(message: 'Indique ton prénom ou un pseudo.')]
+    #[Assert\Length(max: 80, maxMessage: 'Le nom ne doit pas dépasser {{ limit }} caractères.')]
+    public ?string $authorName = null;
+
     #[Assert\NotBlank(message: 'Le titre est obligatoire.')]
     #[Assert\Length(max: 150, maxMessage: 'Le titre ne doit pas dépasser {{ limit }} caractères.')]
     public ?string $title = null;
@@ -24,6 +27,10 @@ final class CommentInput
     #[Assert\Length(max: 150, maxMessage: 'Le projet ne doit pas dépasser {{ limit }} caractères.')]
     public ?string $projectName = null;
 
-    /** Date de passage au salon (facultative), envoyée au format "2026-10-15" */
-    public ?\DateTimeImmutable $realisedAt = null;
+    /**
+     * Anti-spam ("pot de miel") : champ caché sur le site, un humain le laisse vide.
+     * Les robots remplissent tous les champs : s'il contient quelque chose, l'avis est ignoré
+     * (voir GuestbookController). Le nom "website" est volontairement tentant pour un robot.
+     */
+    public ?string $website = null;
 }

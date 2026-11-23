@@ -6,7 +6,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -30,8 +29,8 @@ class UserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Utilisateur')
-            ->setEntityLabelInPlural('Utilisateurs')
+            ->setEntityLabelInSingular('Administrateur')
+            ->setEntityLabelInPlural('Administrateurs')
             ->setSearchFields(['name', 'email']);
     }
 
@@ -39,14 +38,8 @@ class UserCrudController extends AbstractCrudController
     {
         yield TextField::new('name', 'Nom');
         yield EmailField::new('email', 'Email');
-        yield ChoiceField::new('roles', 'Rôles')
-            ->setChoices([
-                'Client' => 'ROLE_USER',
-                'Administrateur' => 'ROLE_ADMIN',
-            ])
-            ->allowMultipleChoices()
-            ->renderExpanded()
-            ->renderAsBadges(['ROLE_ADMIN' => 'danger', 'ROLE_USER' => 'secondary']);
+        // Pas de choix de rôle : sans espace client, un compte ne sert qu'à se connecter
+        // au backoffice, il est donc toujours administrateur (voir persistEntity())
         // Champ "virtuel" : jamais affiché, jamais stocké en clair
         yield TextField::new('plainPassword', 'Mot de passe')
             ->setFormType(PasswordType::class)
@@ -58,6 +51,7 @@ class UserCrudController extends AbstractCrudController
     // Appelé par EasyAdmin juste avant l'INSERT
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
+        $entityInstance->setRoles(['ROLE_ADMIN']); // tout compte créé ici accède au backoffice
         $this->hashPassword($entityInstance);
         parent::persistEntity($entityManager, $entityInstance);
     }
