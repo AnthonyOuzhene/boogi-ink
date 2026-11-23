@@ -80,6 +80,13 @@ class Gallery
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sketch = null;
 
+    /**
+     * Vidéo timelapse de la séance (nom du fichier MP4, même dossier que les photos) : facultative.
+     * Sur le site : badge "Timelapse" sur la vignette, et une diapositive vidéo dans la visionneuse.
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $timelapse = null;
+
     /** Coup de cœur de l'artiste : annotation "coup de cœur ♥" écrite au feutre sur le site */
     #[ORM\Column(options: ['default' => false])]
     private bool $isFavorite = false;
@@ -200,6 +207,25 @@ class Gallery
     public function getSketchUrl(): ?string
     {
         return $this->sketch ? '/'.self::UPLOAD_PATH.'/'.$this->sketch : null;
+    }
+
+    /** Adresse du timelapse pour l'API (null s'il n'y en a pas : ni badge, ni vidéo) */
+    #[Groups(['gallery:read'])]
+    public function getTimelapseUrl(): ?string
+    {
+        return $this->timelapse ? '/'.self::UPLOAD_PATH.'/'.$this->timelapse : null;
+    }
+
+    public function getTimelapse(): ?string
+    {
+        return $this->timelapse;
+    }
+
+    public function setTimelapse(?string $timelapse): static
+    {
+        $this->timelapse = $timelapse;
+
+        return $this;
     }
 
     public function getDescription(): ?string

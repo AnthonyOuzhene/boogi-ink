@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FileField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -60,8 +61,19 @@ class GalleryCrudController extends AbstractCrudController
             ->setHelp('Affichée à côté de la photo quand on l\'ouvre sur le site : le projet, la zone, le nombre de séances… (facultatif). Sautez une ligne pour faire un nouveau paragraphe.')
             ->setNumOfRows(5)
             ->hideOnIndex();
+        // Vidéo envoyée sur le site (pas un lien) : lue directement dans la visionneuse.
+        // Pas de compression côté serveur : la vidéo doit être exportée déjà légère.
+        yield FileField::new('timelapse', 'Vidéo timelapse')
+            ->setBasePath(Gallery::UPLOAD_PATH)
+            ->setUploadDir('public/'.Gallery::UPLOAD_PATH)
+            ->setUploadedFileNamePattern('[randomhash].[extension]')
+            ->mimeTypes('video/mp4', 'La vidéo doit être au format MP4.')
+            ->maxSize('20M', 'La vidéo est trop lourde ({{ size }} {{ suffix }}) : 20 Mo maximum. Exportez-la en 720p ou 1080p.')
+            ->setRequired(false)
+            ->setHelp('Facultatif. Fichier MP4, 20 Mo maximum (export 720p ou 1080p, de préférence sans son : la vidéo est lue en muet). Sur le site, la vignette affiche « Timelapse » et la vidéo s\'ajoute aux photos de la réalisation.')
+            ->hideOnIndex();
         yield UrlField::new('video', 'Lien vidéo')
-            ->setHelp('Lien Instagram, YouTube… (facultatif)')
+            ->setHelp('Lien Instagram, YouTube… vers la version complète (facultatif) : bouton « Voir la vidéo » sur le site.')
             ->hideOnIndex();
         // Chaque photo supplémentaire est éditée avec le formulaire de PictureCrudController.
         // by_reference=false : Symfony appelle addPicture()/removePicture(),

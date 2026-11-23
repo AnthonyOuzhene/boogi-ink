@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import { FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaPlay, FaTimes } from 'react-icons/fa';
 import { assetUrl } from '../api/client';
+import useMediaQuery from '../hooks/useMediaQuery';
 import { formatDate, toParagraphs } from '../utils/format';
 import SketchCompare from './SketchCompare';
 import Scribble from './Scribble';
@@ -14,6 +15,7 @@ import './GalleryViewer.scss';
  *
  * Navigation : flèches ← → du clavier (ou glisser du doigt sur mobile) pour passer d'une photo
  * à l'autre, puis à la réalisation suivante/précédente arrivé au bout. Échap ferme.
+ * Timelapse (backoffice) : diapositive vidéo juste après la photo principale.
  *
  * <dialog> + showModal() : le navigateur gère seul Échap, le fond assombri, et garde le focus
  * clavier à l'intérieur de la fenêtre tant qu'elle est ouverte.
@@ -22,7 +24,16 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
   const dialogRef = useRef(null);
   const [photoIndex, setPhotoIndex] = useState(0);
 
-  const pictures = [gallery.mainPictureUrl, ...(gallery.pictures ?? []).map((picture) => picture.url)];
+  // Réglage système "réduire les animations" : le timelapse ne démarre pas tout seul
+  const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+
+  // Diapositives : photo principale, puis le timelapse s'il y en a un, puis les autres photos
+  const slides = [
+    { type: 'image', url: gallery.mainPictureUrl },
+    ...(gallery.timelapseUrl ? [{ type: 'video', url: gallery.timelapseUrl }] : []),
+    ...(gallery.pictures ?? []).map((picture) => ({ type: 'image', url: picture.url })),
+  ];
+  const slide = slides[photoIndex] ?? slides[0];
   const meta = [gallery.category?.name, gallery.realisedAt && formatDate(gallery.realisedAt)].filter(Boolean).join(' — ');
   const hasPrevious = position > 1;
   const hasNext = position < total;
@@ -51,7 +62,7 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
   };
 
   const showNext = () => {
-    if (photoIndex < pictures.length - 1) setPhotoIndex(photoIndex + 1);
+    if (photoIndex < slides.length - 1) setPhotoIndex(photoIndex + 1);
     else if (hasNext) onNext();
   };
 
@@ -92,15 +103,31 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
         {photoIndex === 0 && gallery.sketchUrl ? (
           <SketchCompare
             key={gallery.id}
-            photo={assetUrl(pictures[0])}
+            photo={assetUrl(slides[0].url)}
             sketch={assetUrl(gallery.sketchUrl)}
             name={gallery.name}
           />
+        ) : slide.type === 'video' ? (
+          // Timelapse : muet (lecture automatique autorisée), en boucle, avec les commandes
+          // (pause, plein écran) ; la photo principale s'affiche le temps du chargement
+          <video
+            key={slide.url}
+            src={assetUrl(slide.url)}
+            poster={assetUrl(gallery.mainPictureUrl)}
+            className="viewer__img viewer__video"
+            aria-label={`${gallery.name} — timelapse de la séance`}
+            controls
+            muted
+            loop
+            playsInline
+            autoPlay={!reduceMotion}
+            preload="metadata"
+          />
         ) : (
           <img
-            key={pictures[photoIndex]}
-            src={assetUrl(pictures[photoIndex])}
-            alt={`${gallery.name} — photo ${photoIndex + 1} sur ${pictures.length}`}
+            key={slide.url}
+            src={assetUrl(slide.url)}
+            alt={`${gallery.name} — photo ${photoIndex + 1} sur ${slides.length}`}
             className="viewer__img"
           />
         )}
@@ -110,24 +137,28 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
             <FaChevronLeft size={22} aria-hidden="true" />
           </button>
         )}
-        {(photoIndex < pictures.length - 1 || hasNext) && (
+        {(photoIndex < slides.length - 1 || hasNext) && (
           <button type="button" className="viewer__arrow viewer__arrow--next" aria-label="Suivante" onClick={showNext}>
             <FaChevronRight size={22} aria-hidden="true" />
           </button>
         )}
 
-        {pictures.length > 1 && (
+        {slides.length > 1 && (
           <div className="viewer__thumbs">
-            {pictures.map((url, index) => (
+            {slides.map((item, index) => (
               <button
                 type="button"
-                key={url}
+                key={item.url}
                 className="viewer__thumb"
-                aria-label={`Photo ${index + 1}`}
+                aria-label={item.type === 'video' ? 'Timelapse (vidéo)' : `Photo ${index + 1}`}
                 aria-current={index === photoIndex}
                 onClick={() => setPhotoIndex(index)}
               >
-                <img src={assetUrl(url)} alt="" />
+                {/* Miniature du timelapse : la photo principale, avec un symbole ▶ */}
+                <img src={assetUrl(item.type === 'video' ? gallery.mainPictureUrl : item.url)} alt="" />
+                {item.type === 'video' && (
+                  <span className="viewer__thumb-play" aria-hidden="true"><FaPlay size={14} /></span>
+                )}
               </button>
             ))}
           </div>

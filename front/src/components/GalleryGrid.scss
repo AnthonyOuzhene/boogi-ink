@@ -93,7 +93,49 @@
     }
   }
 
+  // Aperçu du timelapse au survol : par-dessus la photo, même cadrage
+  &__preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: gallery-preview-in 0.3s ease;
+  }
+
+  // Badge "▶ Timelapse" en haut à droite (le coup de cœur est en haut à gauche)
+  &__badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(11, 18, 21, 0.8); // = --bg, légèrement transparent
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    svg {
+      color: var(--cyan);
+    }
+
+    // Téléphone : petites vignettes, le symbole ▶ suffit
+    @media (max-width: 600px) {
+      top: 8px;
+      right: 8px;
+      padding: 6px;
+      font-size: 0;
+    }
+  }
+
   &__caption {
+    z-index: 1; // au-dessus de l'aperçu vidéo
     position: absolute;
     left: 20px;
     bottom: 20px;
@@ -107,5 +149,12 @@
     text-transform: uppercase;
     opacity: 0;
     transition: opacity 0.3s;
+  }
+}
+
+// Apparition en fondu de l'aperçu vidéo (évite un changement d'image brutal)
+@keyframes gallery-preview-in {
+  from {
+    opacity: 0;
   }
 }

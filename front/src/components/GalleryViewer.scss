@@ -91,7 +91,13 @@
     gap: 10px;
   }
 
+  // Timelapse : la vidéo garde ses proportions comme une photo ; fond noir pendant le chargement
+  &__video {
+    background: #000;
+  }
+
   &__thumb {
+    position: relative; // pour le symbole ▶ du timelapse
     width: 64px;
     height: 64px;
     padding: 0;
@@ -117,6 +123,17 @@
     &[aria-current='true'] {
       border-color: var(--cyan);
     }
+  }
+
+  // Symbole ▶ par-dessus la miniature du timelapse
+  &__thumb-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.45);
   }
 
   // --- Texte ---
