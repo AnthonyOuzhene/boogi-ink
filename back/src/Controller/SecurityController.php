@@ -12,9 +12,11 @@ class SecurityController extends AbstractController
     /**
      * Affiche le formulaire de connexion.
      * La vérification email / mot de passe n'est PAS faite ici : c'est le
-     * pare-feu (form_login dans security.yaml) qui intercepte le POST sur /login.
+     * pare-feu (form_login dans security.yaml) qui intercepte le POST sur cette même URL.
+     * Rangée sous le préfixe du backoffice : /login n'indique pas qu'il y a un backoffice.
+     * Elle reste accessible sans être connecté grâce à la règle PUBLIC_ACCESS de security.yaml.
      */
-    #[Route('/login', name: 'app_login')]
+    #[Route('/boogi-0806/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
@@ -34,10 +36,10 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * Cette méthode n'est jamais exécutée : le pare-feu intercepte /logout
+     * Cette méthode n'est jamais exécutée : le pare-feu intercepte cette URL
      * (clé "logout" dans security.yaml). La route doit juste exister.
      */
-    #[Route('/logout', name: 'app_logout')]
+    #[Route('/boogi-0806/logout', name: 'app_logout')]
     public function logout(): never
     {
         throw new \LogicException('Intercepté par le pare-feu.');

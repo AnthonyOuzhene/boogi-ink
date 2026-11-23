@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Compte administrateur du backoffice (connexion par session sur /login).
+ * Compte administrateur du backoffice (connexion par session sur /boogi-0806/login).
  * Le site public n'a plus d'espace client : il n'y a plus de comptes "client".
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]

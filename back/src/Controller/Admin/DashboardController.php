@@ -24,9 +24,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-// Cet attribut crée la route /admin (nommée "admin") et toutes les routes des CRUD :
+// Cet attribut crée la route /boogi-0806 (nommée "admin") et toutes les routes des CRUD :
 // admin_flash_index, admin_flash_edit, etc. (voir `ddev console debug:router`)
-#[AdminDashboard(routePath: '/admin', routeName: 'admin')]
+// URL volontairement peu devinable (pas /admin, testé par les robots) : le code utilise
+// toujours le NOM de la route ("admin"), il n'y a donc que le chemin à changer ici.
+// Penser à garder le même préfixe dans access_control (security.yaml) !
+#[AdminDashboard(routePath: '/boogi-0806', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
     // Injection de dépendances : Symfony fournit automatiquement les repositories et services
@@ -64,10 +67,10 @@ class DashboardController extends AbstractDashboardController
 
     /**
      * Bouton "Publier" du bloc "Avis à valider".
-     * Une route Symfony classique (pas un CRUD EasyAdmin) : /admin/… est déjà réservé aux admins
+     * Une route Symfony classique (pas un CRUD EasyAdmin) : /boogi-0806/… est déjà réservé aux admins
      * par access_control, et le jeton CSRF prouve que le clic vient bien du tableau de bord.
      */
-    #[Route('/admin/tableau-de-bord/avis/{id}/publier', name: 'admin_dashboard_publish_comment', methods: ['POST'])]
+    #[Route('/boogi-0806/dashboard/comments/{id}/publish', name: 'admin_dashboard_publish_comment', methods: ['POST'])]
     public function publishComment(Comment $comment, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isCsrfTokenValid('publish-comment-'.$comment->getId(), $request->getPayload()->getString('_token'))) {

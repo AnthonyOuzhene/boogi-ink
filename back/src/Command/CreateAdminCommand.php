@@ -60,7 +60,7 @@ class CreateAdminCommand
         $this->entityManager->persist($user); // "à enregistrer"
         $this->entityManager->flush();        // exécute réellement l'INSERT
 
-        $io->success(sprintf('Administrateur %s créé. Connexion : https://boogi-ink.ddev.site/login', $email));
+        $io->success(sprintf('Administrateur %s créé. Connexion : https://boogi-ink.ddev.site/boogi-0806/login', $email));
 
         return Command::SUCCESS;
     }
