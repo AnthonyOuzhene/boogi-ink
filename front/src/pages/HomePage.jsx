@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import useApi from '../hooks/useApi';
+import useMediaQuery from '../hooks/useMediaQuery';
 import { useSalon } from '../context/SalonContext';
-import { assetUrl } from '../api/client';
 import SalonCards from '../components/SalonCards';
 import GalleryGrid from '../components/GalleryGrid';
 import ArtistSection from '../components/ArtistSection';
@@ -10,13 +10,17 @@ import FaqSection from '../components/FaqSection';
 import SessionSteps from '../components/SessionSteps';
 import { FlashGrid } from '../components/FlashGallery';
 import GuestbookCarousel from '../components/GuestbookCarousel';
-// Photo de secours tant qu'aucune n'est envoyée depuis le backoffice
-import defaultBanner from '../assets/images/banner.jpg';
+// Vidéo du hero (fichier fixe, sans son) + photo extraite de la vidéo : affichée pendant
+// le chargement, et à la place de la vidéo si "réduire les animations" est activé
+import heroVideo from '../assets/videos/hero-tattoo.mp4';
+import heroPoster from '../assets/images/hero-tattoo-poster.jpg';
 import './pages.scss';
 import './HomePage.scss';
 
 const HomePage = () => {
   const { salon, loading: salonLoading } = useSalon();
+  // Réglage système (accessibilité) : pas de vidéo qui bouge, la photo fixe à la place
+  const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const { data: galleries } = useApi('/galleries');
   const { data: artists } = useApi('/artists');
   const { data: flashes } = useApi('/flashes');
@@ -32,11 +36,25 @@ const HomePage = () => {
 
   return (
     <>
-      {/* --- Grande photo d'accueil --- */}
+      {/* --- Vidéo d'accueil (décorative : ignorée par les lecteurs d'écran) --- */}
       <section className="hero">
-        {/* Pas d'image tant que la fiche charge : évite d'afficher la photo par défaut puis de la remplacer */}
-        {!salonLoading && (
-          <img src={salon?.pictureUrl ? assetUrl(salon.pictureUrl) : defaultBanner} alt="" className="hero__img" />
+        {reduceMotion ? (
+          <img src={heroPoster} alt="" className="hero__img" />
+        ) : (
+          // Lecture automatique autorisée par les navigateurs seulement si la vidéo est muette (muted) ;
+          // playsInline : sur iPhone, reste dans la page au lieu de passer en plein écran.
+          // poster : photo affichée le temps que la vidéo se charge
+          <video
+            className="hero__img"
+            src={heroVideo}
+            poster={heroPoster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+          />
         )}
         <div className="hero__tint" aria-hidden="true" />
         <div className="container hero__content">
@@ -71,10 +89,14 @@ const HomePage = () => {
         </div>
       </section>
 
-      <SalonCards />
+      {/* Cartes à jouer + artiste sur un même fond bleuté (pas de bandeau noir sous les cartes).
+          Le fond commence au bas de la vidéo : le haut des cartes reste posé dessus. */}
+      <div className="home-intro">
+        <SalonCards />
 
-      {/* --- L'artiste : version courte, son parcours complet est sur L'atelier --- */}
-      <ArtistSection artist={artists?.[0]} />
+        {/* --- L'artiste : version courte, son parcours complet est sur L'atelier --- */}
+        <ArtistSection artist={artists?.[0]} />
+      </div>
 
       {/* --- Dernières réalisations --- */}
       {galleries?.length > 0 && (

@@ -1,10 +1,10 @@
-// Barre de rendez-vous en bas de l'écran : seulement quand le menu est en burger (≤ 1024 px,
+// Barre de rendez-vous en bas de l'écran : seulement quand le menu est en burger (≤ 1 240 px,
 // même seuil que Header.scss), et glisse depuis le bas une fois qu'on a un peu défilé
 .booking-bar {
   display: none;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1240px) {
   .booking-bar {
     display: block;
     position: fixed;

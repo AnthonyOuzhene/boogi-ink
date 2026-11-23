@@ -12,6 +12,12 @@
   transform: rotate(-4deg);
   pointer-events: none;
 
+  // Texte pivoté = bords en escalier sur certains écrans : on force un lissage propre,
+  // et backface-visibility fait dessiner l'annotation sur son propre calque (rendu plus net)
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  backface-visibility: hidden;
+
   &__arrow {
     flex-shrink: 0;
     width: 56px;

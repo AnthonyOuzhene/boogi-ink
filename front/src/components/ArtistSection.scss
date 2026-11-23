@@ -8,16 +8,18 @@
   padding-block: var(--band-padding);
   overflow: hidden;
 
+  // Grille à 2 colonnes (photo | texte) jusqu'à 900 px, puis empilée (voir le @media plus bas).
+  // Pas de flex-wrap : il faisait passer le texte sous la photo dès ~1100 px, laissant un grand vide à droite.
+  // La colonne photo ne dépasse jamais 42 % de la largeur : le texte garde toujours de la place.
   &__inner {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, min(460px, 42%)) minmax(0, 1fr);
     align-items: center;
-    gap: 120px;
+    gap: clamp(56px, 8vw, 120px);
   }
 
   // --- Photo : proportions d'origine + cadre cyan décalé derrière ---
   &__photo {
-    flex: 0 1 460px;
     min-width: 0;
     position: relative;
     margin: 0 24px 24px 0;
@@ -42,7 +44,6 @@
 
   // --- Texte ---
   &__text {
-    flex: 1 1 480px;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -96,8 +97,8 @@
   }
 
   // Accueil : photo un peu plus petite, c'est un aperçu
-  &--short &__photo {
-    flex-basis: 380px;
+  &--short &__inner {
+    grid-template-columns: minmax(0, min(380px, 42%)) minmax(0, 1fr);
   }
 
   // "c'est moi !" au feutre, au-dessus du coin haut droit de la photo, flèche vers le portrait
@@ -117,13 +118,17 @@
   }
 
   @media (max-width: 900px) {
-    &__inner {
+    // Photo au-dessus du texte, centrée (plus de colonne vide à côté)
+    &__inner,
+    &--short &__inner {
+      grid-template-columns: minmax(0, 1fr);
       gap: 72px;
     }
 
     &__photo {
-      flex-basis: 100%;
+      width: 100%;
       max-width: 420px;
+      justify-self: center;
     }
 
     // Petit écran : l'annotation reste au-dessus de la photo, sans dépasser de l'écran

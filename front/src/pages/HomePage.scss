@@ -1,14 +1,19 @@
-// --- Hero : photo noir et blanc teintée de bleu nuit ---
+// --- Hero : vidéo (ou photo) noir et blanc teintée de bleu nuit ---
 .hero {
   position: relative;
-  // Hauteur "idéale" : 860 px, ou la hauteur de l'écran s'il est plus petit (600 px minimum).
-  // C'est un minimum et non une hauteur fixe : sur un écran bas, la photo s'agrandit au lieu
+  // Plein écran : toute la hauteur de la fenêtre (600 px minimum), même sur un grand écran,
+  // pour qu'on ne voie pas le bas de la vidéo ; seul le haut des cartes à jouer dépasse.
+  // 100svh = hauteur visible sur mobile, barre d'adresse comprise (100vh en secours : anciens navigateurs).
+  // C'est un minimum et non une hauteur fixe : sur un écran bas, le hero s'agrandit au lieu
   // d'écraser le texte contre le menu (voir le padding-top de .hero__content)
-  min-height: max(600px, min(860px, 100vh));
+  min-height: max(600px, 100vh);
+  min-height: max(600px, 100svh);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 
+  // Vidéo ou photo de remplacement : remplit tout le hero (recadrée si besoin, jamais déformée).
+  // Plus de zoom lent "Ken Burns" : la vidéo apporte déjà le mouvement
   &__img {
     position: absolute;
     inset: 0;
@@ -16,26 +21,56 @@
     height: 100%;
     object-fit: cover;
     filter: grayscale(1) contrast(1.15);
-    // Zoom très lent (effet "Ken Burns") : la photo avance puis recule, en boucle.
-    // 25 s dans chaque sens : assez lent pour donner de la vie sans attirer l'œil
-    // plus que l'animation du titre. "alternate" évite un saut au retour à l'image de départ.
-    transform-origin: 50% 40%;
-    animation: hero-zoom 25s ease-in-out infinite alternate;
+
+    // Grand écran en paysage : "cover" agrandirait beaucoup la vidéo (format cinéma 2,35:1)
+    // pour remplir toute la hauteur. On l'affiche plutôt sur toute la largeur, sans rien couper
+    // (zoom arrière), calée en haut ; son bas se fond dans le fond sombre, sous les cartes.
+    // Pas au-delà du format de la vidéo (47/20 = 2,35) : sinon il resterait des bandes sur les côtés.
+    @media (min-width: 901px) and (min-aspect-ratio: 16/10) and (max-aspect-ratio: 47/20) {
+      object-fit: contain;
+      object-position: center top;
+      // L'image affichée fait 42,5vw de haut (408 / 960 de la largeur) : le fondu se termine
+      // pile à son bord bas, sur ses 240 derniers pixels (sinon un trait net resterait visible)
+      mask-image: linear-gradient(to bottom, #000 calc(42.5vw - 240px), transparent 42.5vw);
+    }
   }
 
   // Deux calques : un bleu pétrole en "multiply" (duotone) + un voile sombre pour la lisibilité
+  // Voile plus sombre à gauche (derrière le titre et les boutons, pour la lisibilité),
+  // qui s'éclaircit vers la droite pour laisser voir la vidéo
   &__tint {
     position: absolute;
     inset: 0;
-    background: rgba(7, 10, 12, 0.45);
+    background: linear-gradient(
+      90deg,
+      rgba(7, 10, 12, 0.6) 0%,
+      rgba(7, 10, 12, 0.3) 55%,
+      rgba(7, 10, 12, 0.1) 100%
+    );
 
+    // Petit écran : le texte prend toute la largeur, voile uniforme pour qu'il reste lisible partout
+    @media (max-width: 900px) {
+      background: rgba(7, 10, 12, 0.45);
+    }
+
+    // Teinte bleu pétrole allégée (0,85 => 0,3) : l'ambiance reste, la vidéo se voit
     &::before {
       content: '';
       position: absolute;
       inset: 0;
       background: #06343c;
       mix-blend-mode: multiply;
-      opacity: 0.85;
+      opacity: 0.3;
+    }
+
+    // Léger dégradé sombre en haut, derrière le menu (transparent sur l'accueil) :
+    // les liens restent lisibles même quand la vidéo est claire. Il s'efface vers le bas.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto;
+      height: calc(var(--header-height) + 80px);
+      background: linear-gradient(to bottom, rgba(7, 10, 12, 0.65), transparent);
     }
   }
 
@@ -51,8 +86,8 @@
     flex-direction: column;
     justify-content: flex-end;
     gap: 40px;
-    // 128 px d'espace + 110 px recouverts par les cartes à jouer (SalonCards : margin-top -110px)
-    padding-bottom: 238px;
+    // 128 px d'espace + 170 px recouverts par les cartes à jouer (SalonCards : margin-top -170px)
+    padding-bottom: 298px;
   }
 
   &__title {
@@ -149,7 +184,6 @@
 
   // Réglage système "réduire les animations" : tout s'affiche directement dans l'état final
   @media (prefers-reduced-motion: reduce) {
-    &__img,
     &__ink,
     &__underline,
     &__actions {
@@ -162,6 +196,25 @@
   }
 }
 
+// --- Cartes à jouer + section artiste, sur le même fond bleuté ---
+.home-intro {
+  // flow-root : la marge négative des cartes (qui remontent sur la vidéo) ne "tire" pas ce bloc
+  // vers le haut ; le fond commence donc pile au bas de la vidéo, sans la recouvrir
+  display: flow-root;
+  // Même fond que .artist-section (ArtistSection.scss), étalé sur les deux
+  background:
+    radial-gradient(ellipse 50% 80% at 85% 60%, var(--glow), transparent 70%),
+    var(--band-gradient);
+  border-bottom: 1px solid var(--line);
+
+  // La section artiste n'a plus son propre fond ni de trait en haut : elle prolonge les cartes.
+  // Elle garde son espace habituel au-dessus (--band-padding), qui s'ajoute à la marge sous les cartes
+  .artist-section {
+    background: none;
+    border-block: 0;
+  }
+}
+
 // --- Styles du tatoueur, entre le titre "Réalisations" et les photos ---
 .home-styles {
   // Rapproché du titre (.section-head a déjà 72 px de marge en dessous)
@@ -170,13 +223,6 @@
   @media (max-width: 900px) {
     margin: -16px 0 28px;
   }
-}
-
-// Agrandissement de 10 % : visible sur la durée, jamais flou (la photo du backoffice fait
-// au moins 1 920 px de large) ; translate3d confie l'animation à la carte graphique (fluide)
-@keyframes hero-zoom {
-  from { transform: scale(1) translate3d(0, 0, 0); }
-  to { transform: scale(1.1) translate3d(-1%, -1%, 0); }
 }
 
 // La zone dévoilée déborde de 60 px autour du texte : le halo lumineux du mot cyan

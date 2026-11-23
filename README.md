@@ -87,7 +87,7 @@ Fonctionnement :
 - **Modération** : chaque avis est créé **en attente** ; il n'apparaît dans `GET /api/comments` qu'une fois publié dans le backoffice. Envoyer `isPublished` dans le JSON n'a aucun effet.
 - **Anti-spam** : le champ caché `website` (« pot de miel ») est invisible pour les visiteurs ; s'il est rempli, c'est un robot : la réponse est la même (`202`), mais rien n'est enregistré.
 - **Validation** : `#[MapRequestPayload]` transforme le JSON en DTO et le valide avant d'entrer dans la méthode.
-- **Sécurité** : l'API est entièrement publique (pare-feu `api` sans authentification dans `back/config/packages/security.yaml`). Seul le backoffice demande une connexion (session, page `/login`).
+- **Sécurité** : l'API est entièrement publique (pare-feu `api` sans authentification dans `back/config/packages/security.yaml`). Seul le backoffice demande une connexion (session, page `/boogi-0806/login`, tentatives limitées par `login_throttling`). Le backoffice est sur `/boogi-0806` (et non `/admin`, testé par les robots).
 
 $1
 

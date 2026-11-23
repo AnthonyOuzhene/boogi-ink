@@ -19,11 +19,23 @@
     border-bottom-color: var(--line);
   }
 
+  // Plus large que le contenu des pages (.container : 1 280 px) : sur grand écran, le logo
+  // et le bouton de rendez-vous s'écartent vers les bords, les liens respirent au milieu.
+  // "&.container" : plus précis que .container seul, l'emporte quel que soit l'ordre des CSS
+  &__inner,
+  &__inner.container {
+    max-width: calc(1600px + 2 * var(--gutter));
+  }
+
+  // 3 colonnes : logo | liens du menu | réseaux + rendez-vous.
+  // Les colonnes de gauche et de droite ont la même largeur (1fr) : les liens sont centrés
+  // dans l'en-tête, bien distincts du groupe de droite. Si la place manque, une colonne
+  // s'élargit (1fr ne descend pas sous la largeur de son contenu) : rien ne se chevauche.
   &__inner {
     width: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     gap: 24px;
   }
 
@@ -43,6 +55,7 @@
 .brand {
   display: flex;
   flex-shrink: 0; // le logo ne se tasse jamais : c'est le menu qui doit s'adapter
+  justify-self: start;
   align-items: center;
   gap: 14px;
   color: var(--text);
@@ -67,12 +80,29 @@
   }
 }
 
+// Le menu occupe les 2 dernières colonnes de l'en-tête et reprend leur découpage (subgrid) :
+// les liens tombent dans la colonne du milieu, les actions dans celle de droite
 .site-nav {
-  display: flex;
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
   align-items: center;
-  // L'espace entre les liens et leur taille se resserrent sur les écrans moyens :
-  // 52 px / 23 px sur grand écran, environ 28 px / 20 px à 1 025 px (juste avant le burger)
-  gap: clamp(24px, 3.6vw, 52px);
+
+  &__links {
+    display: flex;
+    align-items: center;
+    // L'espace entre les liens grandit avec l'écran : 76 px sur grand écran (1 900 px),
+    // environ 52 px à 1 300 px ; 18 px sur les écrans moyens (voir plus bas), avant le burger
+    gap: clamp(28px, 4vw, 76px);
+  }
+
+  // Réseaux + bouton de rendez-vous, calés à droite
+  &__actions {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 2vw, 32px);
+  }
 
   // Liens en Anton, la police du logo et des grands titres (menu burger : 40 px, plus bas)
   &__link {
@@ -104,61 +134,53 @@
   white-space: nowrap;
 }
 
-// Réseaux sociaux dans le menu : version compacte et discrète des logos du pied de page
-// (pas de fond, contour léger, couleur officielle du réseau au survol comme ailleurs)
+// Réseaux sociaux dans le menu : ronds bien visibles (contour au repos), précédés d'un petit
+// trait vertical qui les sépare des liens ; couleur officielle du réseau au survol, comme ailleurs
 .site-nav__social {
-  gap: 6px;
+  position: relative;
+  gap: 10px;
+  padding-left: clamp(20px, 2vw, 32px);
+
+  // Trait vertical entre les liens du menu et les réseaux
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1px;
+    height: 28px;
+    background: var(--line-strong);
+    transform: translateY(-50%);
+  }
 
   .social-links__link {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
 
     svg {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
     }
 
     // Au repos seulement : au survol, le style de SocialLinks.scss (couleur du réseau) s'applique
     &:not(:hover):not(:focus-visible) {
-      border-color: transparent;
+      border-color: rgba(230, 244, 246, 0.35); // --text à 35 % : visible sur la vidéo comme sur le fond
       background: transparent;
       color: var(--text);
     }
   }
 }
 
-// --- Écrans moyens (1 025 à 1 240 px) : menu horizontal plus compact ---
-@media (min-width: 1025px) and (max-width: 1240px) {
+// --- Mobile, tablette et petits écrans d'ordinateur : menu en panneau plein écran ---
+// Les 3 zones (logo | liens centrés | réseaux + rendez-vous) ont besoin d'au moins ~1 240 px :
+// en dessous, plutôt que de tasser le menu, on passe directement au burger
+@media (max-width: 1240px) {
+  // Plus de 3 colonnes : logo à gauche, burger à droite
   .site-header__inner {
-    gap: 20px;
+    display: flex;
+    justify-content: space-between;
   }
 
-  .site-nav {
-    gap: 18px;
-  }
-
-  .site-nav__cta {
-    padding: 12px 18px;
-    font-size: 15px;
-  }
-
-  .brand {
-    gap: 10px;
-  }
-
-  .brand__logo {
-    width: 44px;
-    height: 44px;
-  }
-
-  .brand__name {
-    font-size: 24px;
-  }
-}
-
-// --- Mobile et tablette : menu en panneau plein écran ---
-// (avec 4 liens, le menu horizontal tient jusqu'à 1 025 px de large)
-@media (max-width: 1024px) {
   .site-header__burger {
     display: inline-flex;
   }
@@ -166,9 +188,9 @@
   .site-nav {
     position: fixed;
     inset: var(--header-height) 0 0;
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
     padding: 32px var(--gutter);
     background: var(--bg);
     transform: translateX(100%);
@@ -179,21 +201,38 @@
       transform: none;
     }
 
+    // Les deux groupes s'empilent : liens, puis bouton de rendez-vous, puis réseaux
+    &__links,
+    &__actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &__links {
+      gap: 8px;
+    }
+
+    &__actions {
+      justify-self: auto;
+      margin-top: 32px;
+      gap: 24px;
+    }
+
     &__link {
       font-family: var(--font-display);
       font-size: 40px;
       letter-spacing: 0.02em;
     }
 
-    &__cta {
-      margin-top: 24px;
-    }
-
     // Réseaux : tout en bas du menu burger, sous "Prendre rendez-vous", zone de clic plus grande
     &__social {
       order: 10;
-      margin-top: 24px;
       gap: 14px;
+      padding-left: 0; // pas de trait de séparation dans le menu burger
+
+      &::before {
+        display: none;
+      }
 
       .social-links__link {
         width: 44px;

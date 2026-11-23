@@ -58,21 +58,27 @@ const Header = () => {
           {menuOpen ? <FaTimes size={26} /> : <FaBars size={26} />}
         </button>
 
+        {/* Deux groupes : les liens (centrés dans l'en-tête sur grand écran) et, à droite,
+            les réseaux + le bouton de rendez-vous. Dans le menu burger, ils s'empilent. */}
         <nav aria-label="Navigation principale" className={`site-nav ${menuOpen ? 'is-open' : ''}`}>
-          {LINKS.map((link) => (
-            // NavLink ajoute la classe "active" quand on est sur la page correspondante
-            <NavLink key={link.to} to={link.to} className="site-nav__link" onClick={closeMenu}>
-              {link.label}
-            </NavLink>
-          ))}
+          <div className="site-nav__links">
+            {LINKS.map((link) => (
+              // NavLink ajoute la classe "active" quand on est sur la page correspondante
+              <NavLink key={link.to} to={link.to} className="site-nav__link" onClick={closeMenu}>
+                {link.label}
+              </NavLink>
+            ))}
+          </div>
 
-          {/* Réseaux sociaux (Instagram = la vitrine de l'artiste) : petites icônes avant le bouton ;
-              dans le menu burger, elles passent en bas, sous le bouton de rendez-vous (Header.scss) */}
-          <SocialLinks className="site-nav__social" />
+          <div className="site-nav__actions">
+            {/* Réseaux sociaux (Instagram = la vitrine de l'artiste) : avant le bouton ;
+                dans le menu burger, ils passent en bas, sous le bouton de rendez-vous (Header.scss) */}
+            <SocialLinks className="site-nav__social" />
 
-          <Link to="/contact" className="btn btn--primary site-nav__cta" onClick={closeMenu}>
-            Prendre rendez-vous
-          </Link>
+            <Link to="/contact" className="btn btn--primary site-nav__cta" onClick={closeMenu}>
+              Prendre rendez-vous
+            </Link>
+          </div>
         </nav>
       </div>
     </header>

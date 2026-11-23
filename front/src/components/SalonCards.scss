@@ -2,7 +2,9 @@
 .salon-cards {
   position: relative;
   z-index: 1;
-  margin-top: -110px; // les cartes débordent sur la photo, comme jetées sur la table
+  // Les cartes débordent sur la vidéo, comme jetées sur la table ; le bas de la vidéo
+  // passe vers le milieu des cartes. Garder la même valeur dans le padding-bottom de .hero__content
+  margin-top: -170px;
   padding: 0 var(--gutter) 96px;
 
   &__hand {
