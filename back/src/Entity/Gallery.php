@@ -14,6 +14,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
@@ -28,6 +30,12 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['gallery:read']],
 )]
 #[ORM\Entity(repositoryClass: GalleryRepository::class)]
+// Le slug est calculé à partir du titre : deux titres qui donnent le même slug sont refusés
+#[UniqueEntity(
+    fields: ['slug'],
+    message: 'Une réalisation porte déjà ce titre (ou un titre très proche) : ajoutez un détail, par exemple « Rose avant-bras ».',
+    errorPath: 'name',
+)]
 class Gallery
 {
     /** Partagé avec Picture : toutes les photos de réalisations sont dans le même dossier */
@@ -43,6 +51,15 @@ class Gallery
     #[ORM\Column(length: 150)]
     #[Assert\NotBlank]
     private ?string $name = null;
+
+    /**
+     * Titre adapté aux adresses web ("Manchette graphique" → "manchette-graphique") : la page
+     * Réalisations l'affiche dans l'URL (?realisation=manchette-graphique) au lieu de l'id.
+     * Calculé automatiquement dans setName() : rien à saisir dans le backoffice.
+     */
+    #[Groups(['gallery:read'])]
+    #[ORM\Column(length: 170, unique: true)]
+    private ?string $slug = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -115,8 +132,16 @@ class Gallery
     public function setName(?string $name): static
     {
         $this->name = $name;
+        // AsciiSlugger : retire les accents, remplace espaces et ponctuation par des tirets
+        $this->slug = $name ? (new AsciiSlugger('fr'))->slug($name)->lower()->toString() : null;
 
         return $this;
+    }
+
+    // Pas de setSlug() : le slug suit toujours le titre (voir setName())
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 
     public function getMainPicture(): ?string

@@ -61,7 +61,7 @@ Déclarées par `#[ApiResource]` dans `back/src/Entity/`. Aucune écriture possi
 | `GET /api/homes`, `/api/homes/{id}` | Fiche du salon : coordonnées, horaires, réseaux, accroche de l'accueil | `Home` |
 | `GET /api/artists`, `/api/artists/{id}` | Présentation du tatoueur | `Artist` |
 | `GET /api/categories`, `/api/categories/{id}` | Styles de tatouage | `Category` |
-| `GET /api/galleries` (`?category=fine-line`, le slug du style), `/api/galleries/{id}` | Réalisations : photos, dessin préparatoire, timelapse (`timelapseUrl`), lien Instagram (`instagramUrl`) | `Gallery`, `Picture` |
+| `GET /api/galleries` (`?category=fine-line`, le slug du style), `/api/galleries/{id}` | Réalisations : `slug` (titre dans l'URL du site : `?realisation=manchette-graphique`), photos, dessin préparatoire, timelapse (`timelapseUrl`), lien Instagram (`instagramUrl`) | `Gallery`, `Picture` |
 | `GET /api/comments`, `/api/comments/{id}` | Livre d'or : **avis publiés uniquement** (filtre `Doctrine/PublishedCommentExtension`) | `Comment` |
 | `GET /api/home_cards` | Cartes à jouer de l'accueil (points forts du salon) | `HomeCard` |
 | `GET /api/faqs` | Questions fréquentes, triées | `Faq` |
@@ -71,6 +71,7 @@ Déclarées par `#[ApiResource]` dans `back/src/Entity/`. Aucune écriture possi
 | `GET /api/studio_photos` | Photos du salon (« Le lieu en images ») | `StudioPhoto` |
 | `GET /api/hygiene_commitments` | Engagements d'hygiène et de sécurité | `HygieneCommitment` |
 | `GET /api/pages`, `/api/pages/{slug}` | Pages de contenu (mentions légales…), identifiées par leur slug | `Page` |
+| `GET /api/instagram_posts` | Les 6 derniers posts Instagram (bande de l'accueil), copiés par `app:instagram:sync` | `InstagramPost` |
 
 Les champs renvoyés sont choisis par les **groupes de sérialisation** (`#[Groups(['gallery:read'])]`…) posés sur les propriétés des entités : un champ sans groupe n'est jamais exposé (par exemple le mot de passe).
 
@@ -131,9 +132,18 @@ Champ « Vidéo timelapse » d'une réalisation : fichier **MP4, 20 Mo maximum**
 
 Fichier fixe du front (pas dans le backoffice) : `front/src/assets/videos/hero-tattoo.mp4`, avec son image fixe `front/src/assets/images/hero-tattoo-poster.jpg` (affichée pendant le chargement, et à la place de la vidéo si « réduire les animations » est activé). Pour la changer : remplacer les deux fichiers en gardant leurs noms (sinon, modifier les imports en haut de `front/src/pages/HomePage.jsx`), puis reconstruire le front. Format conseillé : MP4 H.264 sans son, quelques secondes qui bouclent, 1 à 3 Mo.
 
+## Flux Instagram de l'accueil
+
+Bande « Sur Instagram » en bas de l'accueil (`front/src/components/InstagramFeed.jsx`) : les 6 derniers posts du salon. Elle ne s'affiche pas tant qu'il n'y a aucun post.
+
+- **Récupération côté serveur** : `back/src/Service/InstagramSync.php` interroge l'API Instagram (« Instagram API with Instagram Login »), copie les images dans `public/uploads/instagram/` (converties en WebP) et les enregistre (`InstagramPost`). Le visiteur ne contacte jamais Instagram : pas de cookie, pas de bandeau de consentement.
+- **Mise à jour** : `ddev console app:instagram:sync`, lancée toutes les 3 heures par une tâche planifiée en production. En cas de panne, les derniers posts restent affichés et le tableau de bord du backoffice affiche une alerte.
+- **Jeton d'accès** : enregistré une fois avec `ddev console app:instagram:token` (saisie masquée), puis renouvelé automatiquement avant ses 60 jours. Comment l'obtenir : [DEPLOIEMENT.md](DEPLOIEMENT.md), « Brancher Instagram ».
+- **Sans jeton (développement)** : `ddev console app:instagram:sync --demo` affiche 6 posts d'exemple (photos des fixtures), remplacés par les vrais à la première synchronisation.
+
 ## Mise en production
 
-À vérifier sur l'hébergement :
+Procédure complète, étape par étape : **[DEPLOIEMENT.md](DEPLOIEMENT.md)**. En résumé, à vérifier sur l'hébergement :
 
 - **PHP** : extension GD avec WebP (`php -r 'var_dump(gd_info()["WebP Support"]);'` doit afficher `true`), `memory_limit` d'au moins 256M (conversion des grandes photos).
 - **Envoi de fichiers** : `upload_max_filesize` et `post_max_size` d'au moins 25M (timelapses de 20 Mo), et la limite du serveur web (`client_max_body_size` sous nginx).
@@ -152,5 +162,7 @@ Fichier fixe du front (pas dans le backoffice) : `front/src/assets/videos/hero-t
 | `ddev console cache:clear` | Vider le cache |
 | `ddev console app:create-admin email "Nom"` | Créer un compte administrateur du backoffice |
 | `ddev console app:images:convert-webp` | Convertir en WebP les photos déjà envoyées |
+| `ddev console app:instagram:sync` | Mettre à jour les posts Instagram de l'accueil (`--demo` : posts d'exemple) |
+| `ddev console app:instagram:token` | Enregistrer le jeton d'accès Instagram |
 | `npm run lint` (front) | Vérifier le code React |
 | `npm run build` (front) | Construire le site pour la production (`front/dist/`) |

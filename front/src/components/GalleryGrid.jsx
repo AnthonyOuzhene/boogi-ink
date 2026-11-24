@@ -7,7 +7,7 @@ import Scribble from './Scribble';
 import './GalleryGrid.scss';
 
 /** Lien par défaut (accueil) : la page Réalisations, visionneuse ouverte sur ce tatouage */
-const defaultLink = (gallery) => `/realisations?realisation=${gallery.id}`;
+const defaultLink = (gallery) => `/realisations?realisation=${gallery.slug}`;
 
 // Aperçu du timelapse au survol : seulement avec une souris (pas de survol sur écran tactile)
 // et si le réglage "réduire les animations" n'est pas activé

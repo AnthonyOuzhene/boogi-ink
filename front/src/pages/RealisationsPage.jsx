@@ -8,11 +8,11 @@ import './pages.scss';
 const RealisationsPage = () => {
   // Tout l'état de la page est dans l'URL, elle peut donc être partagée telle quelle :
   // - ?category=fine-line : filtre par style (slug de la catégorie, lisible)
-  // - ?realisation=12 : visionneuse ouverte sur cette réalisation
+  // - ?realisation=manchette-graphique : visionneuse ouverte sur cette réalisation (slug du titre)
   // Le bouton "précédent" du navigateur ferme la visionneuse / revient au filtre précédent.
   const [searchParams, setSearchParams] = useSearchParams();
   const categorySlug = searchParams.get('category');
-  const openedId = searchParams.get('realisation');
+  const openedSlug = searchParams.get('realisation');
 
   const { data: allCategories } = useApi('/categories');
   // Seulement les styles qui ont au moins une réalisation : pas de filtre qui mène à une page vide
@@ -27,12 +27,15 @@ const RealisationsPage = () => {
   // Adresse d'une réalisation dans la visionneuse, en gardant le filtre en cours
   const linkTo = (gallery) => {
     const params = new URLSearchParams(searchParams);
-    params.set('realisation', gallery.id);
+    params.set('realisation', gallery.slug);
     return `?${params}`;
   };
 
-  // La liste renvoyée par l'API contient déjà photos et description : pas de nouvel appel
-  const openedIndex = galleries?.findIndex((gallery) => String(gallery.id) === openedId) ?? -1;
+  // La liste renvoyée par l'API contient déjà photos et description : pas de nouvel appel.
+  // Les anciens liens partagés avec le numéro (?realisation=12) fonctionnent toujours.
+  const openedIndex = galleries?.findIndex(
+    (gallery) => gallery.slug === openedSlug || String(gallery.id) === openedSlug,
+  ) ?? -1;
 
   // Passage d'une réalisation à l'autre : "replace" remplace l'entrée de l'historique,
   // pour que "précédent" ferme la visionneuse au lieu de rejouer chaque réalisation vue

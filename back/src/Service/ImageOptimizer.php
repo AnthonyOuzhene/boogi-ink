@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Artist;
 use App\Entity\Flash;
 use App\Entity\Gallery;
+use App\Entity\InstagramPost;
 use App\Entity\Picture;
 use App\Entity\StudioPhoto;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -33,6 +34,8 @@ final class ImageOptimizer
         Flash::class => ['picture' => Flash::UPLOAD_PATH],
         StudioPhoto::class => ['picture' => StudioPhoto::UPLOAD_PATH],
         Artist::class => ['picture' => Artist::UPLOAD_PATH, 'atelierPicture' => Artist::UPLOAD_PATH],
+        // Pas un champ du backoffice : images copiées depuis Instagram par InstagramSync
+        InstagramPost::class => ['image' => InstagramPost::UPLOAD_PATH],
     ];
 
     public function __construct(

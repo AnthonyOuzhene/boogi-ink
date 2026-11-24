@@ -24,6 +24,26 @@
         {% endif %}
     </div>
 
+    {# --- Flux Instagram de l'accueil : alerte seulement en cas de problème
+           (synchronisation app:instagram:sync, voir InstagramSync) --- #}
+    {% if instagram and instagram.connected %}
+        {% if instagram.lastError %}
+            <div class="alert alert-warning">
+                <i class="fa-brands fa-instagram"></i>
+                <strong>Flux Instagram de l'accueil : la mise à jour a échoué.</strong>
+                Les derniers posts récupérés restent affichés sur le site.
+                <br><span class="bo-small">Détail : {{ instagram.lastError }}</span>
+            </div>
+        {% elseif instagram.tokenExpiringSoon %}
+            <div class="alert alert-warning">
+                <i class="fa-brands fa-instagram"></i>
+                <strong>Flux Instagram : la clé d'accès expire le {{ instagram.tokenExpiresAt|date('d/m/Y') }}.</strong>
+                Le renouvellement automatique n'a pas fonctionné : générer un nouveau jeton
+                (commande <code>app:instagram:token</code>).
+            </div>
+        {% endif %}
+    {% endif %}
+
     {# --- Chiffres clés --- #}
     <div class="bo-kpis">
         <a class="bo-card bo-kpi {{ pendingCount > 0 ? 'is-warning' }}" href="{{ path('admin_comment_index') }}">

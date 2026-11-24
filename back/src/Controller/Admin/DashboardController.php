@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Comment;
+use App\Entity\InstagramConnection;
 use App\Repository\ArtistRepository;
 use App\Repository\CommentRepository;
 use App\Repository\FlashRepository;
@@ -40,6 +41,7 @@ class DashboardController extends AbstractDashboardController
         private readonly ArtistRepository $artistRepository,
         private readonly HomeRepository $homeRepository,
         private readonly ContentChecklist $contentChecklist,
+        private readonly EntityManagerInterface $entityManager,
         // Valeur lue dans .env (FRONT_URL) grâce à l'attribut Autowire
         #[Autowire('%env(FRONT_URL)%')]
         private readonly string $frontUrl,
@@ -62,6 +64,8 @@ class DashboardController extends AbstractDashboardController
             'unpricedFlashCount' => $this->flashRepository->count(['price' => null]),
             'galleryCount' => $this->galleryRepository->count(),
             'checklist' => $this->contentChecklist->check(),
+            // État du flux Instagram de l'accueil (null tant que le jeton n'a jamais été enregistré)
+            'instagram' => $this->entityManager->getRepository(InstagramConnection::class)->findOneBy([]),
         ]);
     }
 

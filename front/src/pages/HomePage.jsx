@@ -10,6 +10,7 @@ import FaqSection from '../components/FaqSection';
 import SessionSteps from '../components/SessionSteps';
 import { FlashGrid } from '../components/FlashGallery';
 import GuestbookCarousel from '../components/GuestbookCarousel';
+import InstagramFeed from '../components/InstagramFeed';
 // Vidéo du hero (fichier fixe, sans son) + photo extraite de la vidéo : affichée pendant
 // le chargement, et à la place de la vidéo si "réduire les animations" est activé
 import heroVideo from '../assets/videos/hero-tattoo.mp4';
@@ -154,6 +155,9 @@ const HomePage = () => {
 
       {/* --- Questions fréquentes --- */}
       <FaqSection />
+
+      {/* --- Derniers posts Instagram (récupérés par le back) : rien si aucun post --- */}
+      <InstagramFeed />
 
       {/* --- Livre d'or : carrousel des avis publiés, sur papier --- */}
       <GuestbookCarousel className="paper" />
