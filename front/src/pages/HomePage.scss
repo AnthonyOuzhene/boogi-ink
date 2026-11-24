@@ -44,37 +44,36 @@
     }
   }
 
-  // Bouton pause / lecture de la vidéo (accessibilité) : discret, en bas à droite,
-  // juste au-dessus des cartes à jouer qui recouvrent le bas du hero (170 px, 64 px sur mobile)
+  // Bouton pause / lecture de la vidéo (accessibilité) : sur la ligne des boutons du hero,
+  // poussé à droite du contenu (margin-left: auto). Volontairement très discret : une simple
+  // icône, sans contour ni fond, qui ne s'affirme qu'au survol ou au focus clavier.
+  // (Zone cliquable de 36 px malgré la petite icône : facile à toucher sur mobile.)
   &__pause {
-    position: absolute;
-    right: var(--gutter);
-    bottom: 200px;
-    z-index: 2;
+    margin-left: auto;
+    flex-shrink: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(230, 244, 246, 0.35);
-    background: rgba(7, 10, 12, 0.5);
+    border: 1px solid transparent;
+    background: transparent;
     color: var(--text);
+    opacity: 0.4;
     cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
+    transition: border-color 0.2s, color 0.2s, opacity 0.2s;
 
-    &:hover {
-      border-color: var(--cyan);
+    &:hover,
+    &:focus-visible {
+      opacity: 1;
+      border-color: rgba(230, 244, 246, 0.35);
       color: var(--cyan);
     }
 
     svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    @media (max-width: 900px) {
-      bottom: 88px;
+      width: 12px;
+      height: 12px;
     }
   }
 

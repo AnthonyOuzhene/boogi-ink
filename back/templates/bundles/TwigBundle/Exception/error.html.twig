@@ -46,11 +46,39 @@
             width: min(560px, 100%);
             text-align: center;
         }
+        /* Logo : contour cyan qui se dessine (tracé d'aiguille, comme sur le site) */
+        .error__mark {
+            position: relative;
+            display: inline-block;
+            line-height: 0;
+        }
         .error__logo {
             width: 64px;
             height: 64px;
             border-radius: 50%;
-            border: 2px solid var(--cyan);
+        }
+        .error__ring {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            transform: rotate(-90deg); /* départ en haut du cercle */
+        }
+        .error__ring circle {
+            fill: none;
+            stroke: var(--cyan);
+            stroke-width: 2;
+            vector-effect: non-scaling-stroke;
+            stroke-dasharray: 100; /* pathLength="100" : tracé complet = 100 */
+            stroke-dashoffset: 0;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            .error__ring circle { animation: logo-trace 1.2s ease-in-out 0.2s both; }
+        }
+        @keyframes logo-trace {
+            from { stroke-dashoffset: 100; }
+            to { stroke-dashoffset: 0; }
         }
         .error__code {
             margin: 24px 0 0;
@@ -103,7 +131,10 @@
 </head>
 <body>
     <main class="error">
-        <img src="{{ asset('admin-assets/logo.png') }}" alt="Boogi'ink" class="error__logo">
+        <span class="error__mark">
+            <img src="{{ asset('admin-assets/logo.png') }}" alt="Boogi'ink" class="error__logo">
+            <svg class="error__ring" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="25" pathLength="100"/></svg>
+        </span>
 
         <p class="error__code" aria-hidden="true">{{ status_code }}</p>
         <h1 class="error__title">{% block heading %}Une erreur est survenue{% endblock %}</h1>

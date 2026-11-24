@@ -93,8 +93,15 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            // Le titre accepte du HTML : logo + nom aux couleurs du site
-            ->setTitle('<img src="/admin-assets/logo.png" alt="" class="bo-logo"> Boogi\'<span class="bo-cyan">ink</span>')
+            // Le titre accepte du HTML : logo + nom aux couleurs du site.
+            // Contour du logo = cercle SVG qui se dessine (tracé d'aiguille, comme sur le site) :
+            // voir admin.css (.bo-logo-mark) et admin-assets/logo.js (une fois par session)
+            ->setTitle(
+                '<span class="bo-logo-mark">'
+                .'<img src="/admin-assets/logo.png" alt="" class="bo-logo">'
+                .'<svg class="bo-logo-ring" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="25" pathLength="100"/></svg>'
+                .'</span> Boogi\'<span class="bo-cyan">ink</span>'
+            )
             ->setFaviconPath('admin-assets/logo.png')
             ->setDefaultColorScheme('dark');
     }
@@ -102,7 +109,10 @@ class DashboardController extends AbstractDashboardController
     public function configureAssets(): Assets
     {
         // Feuille de style ajoutée à toutes les pages du backoffice (fichier dans public/admin-assets/ : pas public/admin/, qui masquerait la route /admin)
-        return Assets::new()->addCssFile('admin-assets/admin.css');
+        return Assets::new()
+            ->addCssFile('admin-assets/admin.css')
+            // Déclenche le tracé du logo une seule fois par session (pas à chaque page du backoffice)
+            ->addJsFile('admin-assets/logo.js');
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

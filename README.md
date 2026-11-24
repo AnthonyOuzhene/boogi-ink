@@ -22,13 +22,21 @@ ddev console doctrine:migrations:migrate # crée / met à jour les tables
 ddev console doctrine:fixtures:load      # données de démo (⚠ vide la base)
 ```
 
-Compte de démo créé par les fixtures (le seul type de compte : le site n'a pas d'espace client) :
+Comptes de démo créés par les fixtures (seulement des comptes du backoffice : le site n'a pas d'espace client) :
 
 | Email | Mot de passe | Rôle |
 |---|---|---|
-| `admin@boogi-ink.local` | `admin1234` | administrateur (backoffice) |
+| `admin@boogi-ink.local` | `admin1234` | administrateur : le salon |
+| `dev@boogi-ink.local` | `dev12345` | super administrateur : le développeur |
 
-Pour un vrai compte admin : `ddev console app:create-admin vous@exemple.fr "Votre nom"`.
+**Deux rôles** (`role_hierarchy` dans `back/config/packages/security.yaml`) :
+
+- `ROLE_ADMIN` (le salon) : tout le backoffice, **sauf** l'accroche du haut de l'accueil (2 titres, menu Salon), les cartes de l'accueil, les engagements « Hygiène & sécurité » de L'atelier, et les comptes super admin (qu'il ne voit pas dans « Administrateurs »).
+- `ROLE_SUPER_ADMIN` (le développeur) : tous les droits de l'admin, plus ceux-là.
+
+Restrictions : `setPermission('ROLE_SUPER_ADMIN')` sur les champs de `HomeCrudController` ; règle `access_control` (adresses `home-card` et `hygiene-commitment`) dans `security.yaml` + menus masqués dans `DashboardController` ; le voter `back/src/Security/Voter/AdminUserVoter.php` pour les comptes. Le tableau de bord (`ContentChecklist`) ne signale à l'admin que les contenus qu'il peut modifier. Pour réserver une autre rubrique : ajouter son adresse à la règle `access_control`, `->setPermission('ROLE_SUPER_ADMIN')` sur son menu, et l'entité dans `ContentChecklist::SUPER_ADMIN_ONLY_SOURCES`. Un compte créé depuis le backoffice est toujours admin ; un super admin se crée en ligne de commande.
+
+Pour un vrai compte : `ddev console app:create-admin vous@exemple.fr "Votre nom"` (admin), ou avec `--super` (super admin).
 
 Le bouton « Voir le site » du backoffice pointe vers `FRONT_URL` (`back/.env`, par défaut `http://localhost:5180`, le port du front fixé dans `front/vite.config.js`). Pour une autre adresse, surchargez-la dans `back/.env.local`.
 
@@ -160,7 +168,7 @@ Procédure complète, étape par étape : **[DEPLOIEMENT.md](DEPLOIEMENT.md)**. 
 | `ddev console doctrine:migrations:migrate` | Appliquer les migrations |
 | `ddev console doctrine:fixtures:load` | Recharger les données de démo (⚠ vide la base) |
 | `ddev console cache:clear` | Vider le cache |
-| `ddev console app:create-admin email "Nom"` | Créer un compte administrateur du backoffice |
+| `ddev console app:create-admin email "Nom"` | Créer un compte administrateur du backoffice (`--super` : super administrateur) |
 | `ddev console app:images:convert-webp` | Convertir en WebP les photos déjà envoyées |
 | `ddev console app:pages:install` | Créer les pages légales manquantes (texte de départ : `back/src/Content/LegalPages.php` ; `--force` remplace aussi les existantes) |
 | `ddev console app:instagram:sync` | Mettre à jour les posts Instagram de l'accueil (`--demo` : posts d'exemple) |

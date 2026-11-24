@@ -65,11 +65,81 @@
     color: var(--text);
   }
 
+  // Logo + son contour animé (le contour n'est plus une bordure CSS : c'est le cercle SVG
+  // .brand__ring, qui peut se "dessiner")
+  &__mark {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
   &__logo {
     width: 52px;
     height: 52px;
     border-radius: 50%;
-    border: 2px solid var(--cyan);
+  }
+
+  // Contour cyan. pathLength="100" (dans le JSX) : le tracé complet mesure 100, quelle que
+  // soit la taille du logo ; stroke-dashoffset de 100 à 0 = le cercle se dessine.
+  // rotate(-90deg) : le tracé démarre en haut (et non à droite, le départ par défaut d'un cercle SVG)
+  &__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    transform: rotate(-90deg);
+    pointer-events: none;
+
+    circle {
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 2;
+      vector-effect: non-scaling-stroke; // 2 px à l'écran, même quand le logo est plus petit
+      stroke-dasharray: 100;
+      stroke-dashoffset: 0; // dessiné : état final (et état sans animation)
+    }
+  }
+
+  // L'aiguille : point lumineux qui fait le tour pendant que le contour se dessine
+  &__needle {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      margin-left: -3px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 6px 2px var(--cyan), 0 0 14px 4px rgba(34, 211, 238, 0.6);
+    }
+  }
+
+  // Animations seulement si le visiteur n'a pas demandé à réduire les animations
+  @media (prefers-reduced-motion: no-preference) {
+    // 1. Au chargement : le contour se dessine en 1,2 s, l'aiguille fait le tour en même temps
+    //    (même durée, même rythme), puis s'éteint. Une seule fois.
+    &__ring circle {
+      animation: logo-trace 1.2s ease-in-out 0.3s both;
+    }
+
+    &__needle {
+      animation: logo-needle 1.2s ease-in-out 0.3s both;
+    }
+
+    // 2. Au survol (souris uniquement) : vibration de machine à tatouer qu'on lance
+    @media (hover: hover) {
+      &:hover &__mark {
+        animation: logo-buzz 0.45s linear;
+      }
+    }
   }
 
   &__name {
@@ -252,4 +322,33 @@
   .brand__name {
     font-size: 24px;
   }
+}
+
+// --- Animations du logo (voir .brand__ring, .brand__needle, .brand__mark) ---
+
+// Le contour se dessine : de "rien de tracé" (100) à "tout tracé" (0)
+@keyframes logo-trace {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+// L'aiguille fait un tour complet en suivant le tracé, puis s'éteint
+@keyframes logo-needle {
+  0% { transform: rotate(0deg); opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: rotate(360deg); opacity: 0; }
+}
+
+// Vibration rapide et minuscule, qui s'amortit (machine à tatouer qu'on lance)
+@keyframes logo-buzz {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-1px, 1px) rotate(-2deg); }
+  20% { transform: translate(1px, -1px) rotate(2deg); }
+  30% { transform: translate(-1px, 0) rotate(-2deg); }
+  40% { transform: translate(1px, 1px) rotate(1.5deg); }
+  50% { transform: translate(-1px, -1px) rotate(-1.5deg); }
+  60% { transform: translate(1px, 0) rotate(1deg); }
+  70% { transform: translate(0, 1px) rotate(-1deg); }
+  80% { transform: translate(-0.5px, 0) rotate(0.5deg); }
+  90% { transform: translate(0.5px, 0) rotate(-0.5deg); }
 }

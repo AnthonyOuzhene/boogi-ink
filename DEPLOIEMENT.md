@@ -85,8 +85,11 @@ php bin/console cache:clear
 ### 3.4 Compte administrateur
 
 ```bash
-php bin/console app:create-admin vous@exemple.fr "Votre nom"
+php bin/console app:create-admin vous@exemple.fr "Votre nom" --super   # votre compte (développeur) : tous les droits
+php bin/console app:create-admin salon@exemple.fr "Nom du salon"         # le compte du salon (admin)
 ```
+
+Le compte admin du salon ne peut pas modifier l'accroche du haut de l'accueil, ni voir ou modifier les comptes super admin.
 
 - [ ] Connexion testée sur `https://api.boogi-ink.fr/boogi-0806/login`
 

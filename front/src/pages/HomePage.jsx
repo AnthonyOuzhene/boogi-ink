@@ -75,16 +75,6 @@ const HomePage = () => {
           />
         )}
         <div className="hero__tint" aria-hidden="true" />
-        {!reduceMotion && (
-          <button
-            type="button"
-            className="hero__pause"
-            aria-label={videoPaused ? 'Relancer la vidéo' : 'Mettre la vidéo en pause'}
-            onClick={toggleVideo}
-          >
-            {videoPaused ? <FaPlay aria-hidden="true" /> : <FaPause aria-hidden="true" />}
-          </button>
-        )}
         <div className="container hero__content">
           <p className="eyebrow">Salon de tatouage{salon?.city && ` — ${salon.city}`}</p>
           {/* Accroche : backoffice, menu "Salon" ; textes par défaut si les champs sont vides.
@@ -113,6 +103,18 @@ const HomePage = () => {
             <Link to="/realisations" className="btn btn--ghost">Voir les réalisations</Link>
             {/* Annotation au feutre (masquée sur téléphone, où les boutons sont empilés) */}
             <Scribble arrow="left" className="hero__scribble">c'est par ici !</Scribble>
+            {/* Pause / lecture de la vidéo : sur la ligne des boutons, calé à droite du contenu */}
+            {!reduceMotion && (
+              <button
+                type="button"
+                className="hero__pause"
+                aria-label={videoPaused ? 'Relancer la vidéo' : 'Mettre la vidéo en pause'}
+                title={videoPaused ? 'Relancer la vidéo' : 'Mettre la vidéo en pause'}
+                onClick={toggleVideo}
+              >
+                {videoPaused ? <FaPlay aria-hidden="true" /> : <FaPause aria-hidden="true" />}
+              </button>
+            )}
           </div>
         </div>
       </section>

@@ -66,13 +66,52 @@ body:not(.ea-dark-scheme) {
 }
 
 /* --- Logo dans le menu --- */
+/* Le contour n'est plus une bordure : c'est un cercle SVG (.bo-logo-ring) qui peut se dessiner */
+.bo-logo-mark {
+    position: relative;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+    line-height: 0;
+}
+
 .bo-logo {
     width: 32px;
     height: 32px;
-    margin-right: 6px;
     border-radius: 50%;
-    border: 2px solid var(--ea-primary);
-    vertical-align: middle;
+}
+
+/* pathLength="100" : tracé complet = 100. rotate(-90deg) : départ en haut du cercle */
+.bo-logo-ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    transform: rotate(-90deg);
+    pointer-events: none;
+}
+
+.bo-logo-ring circle {
+    fill: none;
+    stroke: var(--ea-primary);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 0;
+}
+
+/* Tracé d'aiguille au chargement : seulement quand logo.js ajoute la classe (1re page de la session),
+   et jamais si "réduire les animations" est activé */
+@media (prefers-reduced-motion: no-preference) {
+    .bo-logo-trace .bo-logo-ring circle {
+        animation: bo-logo-trace 1s ease-in-out 0.2s both;
+    }
+}
+
+@keyframes bo-logo-trace {
+    from { stroke-dashoffset: 100; }
+    to { stroke-dashoffset: 0; }
 }
 
 .bo-cyan {

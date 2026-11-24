@@ -44,7 +44,16 @@ const Header = () => {
     <header className={`site-header ${overlay ? 'site-header--overlay' : 'site-header--solid'}`}>
       <div className="container site-header__inner">
         <Link to="/" className="brand" onClick={handleBrandClick}>
-          <img src={logo} alt="" className="brand__logo" />
+          {/* Logo animé : au chargement, son contour cyan se dessine comme un tracé d'aiguille
+              (même idée que le titre de l'accueil) ; au survol, il vibre comme une machine
+              à tatouer qu'on lance. Styles et réglages dans Header.scss. */}
+          <span className="brand__mark">
+            <img src={logo} alt="" className="brand__logo" />
+            <svg className="brand__ring" viewBox="0 0 52 52" aria-hidden="true">
+              <circle cx="26" cy="26" r="25" pathLength="100" />
+            </svg>
+            <span className="brand__needle" aria-hidden="true" />
+          </span>
           <span className="brand__name">Boogi'ink</span>
         </Link>
 
