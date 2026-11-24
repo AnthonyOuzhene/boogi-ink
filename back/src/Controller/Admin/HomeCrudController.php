@@ -83,13 +83,18 @@ class HomeCrudController extends AbstractCrudController
             ->hideOnIndex();
 
         // La vidéo du haut de l'accueil est un fichier fixe du site (front/src/assets/videos) :
-        // seule l'accroche se règle ici
-        yield FormField::addFieldset("Haut de la page d'accueil")->setIcon('fa fa-heading');
+        // seule l'accroche se règle ici, et uniquement par le super admin (le développeur).
+        // setPermission : pour un simple admin, ces champs n'existent pas dans le formulaire,
+        // ils ne peuvent donc ni être vus ni être modifiés (même en trafiquant la page).
+        yield FormField::addFieldset("Haut de la page d'accueil")->setIcon('fa fa-heading')
+            ->setPermission('ROLE_SUPER_ADMIN');
         yield TextField::new('heroTitle', 'Accroche — première ligne')
             ->setHelp('En blanc. Exemple : « L\'encre qui »')
+            ->setPermission('ROLE_SUPER_ADMIN')
             ->hideOnIndex();
         yield TextField::new('heroHighlight', 'Accroche — seconde ligne')
             ->setHelp('En cyan lumineux. Exemple : « vous ressemble »')
+            ->setPermission('ROLE_SUPER_ADMIN')
             ->hideOnIndex();
 
         yield FormField::addFieldset("Page L'atelier")->setIcon('fa fa-store');

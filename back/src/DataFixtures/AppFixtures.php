@@ -227,8 +227,10 @@ class AppFixtures extends Fixture
                 ->setPosition(($position + 1) * 10));
         }
 
-        // --- Administrateur (seul type de compte : le site n'a plus d'espace client) ---
+        // --- Comptes du backoffice (le site n'a pas d'espace client) ---
+        // Admin : le salon. Super admin : le développeur (tous les droits, voir security.yaml)
         $manager->persist($this->createUser('admin@boogi-ink.local', 'Admin', 'admin1234', ['ROLE_ADMIN']));
+        $manager->persist($this->createUser('dev@boogi-ink.local', 'Développeur', 'dev12345', ['ROLE_SUPER_ADMIN']));
 
         // --- Livre d'or (avis déposés par le formulaire public : un simple nom, pas de compte) ---
         $comments = [

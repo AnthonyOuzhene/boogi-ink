@@ -11,6 +11,12 @@ security:
                 class: App\Entity\User
                 property: email
 
+    # Hiérarchie des rôles : le super admin (le développeur) a tous les droits de l'admin (le salon),
+    # plus ceux réservés au super admin (accroche de l'accueil, gestion des comptes super admin).
+    # Voir HomeCrudController, UserCrudController et Security\Voter\AdminUserVoter.
+    role_hierarchy:
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
     firewalls:
         dev:
             # Ensure dev tools and static assets are always allowed

@@ -3,9 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Security\Voter\AdminUserVoter;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -31,7 +37,24 @@ class UserCrudController extends AbstractCrudController
         return $crud
             ->setEntityLabelInSingular('Administrateur')
             ->setEntityLabelInPlural('Administrateurs')
-            ->setSearchFields(['name', 'email']);
+            ->setSearchFields(['name', 'email'])
+            // Fiche, modification, suppression : un admin ne peut pas toucher au compte du super admin
+            ->setEntityPermission(AdminUserVoter::MANAGE);
+    }
+
+    // Liste : un admin ne voit pas le compte du super admin (filtré dès la requête SQL)
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            // Les rôles sont stockés en JSON : on exclut les comptes qui contiennent ROLE_SUPER_ADMIN
+            $queryBuilder
+                ->andWhere('entity.roles NOT LIKE :superAdmin')
+                ->setParameter('superAdmin', '%ROLE_SUPER_ADMIN%');
+        }
+
+        return $queryBuilder;
     }
 
     public function configureFields(string $pageName): iterable
@@ -51,7 +74,9 @@ class UserCrudController extends AbstractCrudController
     // Appelé par EasyAdmin juste avant l'INSERT
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $entityInstance->setRoles(['ROLE_ADMIN']); // tout compte créé ici accède au backoffice
+        // Tout compte créé ici est admin (jamais super admin : celui-ci se crée en ligne de commande,
+        // app:create-admin --super). La modification d'un compte ne touche pas à ses rôles.
+        $entityInstance->setRoles(['ROLE_ADMIN']);
         $this->hashPassword($entityInstance);
         parent::persistEntity($entityManager, $entityInstance);
     }
