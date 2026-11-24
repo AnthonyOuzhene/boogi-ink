@@ -44,6 +44,40 @@
     }
   }
 
+  // Bouton pause / lecture de la vidéo (accessibilité) : discret, en bas à droite,
+  // juste au-dessus des cartes à jouer qui recouvrent le bas du hero (170 px, 64 px sur mobile)
+  &__pause {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 200px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(230, 244, 246, 0.35);
+    background: rgba(7, 10, 12, 0.5);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+
+    &:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    @media (max-width: 900px) {
+      bottom: 88px;
+    }
+  }
+
   // Deux calques : un bleu pétrole en "multiply" (duotone) + un voile sombre pour la lisibilité
   // Voile plus sombre à gauche (derrière le titre et les boutons, pour la lisibilité),
   // qui s'éclaircit vers la droite pour laisser voir la vidéo

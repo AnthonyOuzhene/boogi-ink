@@ -1,10 +1,12 @@
 import useApi from '../hooks/useApi';
+import usePageTitle from '../hooks/usePageTitle';
 import PageHero from '../components/PageHero';
 import FlashGallery from '../components/FlashGallery';
 import './pages.scss';
 
 /** Tous les flashs (backoffice : "Flashs"), disponibles d'abord */
 const FlashsPage = () => {
+  usePageTitle('Flashs');
   const { data: flashes, loading } = useApi('/flashes');
 
   return (

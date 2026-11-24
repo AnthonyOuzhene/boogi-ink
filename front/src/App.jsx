@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 
@@ -26,14 +26,39 @@ const App = () => {
     if (!hash) window.scrollTo(0, 0);
   }, [pathname, hash]);
 
+  // Accessibilité : le site change de page sans recharger le navigateur, un lecteur d'écran
+  // ne s'en rend donc pas compte. À chaque nouvelle page, on place le focus sur son titre (h1),
+  // qu'il annonce ; à défaut, sur le contenu principal. Pas au premier affichage du site.
+  const mainRef = useRef(null);
+  // Adresse de la page précédente : même adresse = premier affichage (ou effet rejoué par
+  // <StrictMode> en développement), on ne touche pas au focus
+  const previousPathname = useRef(pathname);
+  useEffect(() => {
+    if (previousPathname.current === pathname) return;
+    previousPathname.current = pathname;
+    const target = mainRef.current?.querySelector('h1') ?? mainRef.current;
+    if (!target) return;
+    target.setAttribute('tabindex', '-1'); // un titre ne reçoit pas le focus sans cela
+    target.focus({ preventScroll: true });
+  }, [pathname]);
+
+  // Lien "Aller au contenu" : saute le menu (utile au clavier sur chaque page)
+  const skipToContent = (e) => {
+    e.preventDefault(); // pas de "#contenu" dans l'URL (le site s'en sert pour viser des sections)
+    mainRef.current?.focus();
+  };
+
   return (
     <div className="app">
+      <a href="#contenu" className="skip-link" onClick={skipToContent}>Aller au contenu</a>
+
       {/* Un seul conteneur de notifications pour tout le site */}
       <ToastContainer position="top-center" autoClose={5000} limit={3} theme="dark" />
 
       <Header />
-      {/* Sur l'accueil, la grande photo passe sous le menu transparent */}
-      <main className={isHome ? 'site-main' : 'site-main site-main--offset'}>
+      {/* Sur l'accueil, la grande photo passe sous le menu transparent.
+          tabIndex -1 : peut recevoir le focus (lien "Aller au contenu", changement de page) */}
+      <main id="contenu" ref={mainRef} tabIndex={-1} className={isHome ? 'site-main' : 'site-main site-main--offset'}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/realisations" element={<RealisationsPage />} />

@@ -1,6 +1,9 @@
+import { useRef, useState } from 'react';
 import { Link } from 'react-router';
+import { FaPause, FaPlay } from 'react-icons/fa';
 import useApi from '../hooks/useApi';
 import useMediaQuery from '../hooks/useMediaQuery';
+import usePageTitle from '../hooks/usePageTitle';
 import { useSalon } from '../context/SalonContext';
 import SalonCards from '../components/SalonCards';
 import GalleryGrid from '../components/GalleryGrid';
@@ -19,9 +22,22 @@ import './pages.scss';
 import './HomePage.scss';
 
 const HomePage = () => {
+  usePageTitle(null); // "Boogi'ink — Salon de tatouage"
   const { salon, loading: salonLoading } = useSalon();
   // Réglage système (accessibilité) : pas de vidéo qui bouge, la photo fixe à la place
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+
+  // Bouton pause de la vidéo (accessibilité, WCAG 2.2.2 : un contenu qui bouge plus de
+  // 5 secondes et démarre tout seul doit pouvoir être arrêté)
+  const videoRef = useRef(null);
+  const [videoPaused, setVideoPaused] = useState(false);
+  const toggleVideo = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) video.play();
+    else video.pause();
+    setVideoPaused(!video.paused);
+  };
   const { data: galleries } = useApi('/galleries');
   const { data: artists } = useApi('/artists');
   const { data: flashes } = useApi('/flashes');
@@ -46,6 +62,7 @@ const HomePage = () => {
           // playsInline : sur iPhone, reste dans la page au lieu de passer en plein écran.
           // poster : photo affichée le temps que la vidéo se charge
           <video
+            ref={videoRef}
             className="hero__img"
             src={heroVideo}
             poster={heroPoster}
@@ -58,6 +75,16 @@ const HomePage = () => {
           />
         )}
         <div className="hero__tint" aria-hidden="true" />
+        {!reduceMotion && (
+          <button
+            type="button"
+            className="hero__pause"
+            aria-label={videoPaused ? 'Relancer la vidéo' : 'Mettre la vidéo en pause'}
+            onClick={toggleVideo}
+          >
+            {videoPaused ? <FaPlay aria-hidden="true" /> : <FaPause aria-hidden="true" />}
+          </button>
+        )}
         <div className="container hero__content">
           <p className="eyebrow">Salon de tatouage{salon?.city && ` — ${salon.city}`}</p>
           {/* Accroche : backoffice, menu "Salon" ; textes par défaut si les champs sont vides.

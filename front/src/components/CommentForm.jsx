@@ -1,8 +1,18 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import api, { getViolations } from '../api/client';
 
 const EMPTY_FORM = { authorName: '', title: '', projectName: '', message: '', website: '' };
+// Ordre des champs dans le formulaire : après un envoi refusé, le focus va au premier en erreur
+const FIELD_ORDER = ['authorName', 'projectName', 'title', 'message'];
+
+/**
+ * Attributs d'accessibilité d'un champ (WCAG 3.3.1) : aria-invalid signale le champ en erreur,
+ * aria-describedby relie le message d'erreur au champ : le lecteur d'écran le lit avec.
+ */
+const errorProps = (errors, name) => (errors[name]
+  ? { 'aria-invalid': true, 'aria-describedby': `${name}-error` }
+  : {});
 
 /**
  * Formulaire PUBLIC du livre d'or : pas de compte, chacun peut laisser un avis.
@@ -14,6 +24,8 @@ const CommentForm = () => {
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false); // message de remerciement après l'envoi
+
+  const formRef = useRef(null);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -33,8 +45,12 @@ const CommentForm = () => {
       setForm(EMPTY_FORM);
       setSent(true);
     } catch (error) {
-      setErrors(getViolations(error));
+      const violations = getViolations(error);
+      setErrors(violations);
       toast.error("L'envoi a échoué, vérifie le formulaire.");
+      // Focus sur le premier champ en erreur : le clavier et le lecteur d'écran y vont directement
+      const firstInvalid = FIELD_ORDER.find((name) => violations[name]);
+      if (firstInvalid) formRef.current?.elements[firstInvalid]?.focus();
     } finally {
       setSending(false);
     }
@@ -57,34 +73,34 @@ const CommentForm = () => {
       <h2 className="section-title form-title">Partage ton <span className="text-cyan">expérience</span></h2>
       <p className="muted form-intro">Pas besoin de compte. Ton avis sera publié après validation par le salon.</p>
 
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit} ref={formRef}>
         <div className="form-row">
           <div className="field">
             <label htmlFor="authorName">Ton prénom ou un pseudo</label>
             <input id="authorName" name="authorName" type="text" required maxLength={80} autoComplete="given-name"
-              value={form.authorName} onChange={handleChange} />
-            {errors.authorName && <p className="field__error">{errors.authorName}</p>}
+              value={form.authorName} onChange={handleChange} {...errorProps(errors, 'authorName')} />
+            {errors.authorName && <p id="authorName-error" className="field__error">{errors.authorName}</p>}
           </div>
           <div className="field">
             <label htmlFor="projectName">Ton tatouage (facultatif)</label>
             <input id="projectName" name="projectName" type="text" placeholder="Ex. : rose sur l'avant-bras" maxLength={150}
-              value={form.projectName} onChange={handleChange} />
-            {errors.projectName && <p className="field__error">{errors.projectName}</p>}
+              value={form.projectName} onChange={handleChange} {...errorProps(errors, 'projectName')} />
+            {errors.projectName && <p id="projectName-error" className="field__error">{errors.projectName}</p>}
           </div>
         </div>
 
         <div className="field">
           <label htmlFor="title">Titre</label>
           <input id="title" name="title" type="text" placeholder="En quelques mots" required maxLength={150}
-            value={form.title} onChange={handleChange} />
-          {errors.title && <p className="field__error">{errors.title}</p>}
+            value={form.title} onChange={handleChange} {...errorProps(errors, 'title')} />
+          {errors.title && <p id="title-error" className="field__error">{errors.title}</p>}
         </div>
 
         <div className="field">
           <label htmlFor="message">Ton avis</label>
           <textarea id="message" name="message" placeholder="Raconte-moi ton expérience" required maxLength={5000}
-            value={form.message} onChange={handleChange} />
-          {errors.message && <p className="field__error">{errors.message}</p>}
+            value={form.message} onChange={handleChange} {...errorProps(errors, 'message')} />
+          {errors.message && <p id="message-error" className="field__error">{errors.message}</p>}
         </div>
 
         {/* Anti-spam ("pot de miel") : champ invisible pour les visiteurs, hors du parcours clavier

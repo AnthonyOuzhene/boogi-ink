@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { toast } from 'react-toastify';
 import { FaDirections, FaFacebookMessenger, FaInstagram, FaMapMarkerAlt, FaRegCopy } from 'react-icons/fa';
 import { useSalon } from '../context/SalonContext';
+import usePageTitle from '../hooks/usePageTitle';
 import { toLines } from '../utils/format';
 import { instagramMessageUrl, messengerUrl } from '../utils/social';
 import PageHero from '../components/PageHero';
@@ -31,6 +32,7 @@ const MESSAGE_TEMPLATE = `Salut ! J'ai un projet de tatouage :
  * Coordonnées, horaires et réseaux : backoffice, menu "Salon".
  */
 const ContactPage = () => {
+  usePageTitle('Contact');
   const { salon } = useSalon();
   const fullAddress = salon ? `${salon.address}, ${salon.zipCode} ${salon.city}` : null;
   const instagram = instagramMessageUrl(salon?.instagramUrl);

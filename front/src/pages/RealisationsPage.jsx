@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router';
 import useApi from '../hooks/useApi';
+import usePageTitle from '../hooks/usePageTitle';
 import PageHero from '../components/PageHero';
 import GalleryGrid from '../components/GalleryGrid';
 import GalleryViewer from '../components/GalleryViewer';
@@ -36,6 +37,9 @@ const RealisationsPage = () => {
   const openedIndex = galleries?.findIndex(
     (gallery) => gallery.slug === openedSlug || String(gallery.id) === openedSlug,
   ) ?? -1;
+
+  // Visionneuse ouverte : le titre de l'onglet donne le nom du tatouage
+  usePageTitle(openedIndex >= 0 ? `${galleries[openedIndex].name} — Réalisations` : 'Réalisations');
 
   // Passage d'une réalisation à l'autre : "replace" remplace l'entrée de l'historique,
   // pour que "précédent" ferme la visionneuse au lieu de rejouer chaque réalisation vue

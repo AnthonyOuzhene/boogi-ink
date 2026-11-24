@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import useApi from '../hooks/useApi';
 import useScrollToHash from '../hooks/useScrollToHash';
+import usePageTitle from '../hooks/usePageTitle';
 import { useSalon } from '../context/SalonContext';
 import { toParagraphs } from '../utils/format';
 import PageHero from '../components/PageHero';
@@ -18,6 +19,7 @@ import './pages.scss';
  * Tout le contenu vient du backoffice ; une section sans contenu n'est pas affichée.
  */
 const AtelierPage = () => {
+  usePageTitle("L'atelier");
   const { salon } = useSalon();
   const { data: milestones, loading: milestonesLoading } = useApi('/milestones');
   const { data: artists, loading: artistsLoading } = useApi('/artists');

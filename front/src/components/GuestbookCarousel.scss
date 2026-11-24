@@ -140,6 +140,18 @@
     }
   }
 
+  // Bouton pause : même style que les flèches, un peu plus petit (action secondaire)
+  &__pause {
+    width: 40px;
+    height: 40px;
+    margin-left: -12px; // rapproché de la flèche "suivant"
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
   &__dots {
     display: flex;
     gap: 4px;

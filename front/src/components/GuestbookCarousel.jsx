@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaPause, FaPlay } from 'react-icons/fa';
 import useApi from '../hooks/useApi';
 import { formatDate } from '../utils/format';
 import './GuestbookCarousel.scss';
@@ -28,12 +28,14 @@ const GuestbookCarousel = ({ className = '' }) => {
   // ce qui permet à React de les faire GLISSER d'une position à l'autre au lieu de les recréer
   const [current, setCurrent] = useState(0);
 
-  // Deux raisons de mettre en pause, chacune avec son propre état :
+  // Trois raisons de mettre en pause, chacune avec son propre état :
   const [hovered, setHovered] = useState(false);             // souris sur l'avis central (on le lit)
   const [keyboardFocus, setKeyboardFocus] = useState(false); // navigation au clavier dans le carrousel
+  const [paused, setPaused] = useState(false);               // bouton pause (accessibilité, WCAG 2.2.2)
 
   const count = comments?.length ?? 0;
-  const autoplay = count > 1 && !hovered && !keyboardFocus && !prefersReducedMotion();
+  const canAutoplay = count > 1 && !prefersReducedMotion();
+  const autoplay = canAutoplay && !hovered && !keyboardFocus && !paused;
 
   // Défilement automatique : relancé après chaque changement d'avis
   useEffect(() => {
@@ -124,6 +126,17 @@ const GuestbookCarousel = ({ className = '' }) => {
           <button type="button" className="guestbook__arrow" aria-label="Avis suivant" onClick={() => goTo(current + 1)}>
             <FaArrowRight aria-hidden="true" />
           </button>
+          {/* Arrêt / reprise du défilement automatique (pas de bouton si le défilement est déjà coupé) */}
+          {canAutoplay && (
+            <button
+              type="button"
+              className="guestbook__arrow guestbook__pause"
+              aria-label={paused ? 'Reprendre le défilement des avis' : 'Mettre en pause le défilement des avis'}
+              onClick={() => setPaused(!paused)}
+            >
+              {paused ? <FaPlay aria-hidden="true" /> : <FaPause aria-hidden="true" />}
+            </button>
+          )}
         </div>
       )}
     </section>

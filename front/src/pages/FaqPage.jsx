@@ -1,11 +1,13 @@
 import { Link } from 'react-router';
 import useApi from '../hooks/useApi';
+import usePageTitle from '../hooks/usePageTitle';
 import PageHero from '../components/PageHero';
 import FaqList from '../components/FaqList';
 import './pages.scss';
 
 /** Page /faq : toutes les questions fréquentes, gérées dans le backoffice (menu "FAQ") */
 const FaqPage = () => {
+  usePageTitle('Questions fréquentes');
   const { data: faqs, loading, error } = useApi('/faqs');
 
   return (

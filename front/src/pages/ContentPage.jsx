@@ -1,5 +1,6 @@
 import { useParams } from 'react-router';
 import useApi from '../hooks/useApi';
+import usePageTitle from '../hooks/usePageTitle';
 import { formatDate, toBlocks } from '../utils/format';
 import PageHero from '../components/PageHero';
 import NotFoundPage from './NotFoundPage';
@@ -10,6 +11,8 @@ const ContentPage = () => {
   const { slug } = useParams();
   // L'API identifie les pages par leur slug : GET /api/pages/mentions-legales
   const { data: page, loading, error } = useApi(`/pages/${slug}`);
+  // Titre de l'onglet : celui de la page (avant tout "return" : un hook est toujours appelé)
+  usePageTitle(error?.response?.status === 404 ? 'Page introuvable' : (loading ? null : page?.title));
 
   if (error?.response?.status === 404) return <NotFoundPage />;
   if (loading) return <p className="container section muted">Chargement…</p>;

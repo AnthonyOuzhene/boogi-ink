@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import useApi from '../hooks/useApi';
 import useMediaQuery from '../hooks/useMediaQuery';
+import usePageTitle from '../hooks/usePageTitle';
 import { formatDate } from '../utils/format';
 import PageHero from '../components/PageHero';
 import CommentForm from '../components/CommentForm';
@@ -20,6 +21,7 @@ const MOBILE_QUERY = '(max-width: 1024px)'; // couvre les tablettes, y compris e
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const VisitorBookPage = () => {
+  usePageTitle("Livre d'or");
   // L'API ne renvoie que les avis validés dans le backoffice, du plus récent au plus ancien
   const { data: comments, loading, error } = useApi('/comments');
   const isMobile = useMediaQuery(MOBILE_QUERY);
