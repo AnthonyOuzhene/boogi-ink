@@ -32,7 +32,7 @@ Pour un vrai compte admin : `ddev console app:create-admin vous@exemple.fr "Votr
 
 Le bouton « Voir le site » du backoffice pointe vers `FRONT_URL` (`back/.env`, par défaut `http://localhost:5180`, le port du front fixé dans `front/vite.config.js`). Pour une autre adresse, surchargez-la dans `back/.env.local`.
 
-- Backoffice : https://boogi-ink.ddev.site/admin
+- Backoffice : https://boogi-ink.ddev.site/boogi-0806 (connexion : `/boogi-0806/login`). Volontairement pas `/admin`, l'adresse testée par les robots ; le préfixe est défini dans `DashboardController` et doit rester identique dans `access_control` (`back/config/packages/security.yaml`).
 - Documentation de l'API (partie API Platform) : https://boogi-ink.ddev.site/api/docs
 
 ## Démarrer le front
@@ -58,10 +58,10 @@ Déclarées par `#[ApiResource]` dans `back/src/Entity/`. Aucune écriture possi
 
 | Route | Contenu | Entité |
 |---|---|---|
-| `GET /api/homes`, `/api/homes/{id}` | Fiche du salon : coordonnées, horaires, réseaux, accroche et photo de l'accueil | `Home` |
+| `GET /api/homes`, `/api/homes/{id}` | Fiche du salon : coordonnées, horaires, réseaux, accroche de l'accueil | `Home` |
 | `GET /api/artists`, `/api/artists/{id}` | Présentation du tatoueur | `Artist` |
 | `GET /api/categories`, `/api/categories/{id}` | Styles de tatouage | `Category` |
-| `GET /api/galleries` (`?category=fine-line`, le slug du style), `/api/galleries/{id}` | Réalisations et leurs photos | `Gallery`, `Picture` |
+| `GET /api/galleries` (`?category=fine-line`, le slug du style), `/api/galleries/{id}` | Réalisations : photos, dessin préparatoire, timelapse (`timelapseUrl`), lien Instagram (`instagramUrl`) | `Gallery`, `Picture` |
 | `GET /api/comments`, `/api/comments/{id}` | Livre d'or : **avis publiés uniquement** (filtre `Doctrine/PublishedCommentExtension`) | `Comment` |
 | `GET /api/home_cards` | Cartes à jouer de l'accueil (points forts du salon) | `HomeCard` |
 | `GET /api/faqs` | Questions fréquentes, triées | `Faq` |
@@ -89,7 +89,7 @@ Fonctionnement :
 - **Validation** : `#[MapRequestPayload]` transforme le JSON en DTO et le valide avant d'entrer dans la méthode.
 - **Sécurité** : l'API est entièrement publique (pare-feu `api` sans authentification dans `back/config/packages/security.yaml`). Seul le backoffice demande une connexion (session, page `/boogi-0806/login`, tentatives limitées par `login_throttling`). Le backoffice est sur `/boogi-0806` (et non `/admin`, testé par les robots).
 
-$1
+### Codes de réponse
 
 | Code | Signification |
 |---|---|
@@ -102,7 +102,7 @@ $1
 Format d'une erreur `422`, champ par champ :
 
 ```json
-{ "violations": [ { "propertyPath": "email", "title": "Un compte existe déjà avec cet email." } ] }
+{ "violations": [ { "propertyPath": "authorName", "title": "Cette valeur ne doit pas être vide." } ] }
 ```
 
 Le texte de l'erreur est dans `title` pour `GuestbookController`, et dans `message` pour API Platform. Côté React, `getViolations()` (`front/src/api/client.js`) lit les deux.
@@ -112,6 +112,33 @@ Le texte de l'erreur est dans `title` pour `GuestbookController`, et dans `messa
 - `ddev console debug:router` liste toutes les routes : `_api_…` pour API Platform, `api_…` pour `GuestbookController`.
 - Swagger (`/api/docs`) ne documente que la partie API Platform.
 - `debug:router` affiche aussi `GET /api/faqs/{id}` (et de même pour les flashs, frises, étapes, photos du salon, engagements) : c'est une route technique créée par API Platform pour identifier chaque élément ; elle n'est pas exposée (404).
+
+## Photos et vidéos
+
+### Photos envoyées depuis le backoffice : converties en WebP
+
+Chaque photo envoyée (réalisations et leurs photos supplémentaires, dessins préparatoires, flashs, photos du salon, artiste) est **automatiquement** réduite à 2 000 px au plus sur le grand côté, convertie en WebP (qualité 80) ; l'original est supprimé. Une photo de téléphone de plusieurs Mo passe à quelques centaines de Ko.
+
+- Conversion : `back/src/Service/ImageOptimizer.php` (extension GD de PHP). La constante `IMAGE_FIELDS` liste les champs photo traités : **un nouveau champ photo doit y être ajouté**.
+- Déclenchement : `back/src/EventListener/ImageWebpListener.php`, à chaque enregistrement en base (événement Doctrine `onFlush`).
+- Photos envoyées avant cette conversion : `ddev console app:images:convert-webp` (sans risque à relancer : les WebP sont ignorés).
+
+### Timelapses des réalisations
+
+Champ « Vidéo timelapse » d'une réalisation : fichier **MP4, 20 Mo maximum**, sans conversion côté serveur (la vidéo doit être exportée déjà légère : 720p ou 1080p, sans son). Sur le site : badge « Timelapse » sur la vignette, aperçu au survol (à la souris), et diapositive vidéo dans la visionneuse. Le champ « Lien Instagram » (post de la réalisation) ajoute un bouton « Voir sur Instagram ».
+
+### Vidéo de l'accueil
+
+Fichier fixe du front (pas dans le backoffice) : `front/src/assets/videos/hero-tattoo.mp4`, avec son image fixe `front/src/assets/images/hero-tattoo-poster.jpg` (affichée pendant le chargement, et à la place de la vidéo si « réduire les animations » est activé). Pour la changer : remplacer les deux fichiers en gardant leurs noms (sinon, modifier les imports en haut de `front/src/pages/HomePage.jsx`), puis reconstruire le front. Format conseillé : MP4 H.264 sans son, quelques secondes qui bouclent, 1 à 3 Mo.
+
+## Mise en production
+
+À vérifier sur l'hébergement :
+
+- **PHP** : extension GD avec WebP (`php -r 'var_dump(gd_info()["WebP Support"]);'` doit afficher `true`), `memory_limit` d'au moins 256M (conversion des grandes photos).
+- **Envoi de fichiers** : `upload_max_filesize` et `post_max_size` d'au moins 25M (timelapses de 20 Mo), et la limite du serveur web (`client_max_body_size` sous nginx).
+- **Après chaque mise à jour** : `php bin/console doctrine:migrations:migrate`.
+- **Une seule fois** : `php bin/console app:images:convert-webp` pour convertir les photos déjà en ligne.
 
 ## Commandes utiles
 
@@ -123,5 +150,7 @@ Le texte de l'erreur est dans `title` pour `GuestbookController`, et dans `messa
 | `ddev console doctrine:migrations:migrate` | Appliquer les migrations |
 | `ddev console doctrine:fixtures:load` | Recharger les données de démo (⚠ vide la base) |
 | `ddev console cache:clear` | Vider le cache |
+| `ddev console app:create-admin email "Nom"` | Créer un compte administrateur du backoffice |
+| `ddev console app:images:convert-webp` | Convertir en WebP les photos déjà envoyées |
 | `npm run lint` (front) | Vérifier le code React |
 | `npm run build` (front) | Construire le site pour la production (`front/dist/`) |
