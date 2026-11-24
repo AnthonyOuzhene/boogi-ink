@@ -123,15 +123,11 @@ final class LegalPages
 
             ## Services extérieurs
 
-            Certains éléments du site sont fournis par d'autres sociétés, qui reçoivent alors des informations techniques (votre adresse IP, votre navigateur) :
+            En simple visite, votre navigateur ne contacte que le serveur du site : les polices de caractères et les publications Instagram affichées sur l'accueil sont hébergées sur ce serveur. D'autres sociétés ne reçoivent des informations (adresse IP, navigateur) que si vous le choisissez :
 
-            • Google Maps, sur la page Contact : la carte est affichée par Google, qui peut déposer ses propres cookies. Voir la politique de confidentialité de Google : policies.google.com/privacy
+            • Google Maps, sur la page Contact : la carte ne se charge que si vous cliquez sur « Afficher la carte ». Google peut alors déposer ses propres cookies. Le bouton « Itinéraire » ouvre Google Maps dans un nouvel onglet. Voir la politique de confidentialité de Google : policies.google.com/privacy
 
-            • Google Fonts : les polices de caractères du site sont chargées depuis les serveurs de Google.
-
-            • Instagram : les dernières publications du salon affichées sur l'accueil sont copiées sur le serveur du site. Votre navigateur ne contacte Instagram que si vous cliquez sur une publication ou sur un lien vers Instagram ou Facebook.
-
-            [À vérifier : si la carte Google Maps et les polices Google Fonts sont retirées ou hébergées autrement, mettre à jour ce paragraphe.]
+            • Instagram et Facebook : uniquement si vous cliquez sur une publication, un bouton « Suivre » ou « Écrire ». Vous êtes alors soumis aux règles de Meta.
 
             ## Hébergement et journaux techniques
 

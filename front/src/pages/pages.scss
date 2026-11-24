@@ -473,6 +473,54 @@
     filter: grayscale(1) invert(0.92) contrast(0.9);
   }
 
+  // Avant le clic : même emplacement que la carte, quadrillage façon plan, adresse et boutons
+  &__map-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: 480px;
+    padding: 40px 24px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    text-align: center;
+    background:
+      radial-gradient(circle at 50% 45%, rgba(34, 211, 238, 0.12), transparent 55%),
+      repeating-linear-gradient(0deg, transparent 0 47px, rgba(230, 244, 246, 0.05) 47px 48px),
+      repeating-linear-gradient(90deg, transparent 0 47px, rgba(230, 244, 246, 0.05) 47px 48px),
+      var(--surface);
+
+    @media (max-width: 600px) {
+      min-height: 360px;
+    }
+  }
+
+  &__map-pin {
+    width: 40px;
+    height: 40px;
+    color: var(--pink);
+    filter: drop-shadow(0 0 12px rgba(255, 20, 147, 0.5));
+  }
+
+  &__map-address {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  &__map-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  &__map-note {
+    max-width: 420px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
   @media (max-width: 900px) {
     gap: 64px;
   }

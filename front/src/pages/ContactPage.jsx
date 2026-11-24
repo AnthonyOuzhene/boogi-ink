@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { toast } from 'react-toastify';
-import { FaFacebookMessenger, FaInstagram, FaRegCopy } from 'react-icons/fa';
+import { FaDirections, FaFacebookMessenger, FaInstagram, FaMapMarkerAlt, FaRegCopy } from 'react-icons/fa';
 import { useSalon } from '../context/SalonContext';
 import { toLines } from '../utils/format';
 import { instagramMessageUrl, messengerUrl } from '../utils/social';
@@ -34,6 +35,9 @@ const ContactPage = () => {
   const fullAddress = salon ? `${salon.address}, ${salon.zipCode} ${salon.city}` : null;
   const instagram = instagramMessageUrl(salon?.instagramUrl);
   const messenger = messengerUrl(salon?.facebookUrl);
+  // Carte Google chargée seulement au clic : Google peut déposer des cookies, il faut donc
+  // l'accord du visiteur (CNIL). Son clic sur "Afficher la carte" vaut consentement.
+  const [showMap, setShowMap] = useState(false);
 
   const copyTemplate = async () => {
     try {
@@ -126,12 +130,36 @@ const ContactPage = () => {
 
       {fullAddress && (
         <section className="container section">
-          <iframe
-            className="contact__map"
-            title="Plan d'accès au salon"
-            src={`https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`}
-            loading="lazy"
-          />
+          {showMap ? (
+            <iframe
+              className="contact__map"
+              title="Plan d'accès au salon"
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`}
+            />
+          ) : (
+            // Avant le clic : rien n'est chargé depuis Google
+            <div className="contact__map-placeholder">
+              <FaMapMarkerAlt className="contact__map-pin" aria-hidden="true" />
+              <p className="contact__map-address">{fullAddress}</p>
+              <div className="contact__map-actions">
+                <button type="button" className="btn btn--primary" onClick={() => setShowMap(true)}>
+                  Afficher la carte
+                </button>
+                {/* L'itinéraire s'ouvre directement dans Google Maps (nouvel onglet) */}
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn--ghost"
+                >
+                  <FaDirections aria-hidden="true" /> Itinéraire
+                </a>
+              </div>
+              <p className="contact__map-note">
+                La carte est fournie par Google, qui peut déposer des cookies : elle ne se charge que si tu cliques.
+              </p>
+            </div>
+          )}
         </section>
       )}
     </>
