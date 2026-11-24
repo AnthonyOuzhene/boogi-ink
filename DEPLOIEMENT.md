@@ -137,7 +137,7 @@ Les fixtures ne tournent pas en production : la base est vide après la premièr
 - [ ] **L'artiste** : présentation, photos (accueil et L'atelier)
 - [ ] **Cartes de l'accueil**, **Déroulé d'une séance**, **Engagements d'hygiène**, **FAQ**
 - [ ] **Styles** (catégories), puis les premières **Réalisations** et **Flashs**
-- [ ] **Pages** : mentions légales (obligatoires), politique de confidentialité
+- [ ] **Pages légales** : `php bin/console app:pages:install` crée les mentions légales, la politique de confidentialité et les règles sanitaires avec un texte de départ ; compléter ensuite chaque passage **[À compléter : …]** dans le backoffice (menu « Pages ») — les mentions légales sont **obligatoires**
 - [ ] Le tableau de bord du backoffice affiche une liste de contrôle du contenu manquant : la suivre jusqu'au bout
 
 > Idée en attente : une commande `app:install` qui créerait ce contenu de départ automatiquement.

@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Faq;
 use App\Entity\Flash;
 use App\Entity\Gallery;
+use App\Content\LegalPages;
 use App\Entity\Home;
 use App\Entity\HomeCard;
 use App\Entity\HygieneCommitment;
@@ -87,14 +88,9 @@ class AppFixtures extends Fixture
                 ->setPosition(($position + 1) * 10)); // 10, 20, 30 : on peut glisser une question entre deux
         }
 
-        // --- Pages de contenu (texte juridique à rédiger avec le salon) ---
-        $pages = [
-            ['Mentions légales', 'mentions-legales', "## Éditeur du site\n\n[Nom de l'entreprise, forme juridique, adresse du siège, numéro SIRET, nom du responsable de la publication.]\n\n## Hébergement\n\n[Nom, adresse et téléphone de l'hébergeur.]\n\n## Propriété intellectuelle\n\n[Les photos des réalisations sont la propriété du salon et ne peuvent pas être réutilisées sans autorisation.]"],
-            ['Politique de confidentialité', 'politique-de-confidentialite', "## Données collectées\n\n[Création de compte : pseudo, e-mail, mot de passe chiffré. Livre d'or : avis publiés.]\n\n## Utilisation\n\n[À quoi servent ces données, combien de temps elles sont conservées.]\n\n## Vos droits\n\n[Accès, rectification, suppression : comment exercer ses droits (adresse e-mail de contact).]"],
-            ['Règles sanitaires', 'regles-sanitaires', "## Avant la séance\n\n[Conseils de préparation.]\n\n## Hygiène au salon\n\n[Matériel stérile à usage unique, désinfection…]\n\n## Après la séance\n\n[Soins de cicatrisation.]"],
-        ];
-        foreach ($pages as [$title, $slug, $content]) {
-            $manager->persist((new Page())->setTitle($title)->setSlug($slug)->setContent($content));
+        // --- Pages légales : même texte de départ qu'en production (App\Content\LegalPages) ---
+        foreach (LegalPages::all() as $page) {
+            $manager->persist((new Page())->setTitle($page['title'])->setSlug($page['slug'])->setContent($page['content']));
         }
 
         // --- Catégories (styles relevés sur l'Instagram du salon) ---

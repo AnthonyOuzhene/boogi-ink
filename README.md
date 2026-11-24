@@ -162,6 +162,7 @@ Procédure complète, étape par étape : **[DEPLOIEMENT.md](DEPLOIEMENT.md)**. 
 | `ddev console cache:clear` | Vider le cache |
 | `ddev console app:create-admin email "Nom"` | Créer un compte administrateur du backoffice |
 | `ddev console app:images:convert-webp` | Convertir en WebP les photos déjà envoyées |
+| `ddev console app:pages:install` | Créer les pages légales manquantes (texte de départ : `back/src/Content/LegalPages.php` ; `--force` remplace aussi les existantes) |
 | `ddev console app:instagram:sync` | Mettre à jour les posts Instagram de l'accueil (`--demo` : posts d'exemple) |
 | `ddev console app:instagram:token` | Enregistrer le jeton d'accès Instagram |
 | `npm run lint` (front) | Vérifier le code React |
