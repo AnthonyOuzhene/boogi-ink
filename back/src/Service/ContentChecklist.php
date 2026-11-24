@@ -23,6 +23,7 @@ use App\Entity\StudioPhoto;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -50,9 +51,18 @@ class ContentChecklist
         [Flash::class, 'Flashs', FlashCrudController::class, ['name' => 'nom', 'size' => 'taille', 'placement' => 'emplacements']],
     ];
 
+    /**
+     * Contenus réservés au super admin (le développeur) : l'admin du salon ne peut pas les modifier,
+     * on ne les lui signale donc pas (le lien mènerait à une page interdite).
+     * Garder en accord avec security.yaml (access_control) et les setPermission() des CRUD.
+     */
+    private const SUPER_ADMIN_ONLY_SOURCES = [HygieneCommitment::class];
+    private const SUPER_ADMIN_ONLY_FIELDS = [Home::class => ['heroTitle', 'heroHighlight']];
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly AdminUrlGenerator $adminUrlGenerator,
+        private readonly Security $security,
     ) {
     }
 
@@ -69,8 +79,16 @@ class ContentChecklist
         $items = [];
         $filled = 0;   // champs remplis (avec ou sans crochets)
         $pending = 0;  // champs qui contiennent encore des crochets
+        $isSuperAdmin = $this->security->isGranted('ROLE_SUPER_ADMIN');
 
         foreach (self::SOURCES as [$class, $label, $crudController, $fields]) {
+            if (!$isSuperAdmin) {
+                if (in_array($class, self::SUPER_ADMIN_ONLY_SOURCES, true)) {
+                    continue;
+                }
+                $fields = array_diff_key($fields, array_flip(self::SUPER_ADMIN_ONLY_FIELDS[$class] ?? []));
+            }
+
             $records = $this->entityManager->getRepository($class)->findAll();
             $todoFields = [];   // libellés des champs concernés (fiche unique)
             $todoRecords = [];  // fiches concernées (listes)

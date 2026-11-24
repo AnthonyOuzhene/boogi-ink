@@ -129,10 +129,15 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(MilestoneCrudController::class, 'Frises (histoire & parcours)', 'fa fa-timeline');
         yield MenuItem::linkTo(StudioPhotoCrudController::class, 'Photos du salon', 'fa fa-camera');
         yield MenuItem::linkTo(SessionStepCrudController::class, "Déroulé d'une séance", 'fa fa-list-ol');
-        yield MenuItem::linkTo(HygieneCommitmentCrudController::class, 'Hygiène & sécurité', 'fa fa-shield-halved');
+        // Réservé au super admin, comme les cartes de l'accueil (voir security.yaml)
+        yield MenuItem::linkTo(HygieneCommitmentCrudController::class, 'Hygiène & sécurité', 'fa fa-shield-halved')
+            ->setPermission('ROLE_SUPER_ADMIN');
 
         yield MenuItem::section('Site');
-        yield MenuItem::linkTo(HomeCardCrudController::class, "Cartes de l'accueil", 'fa fa-layer-group');
+        // Réservé au super admin (développeur) : masqué dans le menu de l'admin du salon,
+        // et ses adresses sont bloquées dans security.yaml (access_control)
+        yield MenuItem::linkTo(HomeCardCrudController::class, "Cartes de l'accueil", 'fa fa-layer-group')
+            ->setPermission('ROLE_SUPER_ADMIN');
         yield MenuItem::linkTo(FaqCrudController::class, 'FAQ', 'fa fa-circle-question');
         yield MenuItem::linkTo(PageCrudController::class, 'Pages', 'fa fa-file-lines');
 

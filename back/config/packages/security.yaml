@@ -64,6 +64,11 @@ security:
     access_control:
         # La page de connexion AVANT la règle admin : sinon il faudrait être connecté pour se connecter
         - { path: ^/boogi-0806/login$, roles: PUBLIC_ACCESS }
+        # Réservé au super admin (développeur) : les cartes de l'accueil et les engagements
+        # "Hygiène & sécurité" de L'atelier (liste, ajout, modification, suppression).
+        # Placé AVANT la règle générale, sinon un admin passerait par celle-ci.
+        # (Voir aussi DashboardController : menus masqués ; ContentChecklist : tableau de bord.)
+        - { path: ^/boogi-0806/(home-card|hygiene-commitment), roles: ROLE_SUPER_ADMIN }
         - { path: ^/boogi-0806, roles: ROLE_ADMIN }
 
 when@test:
