@@ -67,7 +67,6 @@ class Page
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    // Doctrine appelle cette méthode juste avant chaque INSERT et chaque UPDATE
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function touch(): void

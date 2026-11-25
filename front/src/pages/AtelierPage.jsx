@@ -13,11 +13,7 @@ import StudioGallery from '@/components/atelier/StudioGallery';
 import HygieneCards from '@/components/atelier/HygieneCards';
 import './AtelierPage.scss';
 
-/**
- * L'atelier : le récit complet du salon. L'accueil n'en montre que des aperçus
- * qui renvoient ici (/atelier#artiste, #seance).
- * Tout le contenu vient du backoffice ; une section sans contenu n'est pas affichée.
- */
+// L'accueil renvoie ici par ancre (/atelier#artiste, #seance) : garder ces id
 const AtelierPage = () => {
   usePageTitle("L'atelier");
   const { salon } = useSalon();
@@ -28,12 +24,12 @@ const AtelierPage = () => {
   const { data: commitments, loading: commitmentsLoading } = useApi('/hygiene_commitments');
   const { data: flashes, loading: flashesLoading } = useApi('/flashes');
 
-  // Une seule requête pour les deux frises, triées ensuite côté navigateur
+  // Une seule requête pour les deux frises
   const salonMilestones = milestones?.filter((milestone) => milestone.timeline === 'salon') ?? [];
   const artistMilestones = milestones?.filter((milestone) => milestone.timeline === 'artist') ?? [];
   const artist = artists?.[0];
 
-  // Sections affichées, dans l'ordre : elles alimentent le sommaire et la numérotation 01, 02…
+  // Sections non vides, dans l'ordre : sommaire + numérotation 01, 02…
   const sections = [
     (salonMilestones.length > 0 || salon?.storyIntro) && { id: 'histoire', label: "L'histoire" },
     artist && { id: 'artiste', label: "L'artiste" },
@@ -45,10 +41,10 @@ const AtelierPage = () => {
   const has = (id) => sections.some((section) => section.id === id);
   const number = (id) => String(sections.findIndex((section) => section.id === id) + 1).padStart(2, '0');
 
-  // Toutes les données sont là : on peut défiler jusqu'à la section demandée dans l'URL
+  // Défiler vers #section seulement une fois tout chargé : avant, la section visée n'existe pas encore
   useScrollToHash(![milestonesLoading, artistsLoading, photosLoading, stepsLoading, commitmentsLoading, flashesLoading].includes(true));
 
-  // "Depuis 2012" si la première date du salon est une année, sinon un surtitre neutre
+  // year est un texte libre : "Depuis …" seulement si c'est une année
   const since = salonMilestones[0]?.year;
   const historyEyebrow = /^\d{4}$/.test(since ?? '') ? `Depuis ${since}` : 'Le salon';
 
@@ -72,7 +68,6 @@ const AtelierPage = () => {
         )}
       </PageHero>
 
-      {/* --- L'histoire du salon --- */}
       {has('histoire') && (
         <section id="histoire" className="container section split anchor">
           <div className="split__intro">
@@ -88,7 +83,6 @@ const AtelierPage = () => {
         </section>
       )}
 
-      {/* --- Le parcours de l'artiste : biographie complète + frise --- */}
       {has('artiste') && (
         <div className="section">
           <ArtistSection id="artiste" variant="full" artist={artist} eyebrow={`${number('artiste')} — L'artiste`}>
@@ -97,7 +91,6 @@ const AtelierPage = () => {
         </div>
       )}
 
-      {/* --- Le lieu en images --- */}
       {has('lieu') && (
         <section id="lieu" className="container section anchor">
           <div className="section-head">
@@ -114,7 +107,6 @@ const AtelierPage = () => {
         </section>
       )}
 
-      {/* --- Le déroulé d'une séance --- */}
       {has('seance') && (
         <section id="seance" className="band paper anchor">
           <div className="container split">
@@ -132,7 +124,6 @@ const AtelierPage = () => {
         </section>
       )}
 
-      {/* --- Hygiène & sécurité : bandeau sur fond clair --- */}
       {has('hygiene') && (
         <section id="hygiene" className="band anchor">
           <div className="container">
@@ -148,7 +139,6 @@ const AtelierPage = () => {
         </section>
       )}
 
-      {/* --- Les flashs --- */}
       {has('flashs') && (
         <section id="flashs" className="band paper anchor">
           <div className="container">
@@ -167,7 +157,6 @@ const AtelierPage = () => {
         </section>
       )}
 
-      {/* --- Appel final --- */}
       <section className="container section">
         <div className="cta-band">
           <h2 className="section-title">Un projet ?<br /><span className="glow">Parlons-en.</span></h2>

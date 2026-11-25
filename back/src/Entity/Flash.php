@@ -11,10 +11,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Flash : motif dessiné à l'avance par l'artiste, prêt à être tatoué une seule fois.
- * Les disponibles sont listés avant les réservés.
- */
+/** Flash : motif dessiné à l'avance par l'artiste, prêt à être tatoué une seule fois */
 #[ApiResource(
     operations: [new GetCollection(order: ['isAvailable' => 'DESC', 'position' => 'ASC', 'id' => 'ASC'])],
     normalizationContext: ['groups' => ['flash:read']],
@@ -52,9 +49,8 @@ class Flash
     #[Assert\Length(max: 150)]
     private ?string $placement = null;
 
-    /** DECIMAL : Doctrine le renvoie en chaîne ("120.00") pour ne pas perdre de précision. Vide = sur devis */
+    /** Jamais "sur devis" (dessin déjà fait). DECIMAL : Doctrine le renvoie en chaîne ("120.00") pour ne pas perdre de précision */
     #[Groups(['flash:read'])]
-    /** Prix fixe : un flash est un dessin déjà fait, il n'est jamais "sur devis" */
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     #[Assert\NotBlank(message: 'Un flash a toujours un prix fixe.')]
     #[Assert\Positive]

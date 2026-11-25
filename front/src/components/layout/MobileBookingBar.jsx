@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import './MobileBookingBar.scss';
 
-// Apparaît après ce défilement (px) : sur l'accueil, à peu près quand la grande photo
-// et ses boutons sont passés
+// En px : à peu près quand la grande photo de l'accueil et ses boutons sont passés
 const SHOW_AFTER = 500;
 
 /**
- * Barre "Prendre rendez-vous" fixée en bas de l'écran, sur téléphone et tablette uniquement
- * (le bouton du menu y est caché dans le burger). Masquée sur la page Contact, sa destination.
+ * Sur téléphone et tablette, le bouton du menu est caché dans le burger : cette barre le remplace.
  * L'affichage par taille d'écran se fait en CSS (MobileBookingBar.scss).
  */
 const MobileBookingBar = () => {

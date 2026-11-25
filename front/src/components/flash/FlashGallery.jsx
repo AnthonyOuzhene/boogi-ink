@@ -4,11 +4,6 @@ import { assetUrl } from '@/api/client';
 import { formatPrice } from '@/utils/format';
 import './FlashGallery.scss';
 
-/**
- * Un flash, présenté comme sur une planche de flashs de salon : le dessin posé à même
- * le papier, un numéro, le nom, et le prix "écrit au feutre".
- * Réservé : tampon rouge "Réservé" de travers sur le dessin.
- */
 export const FlashCard = ({ flash, number }) => {
   const details = [flash.size, flash.placement].filter(Boolean).join(' · ');
 
@@ -23,20 +18,17 @@ export const FlashCard = ({ flash, number }) => {
           <span className="flash-card__number">N°{String(number).padStart(2, '0')}</span>
           {flash.name}
         </h3>
-        {/* Le tampon est décoratif : le statut est donné en texte aux lecteurs d'écran */}
+        {/* Le tampon est aria-hidden : statut en texte pour les lecteurs d'écran */}
         <span className="visually-hidden">{flash.isAvailable ? 'Disponible' : 'Réservé'}</span>
         {details && <p className="flash-card__details muted">{details}</p>}
-        {/* Prix fixe, toujours renseigné (obligatoire dans le backoffice) : jamais "Sur devis" */}
+        {/* Prix obligatoire dans le backoffice : jamais "Sur devis" */}
         <p className="flash-card__price">{formatPrice(flash.price)}</p>
       </div>
     </article>
   );
 };
 
-/**
- * La planche de flashs (aperçu de l'accueil, page Flashs…).
- * numberOf : numéro d'un flash ; par défaut sa place dans la liste affichée.
- */
+/** numberOf : numéro d'un flash ; par défaut sa place dans la liste affichée. */
 export const FlashGrid = ({ flashes, numberOf = (flash, index) => index + 1 }) => (
   <div className="flash-grid">
     {flashes.map((flash, index) => <FlashCard key={flash.id} flash={flash} number={numberOf(flash, index)} />)}
@@ -49,10 +41,7 @@ const FILTERS = [
   { key: 'reserved', label: 'Réservés' },
 ];
 
-/**
- * Tous les flashs, avec un filtre Tous / Disponibles / Réservés.
- * Le filtre se fait dans le navigateur : la liste complète est déjà chargée.
- */
+/** Filtre côté navigateur : la liste complète est déjà chargée. */
 const FlashGallery = ({ flashes }) => {
   const [filter, setFilter] = useState('all');
 

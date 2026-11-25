@@ -78,7 +78,6 @@ class ArtistCrudController extends AbstractCrudController
             ->setHelp('Débuts, formation, façon de travailler… Laissez une ligne vide entre deux paragraphes. Les dates clés de son parcours se saisissent dans « Frises ».')
             ->setNumOfRows(12)
             ->hideOnIndex();
-        // ArrayField : une ligne de saisie par élément, avec des boutons Ajouter / Supprimer
         yield ArrayField::new('influences', 'Influences')
             ->setHelp('Affichées en pastilles sous la biographie. Exemple : « Old school américain ». Pas de virgule dans un élément.')
             ->hideOnIndex();

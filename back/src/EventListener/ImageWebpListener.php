@@ -8,12 +8,8 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 
 /**
- * Convertit en WebP les photos envoyées depuis le backoffice, au moment de l'enregistrement.
- *
- * "onFlush" : Doctrine s'apprête à écrire en base toutes les fiches créées ou modifiées.
- * EasyAdmin a déjà déposé les fichiers dans public/uploads/… : on les convertit, puis on
- * corrige le nom du fichier dans la fiche avant l'écriture. Ça couvre aussi les photos
- * supplémentaires des réalisations (Picture), enregistrées en même temps que la réalisation.
+ * onFlush : EasyAdmin a déjà déposé les fichiers dans public/uploads/, on les convertit en WebP
+ * et on corrige le nom de fichier avant l'écriture en base (y compris les Picture d'une réalisation).
  */
 #[AsDoctrineListener(event: Events::onFlush)]
 final class ImageWebpListener
@@ -35,12 +31,12 @@ final class ImageWebpListener
                 continue;
             }
 
-            // Un nom de fichier a changé : Doctrine doit recalculer ce qu'il va écrire
             $before = array_map(fn (string $field) => $metadata->getFieldValue($entity, $field), array_keys(ImageOptimizer::IMAGE_FIELDS[$metadata->getName()]));
             $this->imageOptimizer->optimizeEntity($entity, $metadata);
             $after = array_map(fn (string $field) => $metadata->getFieldValue($entity, $field), array_keys(ImageOptimizer::IMAGE_FIELDS[$metadata->getName()]));
 
             if ($before !== $after) {
+                // Dans onFlush, Doctrine n'écrirait pas le nouveau nom sans ce recalcul
                 $unitOfWork->recomputeSingleEntityChangeSet($metadata, $entity);
             }
         }

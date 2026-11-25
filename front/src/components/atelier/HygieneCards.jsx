@@ -1,7 +1,6 @@
 import './HygieneCards.scss';
 
-// Pictogrammes au trait : la clé correspond au champ "icon" choisi dans le backoffice
-// (liste HygieneCommitment::ICONS côté Symfony)
+// Clés à garder synchronisées avec HygieneCommitment::ICONS côté Symfony
 const ICON_PATHS = {
   shield: ['M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z', 'M9 12l2 2 4-4'],
   ink: ['M9 3h6', 'M10 3v5l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3'],
@@ -17,7 +16,7 @@ const HygieneIcon = ({ name }) => (
   </span>
 );
 
-/** Engagements d'hygiène et de sécurité (backoffice : "Hygiène & sécurité") */
+/** Backoffice : "Hygiène & sécurité" */
 const HygieneCards = ({ commitments }) => (
   <ul className="hygiene-cards">
     {commitments.map((commitment) => (

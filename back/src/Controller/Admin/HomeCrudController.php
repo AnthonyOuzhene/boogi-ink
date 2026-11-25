@@ -17,8 +17,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 
 /**
- * Fiche unique du salon : coordonnées, horaires, réseaux sociaux et haut de la page d'accueil.
- *
  * @extends AbstractCrudController<Home>
  */
 class HomeCrudController extends AbstractCrudController
@@ -53,7 +51,6 @@ class HomeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        // Les "fieldsets" regroupent les champs en blocs titrés dans le formulaire
         yield FormField::addFieldset('Coordonnées')->setIcon('fa fa-location-dot');
         yield TextField::new('name', 'Nom du salon');
         yield TextField::new('address', 'Adresse')->hideOnIndex();
@@ -73,8 +70,7 @@ class HomeCrudController extends AbstractCrudController
             ->setHelp('Décochez pendant les vacances ou une fermeture exceptionnelle : un message s\'affiche sur la page Contact.');
 
         yield FormField::addFieldset('Réseaux sociaux')->setIcon('fa fa-share-nodes');
-        // Libellés avec le logo du réseau : icônes Font Awesome "brands", déjà fournies par EasyAdmin.
-        // label_html : le formulaire Symfony affiche le libellé comme du HTML (et non comme du texte brut).
+        // label_html : sinon l'icône Font Awesome du libellé s'afficherait en texte brut
         yield UrlField::new('instagramUrl', '<i class="fa-brands fa-instagram"></i> Instagram')
             ->setFormTypeOption('label_html', true)
             ->hideOnIndex();
@@ -82,10 +78,8 @@ class HomeCrudController extends AbstractCrudController
             ->setFormTypeOption('label_html', true)
             ->hideOnIndex();
 
-        // La vidéo du haut de l'accueil est un fichier fixe du site (front/src/assets/videos) :
-        // seule l'accroche se règle ici, et uniquement par le super admin (le développeur).
-        // setPermission : pour un simple admin, ces champs n'existent pas dans le formulaire,
-        // ils ne peuvent donc ni être vus ni être modifiés (même en trafiquant la page).
+        // La vidéo d'accueil est un fichier fixe (front/src/assets/videos), seule l'accroche se règle ici.
+        // setPermission : pour un admin ces champs n'existent pas dans le formulaire, même en trafiquant la page.
         yield FormField::addFieldset("Haut de la page d'accueil")->setIcon('fa fa-heading')
             ->setPermission('ROLE_SUPER_ADMIN');
         yield TextField::new('heroTitle', 'Accroche — première ligne')

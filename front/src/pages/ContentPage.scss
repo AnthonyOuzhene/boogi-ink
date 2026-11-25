@@ -1,7 +1,5 @@
-// Pages de contenu (mentions légales…) : colonne de lecture confortable
-
 .content-page {
-  // (pas de max-width ici : la règle .container, chargée après, l'écraserait)
+  // Pas de max-width ici : .container, chargé après, l'écraserait
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -22,7 +20,7 @@
 
   h2,
   p {
-    max-width: 760px; // lignes de 70 à 80 caractères : lecture confortable
+    max-width: 760px; // ~70-80 caractères par ligne
   }
 
   p {

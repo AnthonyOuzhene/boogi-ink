@@ -1,5 +1,4 @@
-// Comparaison dessin / tatouage : la photo donne la taille, le dessin est posé par-dessus
-// et découpé à droite selon --position (clip-path)
+// La photo donne la taille ; le dessin, posé par-dessus, est découpé selon --position (clip-path)
 .compare {
   position: relative;
   display: inline-block;
@@ -18,11 +17,9 @@
     object-fit: contain;
     background: #fffdf8; // papier : les dessins sont sur fond blanc
     border-radius: var(--radius);
-    // Seule la partie gauche (jusqu'au curseur) reste visible
     clip-path: inset(0 calc(100% - var(--position)) 0 0);
   }
 
-  // Trait vertical cyan + pastille ↔ au niveau du curseur
   &__handle {
     position: absolute;
     top: 0;
@@ -73,7 +70,7 @@
     }
   }
 
-  // Le vrai curseur : invisible, sur toute l'image (on peut saisir n'importe où)
+  // Le vrai curseur : invisible, couvre toute l'image pour être saisi n'importe où
   &__range {
     position: absolute;
     inset: 0;
@@ -85,7 +82,7 @@
     touch-action: pan-y; // le glisser horizontal pilote le curseur, le défilement vertical reste possible
   }
 
-  // Focus clavier : contour autour de toute la comparaison
+  // Le range étant invisible, le focus clavier s'affiche autour du bloc entier
   &:has(.compare__range:focus-visible) {
     outline: 2px solid var(--cyan);
     outline-offset: 4px;

@@ -1,50 +1,41 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
 
-    # Hiérarchie des rôles : le super admin (le développeur) a tous les droits de l'admin (le salon),
-    # plus ceux réservés au super admin (accroche de l'accueil, gestion des comptes super admin).
+    # Super admin (développeur) = droits de l'admin (salon) + rubriques réservées.
     # Voir HomeCrudController, UserCrudController et Security\Voter\AdminUserVoter.
     role_hierarchy:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     firewalls:
         dev:
-            # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler(/|$)|(_wdt|assets|build)/)
             security: false
-        # API utilisée par le front React : entièrement PUBLIQUE (plus d'espace client).
-        # Lecture du contenu + dépôt d'un avis du livre d'or (modéré dans le backoffice).
-        # Placé AVANT "main" : Symfony utilise le premier pare-feu dont le pattern correspond,
-        # les requêtes /api n'ouvrent donc jamais de session.
+        # API entièrement publique (lecture + dépôt d'avis, modérés au backoffice).
+        # AVANT "main" : le premier pare-feu qui correspond l'emporte, /api n'ouvre jamais de session.
         api:
             pattern: ^/api
             security: false
 
-        # Backoffice EasyAdmin : formulaire de connexion + session
+        # Backoffice EasyAdmin
         main:
             lazy: true
             provider: app_user_provider
 
-            # Connexion par formulaire (page /boogi-0806/login, rendue par SecurityController)
+            # Page /boogi-0806/login, rendue par SecurityController
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: admin
 
-            # Limite les essais de mot de passe (contre les robots qui testent des mots de passe en boucle) :
-            # 5 échecs pour un même email depuis une même IP => bloqué 15 minutes.
-            # Nécessite le composant symfony/rate-limiter.
+            # Anti-robots : 5 échecs (même email, même IP) => bloqué 15 min. Requiert symfony/rate-limiter.
             login_throttling:
                 max_attempts: 5
                 interval: '15 minutes'
@@ -53,31 +44,23 @@ security:
                 path: app_logout
                 target: app_login
 
-            # Activate different ways to authenticate:
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Note: Only the *first* matching rule is applied
-    # Préfixe du backoffice : doit rester identique au routePath de DashboardController.
+    # Seule la PREMIÈRE règle qui correspond s'applique : l'ordre compte.
+    # Préfixe du backoffice : identique au routePath de DashboardController.
     access_control:
-        # La page de connexion AVANT la règle admin : sinon il faudrait être connecté pour se connecter
+        # Connexion AVANT la règle admin, sinon il faudrait être connecté pour se connecter
         - { path: ^/boogi-0806/login$, roles: PUBLIC_ACCESS }
-        # Réservé au super admin (développeur) : les cartes de l'accueil et les engagements
-        # "Hygiène & sécurité" de L'atelier (liste, ajout, modification, suppression).
-        # Placé AVANT la règle générale, sinon un admin passerait par celle-ci.
-        # (Voir aussi DashboardController : menus masqués ; ContentChecklist : tableau de bord.)
+        # Super admin seulement : cartes de l'accueil et engagements "Hygiène & sécurité".
+        # AVANT la règle générale, sinon un admin passerait par celle-ci.
+        # (Voir aussi DashboardController et ContentChecklist.)
         - { path: ^/boogi-0806/(home-card|hygiene-commitment), roles: ROLE_SUPER_ADMIN }
         - { path: ^/boogi-0806, roles: ROLE_ADMIN }
 
 when@test:
     security:
         password_hashers:
-            # Password hashers are resource-intensive by design to ensure security.
-            # In tests, it's safe to reduce their cost to improve performance.
+            # Coût de hachage minimal en test, pour la rapidité
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

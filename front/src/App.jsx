@@ -20,18 +20,15 @@ const App = () => {
   const { pathname, hash } = useLocation();
   const isHome = pathname === '/';
 
-  // Changement de page : on remonte en haut (sinon on garde le défilement de la page précédente).
-  // Sauf si l'URL vise une section (/atelier#seance) : la page s'en charge (hook useScrollToHash).
+  // Avec un #section, c'est la page qui défile (useScrollToHash)
   useEffect(() => {
     if (!hash) window.scrollTo(0, 0);
   }, [pathname, hash]);
 
-  // Accessibilité : le site change de page sans recharger le navigateur, un lecteur d'écran
-  // ne s'en rend donc pas compte. À chaque nouvelle page, on place le focus sur son titre (h1),
-  // qu'il annonce ; à défaut, sur le contenu principal. Pas au premier affichage du site.
+  // Accessibilité : sans rechargement, un lecteur d'écran ne voit pas le changement de page ;
+  // on focus le h1 (annoncé), sinon le <main>. Pas au premier affichage.
   const mainRef = useRef(null);
-  // Adresse de la page précédente : même adresse = premier affichage (ou effet rejoué par
-  // <StrictMode> en développement), on ne touche pas au focus
+  // Même adresse = premier affichage ou effet rejoué par <StrictMode> : focus inchangé
   const previousPathname = useRef(pathname);
   useEffect(() => {
     if (previousPathname.current === pathname) return;
@@ -42,9 +39,8 @@ const App = () => {
     target.focus({ preventScroll: true });
   }, [pathname]);
 
-  // Lien "Aller au contenu" : saute le menu (utile au clavier sur chaque page)
   const skipToContent = (e) => {
-    e.preventDefault(); // pas de "#contenu" dans l'URL (le site s'en sert pour viser des sections)
+    e.preventDefault(); // pas de "#contenu" dans l'URL : le hash sert à viser des sections
     mainRef.current?.focus();
   };
 
@@ -52,12 +48,11 @@ const App = () => {
     <div className="app">
       <a href="#contenu" className="skip-link" onClick={skipToContent}>Aller au contenu</a>
 
-      {/* Un seul conteneur de notifications pour tout le site */}
       <ToastContainer position="top-center" autoClose={5000} limit={3} theme="dark" />
 
       <Header />
-      {/* Sur l'accueil, la grande photo passe sous le menu transparent.
-          tabIndex -1 : peut recevoir le focus (lien "Aller au contenu", changement de page) */}
+      {/* Pas d'offset sur l'accueil : la vidéo passe sous le menu transparent.
+          tabIndex -1 : focusable par "Aller au contenu" et au changement de page */}
       <main id="contenu" ref={mainRef} tabIndex={-1} className={isHome ? 'site-main' : 'site-main site-main--offset'}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -67,20 +62,17 @@ const App = () => {
           <Route path="/flashs" element={<FlashsPage />} />
           <Route path="/livre-d-or" element={<VisitorBookPage />} />
           <Route path="/faq" element={<FaqPage />} />
-          {/* Pages gérées dans le backoffice : mentions légales, confidentialité… */}
           <Route path="/pages/:slug" element={<ContentPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          {/* Ancien espace client (supprimé) : les anciennes adresses ramènent à l'accueil */}
+          {/* Ancien espace client (supprimé) : redirections pour les vieux liens */}
           <Route path="/connexion" element={<Navigate to="/" replace />} />
           <Route path="/inscription" element={<Navigate to="/" replace />} />
           <Route path="/profil/*" element={<Navigate to="/" replace />} />
-          {/* Ancienne adresse de la page de l'atelier */}
           <Route path="/atelier-tatouage" element={<Navigate to="/atelier" replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       <Footer />
-      {/* Téléphone et tablette : bouton "Prendre rendez-vous" toujours à portée de pouce */}
       <MobileBookingBar />
     </div>
   );

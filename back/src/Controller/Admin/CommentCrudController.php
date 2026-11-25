@@ -33,13 +33,11 @@ class CommentCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield DateTimeField::new('createdAt', 'Déposé le')->hideOnForm();
-        // Nom tapé dans le formulaire public du livre d'or (pas de compte client)
         yield TextField::new('authorName', 'Auteur');
         yield TextField::new('title', 'Titre');
         yield TextareaField::new('message', 'Message')->hideOnIndex();
         yield TextField::new('projectName', 'Projet réalisé')->hideOnIndex();
         yield DateField::new('realisedAt', 'Date du tatouage')->hideOnIndex();
-        // Interrupteur cliquable directement depuis la liste
         yield BooleanField::new('isPublished', 'Publié')->renderAsSwitch();
     }
 

@@ -11,10 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Présentation du tatoueur, affichée dans la section "L'artiste" du site.
- * Une seule fiche est prévue (le backoffice empêche d'en créer une deuxième).
- */
+/** Section "L'artiste" du site : une seule fiche (le backoffice empêche d'en créer une deuxième) */
 #[ApiResource(
     operations: [new Get(), new GetCollection()],
     normalizationContext: ['groups' => ['artist:read']],
@@ -62,8 +59,7 @@ class Artist
     private ?string $shortBio = null;
 
     /**
-     * Influences et styles, affichés en pastilles.
-     * SIMPLE_ARRAY : un tableau PHP stocké en base sous forme de texte séparé par des virgules.
+     * Affichées en pastilles. SIMPLE_ARRAY : stocké en base en texte séparé par des virgules.
      *
      * @var list<string>|null
      */

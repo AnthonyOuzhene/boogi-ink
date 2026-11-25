@@ -2,17 +2,13 @@ import { useState } from 'react';
 import './SketchCompare.scss';
 
 /**
- * "Du dessin à la peau" : le dessin préparatoire posé par-dessus la photo du tatouage,
- * découpé selon la position du curseur (à gauche le dessin, à droite le tatouage).
- *
- * Le curseur est un vrai <input type="range"> rendu invisible et étendu sur toute l'image :
- * utilisable à la souris, au doigt, au clavier (flèches) et reconnu par les lecteurs d'écran.
+ * Le curseur est un vrai <input type="range"> invisible étendu sur toute l'image :
+ * souris, doigt, clavier (flèches) et lecteurs d'écran sans code en plus.
  */
 const SketchCompare = ({ photo, sketch, name }) => {
   const [position, setPosition] = useState(50); // % de dessin visible, depuis la gauche
 
-  // Dans la visionneuse, glisser du doigt et les flèches changent de photo :
-  // sur le curseur, ces gestes doivent seulement le déplacer
+  // Empêche la visionneuse de changer de photo (glisser, flèches) quand on manipule le curseur
   const keepForSlider = (e) => e.stopPropagation();
 
   return (

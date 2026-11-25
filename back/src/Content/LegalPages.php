@@ -3,17 +3,13 @@
 namespace App\Content;
 
 /**
- * Texte de départ des pages légales (mentions légales, confidentialité, règles sanitaires).
+ * Texte de départ des pages légales, pour les fixtures et app:pages:install. Ensuite, les pages
+ * se modifient dans le backoffice : ce fichier ne sert plus qu'à les recréer.
  *
- * Utilisé par les fixtures et par la commande app:pages:install (production). Ensuite, les pages
- * se modifient dans le backoffice (menu "Pages") : ce fichier ne sert plus qu'à les recréer.
+ * Format (voir ContentPage.jsx) : ligne vide = paragraphe, "## " = intertitre ; les retours
+ * à la ligne simples sont ignorés, donc chaque élément de liste est un paragraphe commençant par "• ".
  *
- * Format du texte (voir ContentPage.jsx) : une ligne vide = nouveau paragraphe,
- * une ligne qui commence par "## " = intertitre. Les retours à la ligne simples sont ignorés :
- * chaque élément de liste est donc un paragraphe qui commence par "• ".
- *
- * Les passages entre crochets [À compléter : …] sont à remplacer dans le backoffice.
- * Ces textes sont des modèles : à faire relire si besoin (ils ne remplacent pas un conseil juridique).
+ * Modèles à faire relire (ils ne remplacent pas un conseil juridique).
  */
 final class LegalPages
 {

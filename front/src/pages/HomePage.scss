@@ -1,18 +1,12 @@
-// --- Hero : vidéo (ou photo) noir et blanc teintée de bleu nuit ---
 .hero {
   position: relative;
-  // Plein écran : toute la hauteur de la fenêtre (600 px minimum), même sur un grand écran,
-  // pour qu'on ne voie pas le bas de la vidéo ; seul le haut des cartes à jouer dépasse.
-  // 100svh = hauteur visible sur mobile, barre d'adresse comprise (100vh en secours : anciens navigateurs).
-  // C'est un minimum et non une hauteur fixe : sur un écran bas, le hero s'agrandit au lieu
-  // d'écraser le texte contre le menu (voir le padding-top de .hero__content)
+  // 100vh = secours pour les navigateurs sans svh.
+  // min-height (pas height) : sur un écran bas, le hero grandit au lieu d'écraser le texte
   min-height: max(600px, 100vh);
   min-height: max(600px, 100svh);
 
-  // Écran en portrait (téléphone, tablette debout) : la vidéo, au format cinéma, serait très
-  // agrandie et floue pour remplir toute la hauteur, avec un grand vide au-dessus du texte.
-  // On s'arrête aux 3/4 de l'écran : le texte remonte, les cartes apparaissent plus tôt.
-  // (À revoir avec une version verticale de la vidéo : elle pourra reprendre tout l'écran.)
+  // En portrait, la vidéo cinéma serait très agrandie et floue sur toute la hauteur.
+  // À revoir avec une version verticale de la vidéo.
   @media (orientation: portrait) {
     min-height: max(520px, 75vh);
     min-height: max(520px, 75svh);
@@ -21,8 +15,7 @@
   flex-direction: column;
   overflow: hidden;
 
-  // Vidéo ou photo de remplacement : remplit tout le hero (recadrée si besoin, jamais déformée).
-  // Plus de zoom lent "Ken Burns" : la vidéo apporte déjà le mouvement
+  // Pas de zoom "Ken Burns" : la vidéo apporte déjà le mouvement
   &__img {
     position: absolute;
     inset: 0;
@@ -31,23 +24,18 @@
     object-fit: cover;
     filter: grayscale(1) contrast(1.15);
 
-    // Grand écran en paysage : "cover" agrandirait beaucoup la vidéo (format cinéma 2,35:1)
-    // pour remplir toute la hauteur. On l'affiche plutôt sur toute la largeur, sans rien couper
-    // (zoom arrière), calée en haut ; son bas se fond dans le fond sombre, sous les cartes.
-    // Pas au-delà du format de la vidéo (47/20 = 2,35) : sinon il resterait des bandes sur les côtés.
+    // Grand écran paysage : "cover" agrandirait trop la vidéo (2,35:1), on la montre en entier.
+    // Plafond 47/20 = format de la vidéo, sinon bandes sur les côtés.
     @media (min-width: 901px) and (min-aspect-ratio: 16/10) and (max-aspect-ratio: 47/20) {
       object-fit: contain;
       object-position: center top;
-      // L'image affichée fait 42,5vw de haut (408 / 960 de la largeur) : le fondu se termine
-      // pile à son bord bas, sur ses 240 derniers pixels (sinon un trait net resterait visible)
+      // 42,5vw = hauteur affichée de la vidéo (408 / 960) : le fondu finit pile à son bord bas,
+      // sinon un trait net reste visible
       mask-image: linear-gradient(to bottom, #000 calc(42.5vw - 240px), transparent 42.5vw);
     }
   }
 
-  // Bouton pause / lecture de la vidéo (accessibilité) : sur la ligne des boutons du hero,
-  // poussé à droite du contenu (margin-left: auto). Volontairement très discret : une simple
-  // icône, sans contour ni fond, qui ne s'affirme qu'au survol ou au focus clavier.
-  // (Zone cliquable de 36 px malgré la petite icône : facile à toucher sur mobile.)
+  // Pause vidéo (accessibilité). Zone de 36 px malgré la petite icône : facile à toucher
   &__pause {
     margin-left: auto;
     flex-shrink: 0;
@@ -77,9 +65,7 @@
     }
   }
 
-  // Deux calques : un bleu pétrole en "multiply" (duotone) + un voile sombre pour la lisibilité
-  // Voile plus sombre à gauche (derrière le titre et les boutons, pour la lisibilité),
-  // qui s'éclaircit vers la droite pour laisser voir la vidéo
+  // Voile sombre à gauche pour la lisibilité du texte + teinte duotone (::before)
   &__tint {
     position: absolute;
     inset: 0;
@@ -90,12 +76,11 @@
       rgba(7, 10, 12, 0.1) 100%
     );
 
-    // Petit écran : le texte prend toute la largeur, voile uniforme pour qu'il reste lisible partout
+    // Le texte prend toute la largeur : voile uniforme
     @media (max-width: 900px) {
       background: rgba(7, 10, 12, 0.45);
     }
 
-    // Teinte bleu pétrole allégée (0,85 => 0,3) : l'ambiance reste, la vidéo se voit
     &::before {
       content: '';
       position: absolute;
@@ -105,8 +90,7 @@
       opacity: 0.3;
     }
 
-    // Léger dégradé sombre en haut, derrière le menu (transparent sur l'accueil) :
-    // les liens restent lisibles même quand la vidéo est claire. Il s'efface vers le bas.
+    // Menu transparent sur l'accueil : garde ses liens lisibles sur une vidéo claire
     &::after {
       content: '';
       position: absolute;
@@ -118,17 +102,15 @@
 
   &__content {
     position: relative;
-    flex: 1; // occupe toute la hauteur de la photo
-    // Pleine largeur : dans un parent flex, les marges auto de .container réduiraient
-    // sinon le bloc à la largeur de son texte (et le centreraient)
+    flex: 1;
+    // Sinon, dans un parent flex, les marges auto de .container réduisent le bloc à son texte
     width: 100%;
     display: flex;
-    // Espace minimum sous le menu (transparent, posé sur la photo)
     padding-top: calc(var(--header-height) + 56px);
     flex-direction: column;
     justify-content: flex-end;
     gap: 40px;
-    // 128 px d'espace + 170 px recouverts par les cartes à jouer (SalonCards : margin-top -170px)
+    // 128 px d'espace + 170 px recouverts par les cartes (margin-top -170px dans SalonCards.scss)
     padding-bottom: 298px;
   }
 
@@ -137,9 +119,8 @@
     line-height: 0.9;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; // chaque ligne prend la largeur de son texte : l'aiguille s'arrête au bout du mot
-    // Hauteur réservée dès le chargement : rien ne "saute" quand le titre apparaît
-    min-height: 1.8em;
+    align-items: flex-start; // l'aiguille s'arrête au bout du mot, pas au bord du bloc
+    min-height: 1.8em; // évite un saut de mise en page à l'apparition du titre
   }
 
   &__actions {
@@ -149,24 +130,17 @@
     gap: 16px;
   }
 
-  // "c'est par ici !" au feutre, flèche vers les boutons
   &__scribble {
     margin-left: 8px;
     font-size: 22px;
 
-    // Téléphone : boutons empilés, pas la place pour l'annotation
     @media (max-width: 700px) {
       display: none;
     }
   }
 
-  // ===========================================================================
-  // Animation "tracé d'aiguille" (jouée une seule fois)
-  //   0 → 1,1 s   : 1re ligne dessinée
-  //   1,1 → 2,4 s : 2e ligne dessinée
-  //   2,4 → 2,9 s : soulignement cyan
-  //   2,6 → 3,2 s : apparition des boutons
-  // ===========================================================================
+  // Animation "tracé d'aiguille" — délais enchaînés, à garder cohérents :
+  //   0 → 1,1 s : 1re ligne | 1,1 → 2,4 s : 2e ligne | 2,4 s : soulignement | 2,6 s : boutons
   &__line {
     position: relative;
     display: inline-block;
@@ -177,14 +151,12 @@
     }
   }
 
-  // Le texte est dévoilé de gauche à droite (clip-path), au rythme de l'aiguille.
-  // Il reste dans le HTML dès le départ : les lecteurs d'écran et Google le lisent normalement.
+  // clip-path : le texte reste dans le HTML, lu normalement par les lecteurs d'écran et Google
   &__ink {
     display: inline-block;
     animation: hero-ink var(--ink-duration, 1.1s) linear var(--ink-delay, 0s) both;
   }
 
-  // L'aiguille : un trait vertical lumineux qui avance avec le bord du texte révélé
   &__needle {
     position: absolute;
     top: -6%;
@@ -219,12 +191,12 @@
     &__content {
       gap: 28px;
       padding-top: calc(var(--header-height) + 32px);
-      // 72 px d'espace + 64 px recouverts par les cartes à jouer (SalonCards, mobile)
+      // 72 px d'espace + 64 px recouverts par les cartes (SalonCards.scss, mobile)
       padding-bottom: 136px;
     }
   }
 
-  // Réglage système "réduire les animations" : tout s'affiche directement dans l'état final
+  // Accessibilité : état final direct
   @media (prefers-reduced-motion: reduce) {
     &__ink,
     &__underline,
@@ -238,28 +210,25 @@
   }
 }
 
-// --- Cartes à jouer + section artiste, sur le même fond bleuté ---
+// Cartes à jouer + section artiste sur un même fond
 .home-intro {
-  // flow-root : la marge négative des cartes (qui remontent sur la vidéo) ne "tire" pas ce bloc
-  // vers le haut ; le fond commence donc pile au bas de la vidéo, sans la recouvrir
+  // flow-root : la marge négative des cartes ne tire pas ce bloc (et son fond) sur la vidéo
   display: flow-root;
-  // Même fond que .artist-section (ArtistSection.scss), étalé sur les deux
+  // Même fond que .artist-section (ArtistSection.scss)
   background:
     radial-gradient(ellipse 50% 80% at 85% 60%, var(--glow), transparent 70%),
     var(--band-gradient);
   border-bottom: 1px solid var(--line);
 
-  // La section artiste n'a plus son propre fond ni de trait en haut : elle prolonge les cartes.
-  // Elle garde son espace habituel au-dessus (--band-padding), qui s'ajoute à la marge sous les cartes
+  // Le fond est porté par .home-intro
   .artist-section {
     background: none;
     border-block: 0;
   }
 }
 
-// --- Styles du tatoueur, entre le titre "Réalisations" et les photos ---
 .home-styles {
-  // Rapproché du titre (.section-head a déjà 72 px de marge en dessous)
+  // Négatif : compense les 72 px de marge sous .section-head
   margin: -36px 0 40px;
 
   @media (max-width: 900px) {
@@ -267,8 +236,7 @@
   }
 }
 
-// La zone dévoilée déborde de 60 px autour du texte : le halo lumineux du mot cyan
-// n'est jamais coupé net (sinon un rectangle sombre apparaît autour)
+// -60px : déborde pour ne pas couper le halo du mot cyan
 @keyframes hero-ink {
   from { clip-path: inset(-60px 100% -60px -60px); }
   to { clip-path: inset(-60px -60px -60px -60px); }

@@ -1,17 +1,14 @@
 /**
- * Liens directs vers les messageries, construits depuis les adresses des profils
- * saisies dans le backoffice (menu "Salon") :
+ * Profil → lien direct vers la conversation (ouvre l'appli sur téléphone) :
  *   https://www.instagram.com/julienbourgarit/  →  https://ig.me/m/julienbourgarit
  *   https://www.facebook.com/julienbourgarit/   →  https://m.me/julienbourgarit
- * ig.me et m.me ouvrent directement la conversation (dans l'appli sur téléphone).
  */
 
-/** Premier segment du chemin d'une adresse ("julienbourgarit"), ou null si l'adresse est inexploitable */
 const accountFromUrl = (url) => {
   try {
     const [account] = new URL(url).pathname.split('/').filter(Boolean);
-    // "profile.php" (profil Facebook sans nom d'utilisateur) : pas de lien direct possible.
-    // (Les points sont autorisés : ils sont fréquents dans les noms Instagram, ex. "julien.b")
+    // "profile.php" = profil Facebook sans nom d'utilisateur, pas de lien direct possible
+    // (on teste ".php" et pas "." : les points sont fréquents dans les noms Instagram)
     return account && !account.endsWith('.php') ? account : null;
   } catch {
     return null;

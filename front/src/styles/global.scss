@@ -1,24 +1,16 @@
-// =============================================================================
-// Direction "Néon nocturne" — styles communs à tout le site
-//
-// Ce fichier ne contient plus de règles : il importe, dans l'ordre, les morceaux de styles/.
-// L'ordre compte (une règle plus bas l'emporte à précision égale) : ne pas le changer sans raison.
+// L'ordre des @use compte : à précision égale, la règle importée plus bas l'emporte.
 //
 // Où ranger un style ?
-// - commun à tout le site          → un fichier de styles/ ci-dessous ;
-// - propre à un composant          → son .scss, à côté de son .jsx (components/…) ;
-// - propre à une page              → son .scss, à côté de son .jsx (pages/…).
-// Les couleurs et tailles sont des variables CSS (--cyan…), définies dans _variables.scss :
-// utilisables dans tous les .scss sans import.
-// =============================================================================
+// - commun au site → styles/ ;  - composant / page → .scss à côté de son .jsx.
+// Les variables CSS (--cyan…) de _variables.scss sont utilisables partout sans import.
 
-@use 'variables';   // couleurs, polices, tailles (:root)
-@use 'base';        // réinitialisation, focus, lien « Aller au contenu », structure de l'app
-@use 'layout';      // conteneur, sections, en-têtes de section, bandeaux, piles de texte
-@use 'typography';  // grands titres, titres de section, texte lumineux
+@use 'variables';
+@use 'base';
+@use 'layout';
+@use 'typography';
 @use 'paper';       // zone « papier » (fond clair) et punaises
-@use 'utilities';   // masqué à l'écran, surtitre, texte secondaire, lien fléché, pastilles
-@use 'filters';     // filtres en pastilles (styles, disponibilité)
+@use 'utilities';
+@use 'filters';
 @use 'buttons';
 @use 'forms';       // formulaires, carte néon, carte d'appel à l'action
-@use 'toastify';    // notifications
+@use 'toastify';

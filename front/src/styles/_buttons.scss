@@ -1,7 +1,3 @@
-// Boutons
-// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
-
-// --- Boutons ------------------------------------------------------------------
 .btn {
   display: inline-flex;
   align-items: center;
@@ -37,8 +33,7 @@
     }
   }
 
-  // Lien vers Instagram (à ajouter à btn--ghost) : au survol, le dégradé officiel d'Instagram,
-  // comme les icônes des réseaux du menu (SocialLinks.scss)
+  // À ajouter à btn--ghost ; même dégradé que dans SocialLinks.scss
   &--instagram:hover,
   &--instagram:focus-visible {
     color: #fff;

@@ -10,11 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Étape du déroulé d'une séance ("Comment ça se passe").
- * Le titre et le début de la description sont repris en aperçu sur l'accueil,
- * le texte complet est sur L'atelier.
- */
+/** Étape d'une séance ("Comment ça se passe") : aperçu sur l'accueil, texte complet sur L'atelier. */
 #[ApiResource(
     operations: [new GetCollection(order: ['position' => 'ASC', 'id' => 'ASC'])],
     normalizationContext: ['groups' => ['session_step:read']],
@@ -35,7 +31,7 @@ class SessionStep
     #[Assert\Length(max: 150)]
     private ?string $title = null;
 
-    /** Phrase courte, affichée sur l'accueil */
+    /** Affiché sur l'accueil */
     #[Groups(['session_step:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
@@ -46,7 +42,6 @@ class SessionStep
     #[Assert\NotBlank]
     private ?string $description = null;
 
-    /** Ordre d'affichage : la plus petite valeur en premier */
     #[ORM\Column]
     private int $position = 0;
 

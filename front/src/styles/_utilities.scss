@@ -1,7 +1,4 @@
-// Petites classes utilitaires : masqué à l'écran, surtitre, texte secondaire, lien fléché, pastilles
-// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
-
-// Texte masqué à l'écran mais lu par les lecteurs d'écran (ex. "Disponible" sur un flash)
+// Masqué à l'écran mais lu par les lecteurs d'écran
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -18,7 +15,7 @@
   letter-spacing: 0.3em;
   text-transform: uppercase;
 
-  // Touche de rose : surtitres numérotés de L'atelier (01 — Le salon, 02 — L'artiste…)
+  // Surtitres numérotés de L'atelier
   &--pink {
     color: var(--pink);
   }
@@ -36,7 +33,6 @@
   text-decoration: none;
 }
 
-// Pastilles : influences de l'artiste, sommaire de L'atelier
 .chips {
   list-style: none;
   padding: 0;

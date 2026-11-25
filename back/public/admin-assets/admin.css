@@ -316,10 +316,6 @@ body:not(.ea-dark-scheme) {
     background: color-mix(in srgb, var(--ea-primary) 6%, transparent);
 }
 
-.bo-row.is-info {
-    background: color-mix(in srgb, var(--ea-primary) 4%, transparent);
-}
-
 .bo-row__label {
     flex: 0 0 170px;
 }

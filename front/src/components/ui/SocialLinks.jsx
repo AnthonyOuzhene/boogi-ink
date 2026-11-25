@@ -2,12 +2,8 @@ import { FaFacebookF, FaInstagram } from 'react-icons/fa';
 import { useSalon } from '@/context/SalonContext';
 import './SocialLinks.scss';
 
-/**
- * Logos Instagram / Facebook du salon (adresses saisies dans le backoffice, menu "Salon").
- * Icônes seules : le nom du réseau est lu par les lecteurs d'écran (aria-label)
- * et s'affiche en infobulle au survol (title).
- * N'affiche rien si aucun réseau n'est renseigné.
- */
+// Adresses saisies dans le backoffice (menu "Salon").
+// Icônes seules : le nom du réseau passe par aria-label (lecteurs d'écran) et title (survol).
 const NETWORKS = [
   { key: 'instagramUrl', label: 'Instagram', Icon: FaInstagram, modifier: 'instagram' },
   { key: 'facebookUrl', label: 'Facebook', Icon: FaFacebookF, modifier: 'facebook' },

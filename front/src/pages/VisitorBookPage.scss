@@ -1,13 +1,11 @@
-// Page Livre d'or : grille d'avis punaisés et pagination
-
 .comments {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
   gap: 48px 36px; // plus d'espace vertical : place pour les punaises
   padding-top: 12px;
-  // Changement de page : on remonte ici ; le header est fixe, on garde de la marge pour lui
+  // Cible du scroll au changement de page, sous le header fixe
   scroll-margin-top: calc(var(--header-height) + 24px);
-  // Rejouée à chaque page (la grille est recréée, voir key={page} dans VisitorBookPage)
+  // Rejouée à chaque page grâce à key={page} dans VisitorBookPage.jsx
   animation: comments-in 0.4s ease;
 }
 
@@ -18,7 +16,6 @@
   }
 }
 
-// Pagination sous la grille : flèches rondes + numéros de page
 .pagination {
   padding-top: 56px;
   display: flex;
@@ -63,7 +60,6 @@
     }
   }
 
-  // Numéros sans bordure, sauf la page courante, pleine en cyan
   &__page {
     border-color: transparent;
 
@@ -86,8 +82,7 @@
   }
 }
 
-// Avis = petit mot punaisé au mur : feuille blanche, coins presque droits, ombre de papier,
-// légèrement de travers (angle différent d'un avis à l'autre). Au survol, il se redresse.
+// Avis = petit mot punaisé au mur
 .comment {
   position: relative; // pour la punaise (.pin)
   padding: 44px 36px 32px;
@@ -102,7 +97,6 @@
   transform: rotate(var(--tilt, 0deg));
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-  // Angles qui varient sur un cycle de 4 : le mur n'a pas l'air trop régulier
   &:nth-child(4n + 1) { --tilt: -1.5deg; }
   &:nth-child(4n + 2) { --tilt: 1deg; }
   &:nth-child(4n + 3) { --tilt: -0.5deg; }
@@ -119,7 +113,7 @@
     font-family: var(--font-display);
     font-size: 72px;
     line-height: 0.5;
-    color: var(--pink); // touche de rose (accent secondaire), comme une annotation au feutre
+    color: var(--pink);
   }
 
   &__title {

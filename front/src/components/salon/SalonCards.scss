@@ -1,9 +1,8 @@
-// Cartes à jouer posées en éventail, à cheval sur le bas de la grande photo d'accueil
 .salon-cards {
   position: relative;
   z-index: 1;
-  // Les cartes débordent sur la vidéo, comme jetées sur la table ; le bas de la vidéo
-  // passe vers le milieu des cartes. Garder la même valeur dans le padding-bottom de .hero__content
+  // Les cartes chevauchent le bas de la vidéo.
+  // Garder la même valeur dans le padding-bottom de .hero__content
   margin-top: -170px;
   padding: 0 var(--gutter) 96px;
 
@@ -32,7 +31,6 @@
   box-shadow: 0 24px 40px -20px rgba(0, 0, 0, 0.8);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 
-  // Éventail : les cartes du bord sont plus inclinées et un peu plus basses
   --tilt: 0deg;
   --drop: 0px;
   transform: translateY(var(--drop)) rotate(var(--tilt));
@@ -42,13 +40,11 @@
   &:nth-child(3) { --tilt: 2deg; --drop: 4px; }
   &:nth-child(4) { --tilt: 6deg; --drop: 22px; }
 
-  // Survol : la carte se redresse et se soulève
   &:hover {
     transform: translateY(-14px) rotate(0deg);
     box-shadow: 0 34px 50px -22px rgba(0, 0, 0, 0.9);
   }
 
-  // Filet intérieur, comme le cadre d'une carte à jouer
   &::after {
     content: '';
     position: absolute;
@@ -58,7 +54,6 @@
     pointer-events: none;
   }
 
-  // Symbole dans deux coins opposés (celui du bas est retourné, comme sur une vraie carte)
   &__corner {
     position: absolute;
     top: 20px;
@@ -92,7 +87,6 @@
   }
 }
 
-// Écrans moyens : cartes plus petites, texte resserré
 @media (max-width: 1100px) {
   .playing-card {
     padding: 40px 20px;
@@ -113,10 +107,8 @@
   }
 }
 
-// Tablette et mobile : cartes plus compactes.
-// (Le recouvrement de la photo, 64 px, est compté dans la marge du bas de .hero__content)
-// aspect-ratio (5 / 7) sert de hauteur minimale : la carte garde son format de carte à jouer
-// et s'allonge seulement si le texte en a besoin.
+// -64px : compté dans la marge du bas de .hero__content.
+// aspect-ratio sert de hauteur minimale : la carte s'allonge seulement si le texte l'exige.
 @media (max-width: 900px) {
   .salon-cards {
     margin-top: -64px;
@@ -156,8 +148,6 @@
   }
 }
 
-// Téléphone : grille de 2 × 2, les 4 cartes visibles d'un coup,
-// légèrement inclinées en damier (toujours "jetées sur la table")
 @media (max-width: 600px) {
   .salon-cards__hand {
     display: grid;

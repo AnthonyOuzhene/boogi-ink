@@ -37,16 +37,11 @@ class Category
     /**
      * @var Collection<int, Gallery>
      */
-    // EXTRA_LAZY : $this->galleries->count() fait un simple "SELECT COUNT(*)" en base,
-    // sans charger toutes les réalisations (voir getGalleryCount())
+    // EXTRA_LAZY : count() fait un SELECT COUNT sans charger les réalisations (voir getGalleryCount())
     #[ORM\OneToMany(targetEntity: Gallery::class, mappedBy: 'category', fetch: 'EXTRA_LAZY')]
     private Collection $galleries;
 
-    /**
-     * Nom adapté aux adresses web ("Fine line" → "fine-line") : la page Réalisations
-     * l'affiche dans l'URL (/realisations?category=fine-line) au lieu de l'id.
-     * Calculé automatiquement dans setName() : rien à saisir dans le backoffice.
-     */
+    /** Dans l'URL du site à la place de l'id (/realisations?category=fine-line) ; calculé dans setName() */
     #[Groups(['category:read', 'gallery:read'])]
     #[ORM\Column(length: 120, unique: true)]
     private ?string $slug = null;
@@ -62,8 +57,7 @@ class Category
     }
 
     /**
-     * Nombre de réalisations de ce style, renvoyé par l'API (GET /api/categories) :
-     * le front n'affiche que les styles qui ont au moins une réalisation.
+     * Le front n'affiche que les styles qui ont au moins une réalisation.
      * Champ calculé : un getter avec un groupe de sérialisation suffit, pas de colonne en base.
      */
     #[Groups(['category:read'])]
@@ -107,7 +101,6 @@ class Category
     public function removeGallery(Gallery $gallery): static
     {
         if ($this->galleries->removeElement($gallery)) {
-            // set the owning side to null (unless already changed)
             if ($gallery->getCategory() === $this) {
                 $gallery->setCategory(null);
             }

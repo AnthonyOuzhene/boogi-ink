@@ -3,12 +3,9 @@ import useApi from '@/hooks/useApi';
 import FaqList from './FaqList';
 import './FaqSection.scss';
 
-const PREVIEW_COUNT = 4; // nombre de questions affichées sur l'accueil
+const PREVIEW_COUNT = 4;
 
-/**
- * Aperçu de la FAQ sur l'accueil : bandeau pleine largeur sur fond clair,
- * les premières questions, puis un lien vers la page /faq complète.
- */
+/** Aperçu de la FAQ sur l'accueil */
 const FaqSection = () => {
   const { data: faqs } = useApi('/faqs');
   if (!faqs?.length) return null;

@@ -9,8 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 
 /**
- * Pas dans le menu : ce CRUD sert de "sous-formulaire" pour chaque photo
- * dans le formulaire d'une réalisation (voir GalleryCrudController).
+ * Hors menu : sous-formulaire des photos d'une réalisation (voir GalleryCrudController).
  *
  * @extends AbstractCrudController<Picture>
  */

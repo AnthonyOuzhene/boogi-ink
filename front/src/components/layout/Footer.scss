@@ -1,7 +1,6 @@
 .site-footer {
   margin-top: var(--section);
   border-top: 1px solid var(--line);
-  // Le pied de page "ferme" la page : de --surface vers le noir le plus profond
   background: linear-gradient(180deg, var(--surface) 0%, var(--bg-deep) 100%);
 
   &__inner {
@@ -29,7 +28,6 @@
     text-transform: uppercase;
   }
 
-  // Logos Instagram / Facebook, sous les coordonnées
   &__social {
     margin-top: 12px;
   }
@@ -46,7 +44,7 @@
   }
 }
 
-// Bloc "Horaires" (chaque ligne saisie dans le backoffice = une ligne ici)
+// Une ligne par ligne d'horaires saisie dans le backoffice
 .site-footer__hours {
   display: flex;
   flex-direction: column;

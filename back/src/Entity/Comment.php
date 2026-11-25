@@ -12,10 +12,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
-    // API Platform : le livre d'or PUBLIC, en lecture seule (avis publiés uniquement,
-    // voir PublishedCommentExtension).
-    // Dépôt d'un avis par le formulaire public (sans compte) : POST /api/comments,
-    // GuestbookController. L'avis arrive en attente, publié depuis le backoffice.
+    // Lecture seule, avis publiés uniquement (voir PublishedCommentExtension).
+    // Dépôt public sans compte : POST /api/comments (GuestbookController), l'avis arrive en attente.
     operations: [
         new Get(),
         new GetCollection(order: ['createdAt' => 'DESC']),
@@ -59,10 +57,7 @@ class Comment
     #[ORM\Column]
     private bool $isPublished = false;
 
-    /**
-     * Nom affiché sous l'avis, tapé dans le formulaire public du livre d'or.
-     * (Plus de compte client : l'avis n'est lié à aucun utilisateur.)
-     */
+    /** Tapé dans le formulaire public : l'avis n'est lié à aucun compte */
     #[Groups(['comment:read'])]
     #[ORM\Column(length: 80)]
     #[Assert\NotBlank]
@@ -71,7 +66,6 @@ class Comment
 
     public function __construct()
     {
-        // La date de l'avis est fixée automatiquement à la création
         $this->createdAt = new \DateTimeImmutable();
     }
 

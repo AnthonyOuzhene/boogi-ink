@@ -32,7 +32,6 @@ class PageCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('title', 'Titre');
-        // SlugField : se remplit automatiquement à partir du titre pendant la saisie
         yield SlugField::new('slug', 'Adresse')
             ->setTargetFieldName('title')
             ->setHelp("Adresse de la page sur le site : /pages/<adresse>. Attention : la modifier casse les anciens liens.");

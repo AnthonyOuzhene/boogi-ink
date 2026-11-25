@@ -1,14 +1,12 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{# Tableau de bord du backoffice. Les données viennent de DashboardController::index(),
-   les styles de public/admin-assets/admin.css (classes "bo-…"). #}
+{# Données : DashboardController::index() ; styles : public/admin-assets/admin.css (classes "bo-…") #}
 
 {% block content_title %}Tableau de bord{% endblock %}
 
 {% block main %}
 <div class="bo">
 
-    {# --- En-tête : date, bonjour, statut du salon --- #}
     <div class="bo-head">
         <div>
             <p class="bo-eyebrow">{{ today|capitalize }}</p>
@@ -24,8 +22,7 @@
         {% endif %}
     </div>
 
-    {# --- Flux Instagram de l'accueil : alerte seulement en cas de problème
-           (synchronisation app:instagram:sync, voir InstagramSync) --- #}
+    {# Instagram : alerte seulement en cas de problème (voir InstagramSync) #}
     {% if instagram and instagram.connected %}
         {% if instagram.lastError %}
             <div class="alert alert-warning">
@@ -44,7 +41,6 @@
         {% endif %}
     {% endif %}
 
-    {# --- Chiffres clés --- #}
     <div class="bo-kpis">
         <a class="bo-card bo-kpi {{ pendingCount > 0 ? 'is-warning' }}" href="{{ path('admin_comment_index') }}">
             <span class="bo-kpi__label">Avis en attente</span>
@@ -63,7 +59,6 @@
         </a>
     </div>
 
-    {# --- Raccourcis --- #}
     <div class="bo-shortcuts">
         <span class="bo-muted">Raccourcis</span>
         <a class="btn btn-primary" href="{{ path('admin_gallery_new') }}"><i class="fa fa-plus"></i> Ajouter une réalisation</a>
@@ -76,7 +71,7 @@
 
     <div class="bo-columns">
 
-        {# --- Contenus à compléter (service ContentChecklist) --- #}
+        {# Voir le service ContentChecklist #}
         <section class="bo-card">
             <header class="bo-card__head">
                 <div>
@@ -101,18 +96,9 @@
                     <a class="btn btn-secondary btn-sm" href="{{ item.url }}">Compléter</a>
                 </div>
             {% endfor %}
-            {% if unpricedFlashCount > 0 %}
-                <div class="bo-row is-info">
-                    <strong class="bo-row__label">Flashs</strong>
-                    <span class="bo-row__detail bo-muted">{{ unpricedFlashCount }} sans prix : le site affiche « Sur devis »</span>
-                    <span class="badge badge-secondary">info</span>
-                    <a class="btn btn-secondary btn-sm" href="{{ path('admin_flash_index') }}">Voir</a>
-                </div>
-            {% endif %}
         </section>
 
         <div class="bo-stack">
-            {# --- Avis à valider, avec publication directe --- #}
             <section class="bo-card">
                 <header class="bo-card__head">
                     <h3 class="bo-card__title">Avis à valider</h3>
@@ -127,7 +113,7 @@
                         <p class="bo-muted">« {{ comment.message|length > 160 ? comment.message|slice(0, 160) ~ '…' : comment.message }} »</p>
                         <span class="bo-meta">{{ comment.authorName }} · {{ comment.createdAt|date('d/m/Y à H:i') }}</span>
                         <div class="bo-comment__actions">
-                            {# Formulaire POST + jeton CSRF : voir DashboardController::publishComment() #}
+                            {# Jeton CSRF vérifié par DashboardController::publishComment() #}
                             <form method="post" action="{{ path('admin_dashboard_publish_comment', {id: comment.id}) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('publish-comment-' ~ comment.id) }}">
                                 <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-check"></i> Publier</button>
@@ -140,7 +126,6 @@
                 {% endfor %}
             </section>
 
-            {# --- Flashs --- #}
             <section class="bo-card">
                 <header class="bo-card__head">
                     <h3 class="bo-card__title">Flashs</h3>

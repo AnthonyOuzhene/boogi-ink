@@ -11,8 +11,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 /**
- * Cartes "à jouer" de l'accueil, sous la grande photo.
- *
  * @extends AbstractCrudController<HomeCard>
  */
 class HomeCardCrudController extends AbstractCrudController
@@ -36,7 +34,6 @@ class HomeCardCrudController extends AbstractCrudController
     {
         yield IntegerField::new('position', 'Ordre')
             ->setHelp('De gauche à droite : la plus petite valeur en premier (10, 20, 30… pour pouvoir glisser une carte entre deux).');
-        // Liste déroulante : le libellé est affiché, la clé (quill, swallow…) est enregistrée
         yield ChoiceField::new('icon', 'Symbole')
             ->setChoices(HomeCard::ICONS)
             ->setHelp('Dessiné dans deux coins opposés de la carte, comme sur une carte à jouer.');

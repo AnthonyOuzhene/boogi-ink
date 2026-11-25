@@ -1,11 +1,11 @@
 .guestbook {
-  --slide-width: min(760px, 62vw); // largeur de l'avis central
+  --slide-width: min(760px, 62vw);
   --slide-gap: 40px;
 
   padding-top: var(--section);
   overflow: hidden; // les voisins sont coupés au bord de l'écran
 
-  // Sur papier : bandeau collé à la section précédente, marges intérieures comme les autres (.band)
+  // Sur papier : mêmes marges intérieures que .band
   &.paper {
     padding-block: var(--band-padding);
   }
@@ -34,7 +34,7 @@
     align-items: stretch;
   }
 
-  // Avis = note punaisée (comme sur la page Livre d'or), sans inclinaison : les cartes défilent déjà
+  // Note punaisée comme sur la page Livre d'or, sans inclinaison : les cartes défilent déjà
   &__slide {
     position: relative; // pour la punaise (.pin)
     grid-area: 1 / 1;
@@ -49,13 +49,11 @@
       0 1px 2px rgba(20, 25, 27, 0.12),
       0 14px 24px -14px rgba(20, 25, 27, 0.45);
     cursor: pointer;
-    // Défilement lent et doux
     transition:
       transform 1s cubic-bezier(0.65, 0, 0.35, 1),
       opacity 1s cubic-bezier(0.65, 0, 0.35, 1),
       box-shadow 1s;
 
-    // Position = décalage d'une largeur de carte + l'espace entre deux cartes
     transform: translateX(calc(var(--offset, 0) * (var(--slide-width) + var(--slide-gap)))) scale(0.9);
     opacity: 0.35;
 
@@ -64,13 +62,11 @@
     &[data-position='1'] { --offset: 1; }
     &[data-position='2'] { --offset: 2; opacity: 0; pointer-events: none; }
 
-    // L'avis courant : au centre, en pleine lumière
     &[data-position='0'] {
       --offset: 0;
       transform: none;
       opacity: 1;
       cursor: default;
-      // Au premier plan : ombre plus marquée, comme une feuille un peu soulevée
       box-shadow:
         0 2px 4px rgba(20, 25, 27, 0.12),
         0 26px 40px -18px rgba(20, 25, 27, 0.55);
@@ -112,7 +108,6 @@
     text-transform: uppercase;
   }
 
-  // --- Flèches + points ---
   &__controls {
     padding-top: 48px; // idem : pas de margin sur un .container
     display: flex;
@@ -140,7 +135,7 @@
     }
   }
 
-  // Bouton pause : même style que les flèches, un peu plus petit (action secondaire)
+  // Même style que les flèches, en plus petit (action secondaire)
   &__pause {
     width: 40px;
     height: 40px;

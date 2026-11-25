@@ -12,10 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Date marquante d'une frise de L'atelier : l'histoire du salon ou le parcours de l'artiste.
- * GET /api/milestones?timeline=salon (ou artist)
- */
+/** Date d'une frise de L'atelier. GET /api/milestones?timeline=salon (ou artist) */
 #[ApiResource(
     operations: [
         new GetCollection(
@@ -44,7 +41,6 @@ class Milestone
     #[ORM\Column]
     private ?int $id = null;
 
-    /** Frise à laquelle appartient la date : "salon" ou "artist" */
     #[Groups(['milestone:read'])]
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank]

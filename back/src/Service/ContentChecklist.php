@@ -99,7 +99,7 @@ class ContentChecklist
                     $value = $accessor->getValue($record, $property);
                     $text = is_array($value) ? implode("\n", $value) : (string) $value;
                     if ('' === trim($text)) {
-                        continue; // champ vide : pas compté (il est facultatif ou déjà signalé par le formulaire)
+                        continue; // champ vide : facultatif, ou déjà signalé par le formulaire
                     }
                     ++$filled;
                     if (preg_match(self::PLACEHOLDER, $text)) {

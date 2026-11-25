@@ -10,13 +10,8 @@ use App\Entity\Comment;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Ajoute "WHERE is_published = true" à toutes les requêtes de l'API sur les avis,
- * pour la liste (GET /api/comments) comme pour le détail (GET /api/comments/12).
- *
- * Grâce à l'autoconfiguration de Symfony, implémenter ces interfaces suffit :
- * API Platform détecte et utilise cette classe tout seul.
- * EasyAdmin n'est pas concerné : il ne passe pas par API Platform (le backoffice voit
- * donc aussi les avis en attente, pour les publier).
+ * L'API ne renvoie que les avis publiés (liste et détail). Activée par autoconfiguration.
+ * EasyAdmin ne passe pas par API Platform : le backoffice voit aussi les avis en attente.
  */
 final class PublishedCommentExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {

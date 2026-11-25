@@ -9,10 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Photo du salon, affichée dans "Le lieu en images" sur L'atelier.
- * La première de la liste est affichée en grand.
- */
+/** Photo de "Le lieu en images" (L'atelier) ; la première de la liste est affichée en grand. */
 #[ApiResource(
     operations: [new GetCollection(order: ['position' => 'ASC', 'id' => 'ASC'])],
     normalizationContext: ['groups' => ['studio_photo:read']],
@@ -29,11 +26,11 @@ class StudioPhoto
     #[ORM\Column]
     private ?int $id = null;
 
-    /** Nom du fichier dans public/uploads/studio (l'URL complète est exposée par getPictureUrl) */
+    /** Nom de fichier seul ; l'API expose l'URL via getPictureUrl() */
     #[ORM\Column(length: 255)]
     private ?string $picture = null;
 
-    /** Légende, aussi utilisée comme texte alternatif de l'image */
+    /** Sert aussi de texte alternatif de l'image */
     #[Groups(['studio_photo:read'])]
     #[ORM\Column(length: 150, nullable: true)]
     #[Assert\Length(max: 150)]

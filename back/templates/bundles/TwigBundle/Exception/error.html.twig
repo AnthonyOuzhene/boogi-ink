@@ -1,14 +1,9 @@
 {#
-    Pages d'erreur du back (backoffice et toute adresse inconnue du domaine de l'API),
-    aux couleurs du site. Symfony les utilise automatiquement EN PRODUCTION (APP_ENV=prod) :
-    - error404.html.twig : page introuvable ;
-    - error403.html.twig : accès refusé (ex. un admin sur une rubrique réservée au super admin) ;
-    - ce fichier : toutes les autres erreurs (500…).
-    En développement, Symfony affiche sa page de débogage à la place. Aperçu : /_error/404, /_error/403, /_error/500.
+    Utilisées par Symfony EN PRODUCTION seulement (error404, error403, sinon ce fichier) ;
+    en dev, page de débogage à la place. Aperçu : /_error/404, /_error/403, /_error/500.
+    Les erreurs de /api restent en JSON.
 
-    Sécurité : un visiteur non connecté (souvent un robot qui teste /admin) n'apprend JAMAIS
-    l'adresse du backoffice : il est renvoyé vers le site. Seul un compte connecté voit
-    le bouton vers le tableau de bord. Les erreurs de l'API (/api) restent en JSON.
+    Sécurité : un visiteur non connecté ne voit JAMAIS l'adresse du backoffice.
 #}
 <!doctype html>
 <html lang="fr">
@@ -46,7 +41,6 @@
             width: min(560px, 100%);
             text-align: center;
         }
-        /* Logo : contour cyan qui se dessine (tracé d'aiguille, comme sur le site) */
         .error__mark {
             position: relative;
             display: inline-block;
@@ -98,7 +92,6 @@
             max-width: 440px;
             color: var(--muted);
         }
-        /* Petite note "au feutre", comme sur le site */
         .error__note {
             display: inline-block;
             margin-bottom: 28px;
@@ -144,11 +137,9 @@
 
         <div class="error__actions">
             {% if app.user %}
-                {# Compte connecté : retour au backoffice #}
                 <a href="{{ path('admin') }}" class="btn btn--primary">Retour au tableau de bord</a>
                 <a href="{{ front_url }}" class="btn btn--ghost">Voir le site</a>
             {% else %}
-                {# Visiteur (ou robot) : uniquement le site, jamais l'adresse du backoffice #}
                 <a href="{{ front_url }}" class="btn btn--primary">Aller sur le site Boogi'ink</a>
             {% endif %}
         </div>

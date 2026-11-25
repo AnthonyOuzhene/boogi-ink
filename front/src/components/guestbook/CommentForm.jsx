@@ -7,24 +7,17 @@ const EMPTY_FORM = { authorName: '', title: '', projectName: '', message: '', we
 // Ordre des champs dans le formulaire : après un envoi refusé, le focus va au premier en erreur
 const FIELD_ORDER = ['authorName', 'projectName', 'title', 'message'];
 
-/**
- * Attributs d'accessibilité d'un champ (WCAG 3.3.1) : aria-invalid signale le champ en erreur,
- * aria-describedby relie le message d'erreur au champ : le lecteur d'écran le lit avec.
- */
+/** WCAG 3.3.1 : aria-invalid marque le champ, aria-describedby fait lire son message d'erreur avec. */
 const errorProps = (errors, name) => (errors[name]
   ? { 'aria-invalid': true, 'aria-describedby': `${name}-error` }
   : {});
 
-/**
- * Formulaire PUBLIC du livre d'or : pas de compte, chacun peut laisser un avis.
- * Chaque avis arrive "en attente" et n'apparaît qu'après validation dans le backoffice.
- */
+/** Formulaire public, sans compte : l'avis n'apparaît qu'après validation dans le backoffice. */
 const CommentForm = () => {
-  // Un seul état pour tout le formulaire (plutôt qu'un useState par champ)
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false); // message de remerciement après l'envoi
+  const [sent, setSent] = useState(false);
 
   const formRef = useRef(null);
 
@@ -35,7 +28,7 @@ const CommentForm = () => {
     setErrors({});
     setSending(true);
     try {
-      // POST /api/comments (GuestbookController) : l'avis est créé "en attente de validation"
+      // GuestbookController : l'avis est créé "en attente de validation"
       await api.post('/comments', {
         authorName: form.authorName,
         title: form.title,
@@ -49,7 +42,7 @@ const CommentForm = () => {
       const violations = getViolations(error);
       setErrors(violations);
       toast.error("L'envoi a échoué, vérifie le formulaire.");
-      // Focus sur le premier champ en erreur : le clavier et le lecteur d'écran y vont directement
+      // Focus sur le premier champ en erreur (clavier, lecteur d'écran)
       const firstInvalid = FIELD_ORDER.find((name) => violations[name]);
       if (firstInvalid) formRef.current?.elements[firstInvalid]?.focus();
     } finally {
@@ -104,8 +97,7 @@ const CommentForm = () => {
           {errors.message && <p id="message-error" className="field__error">{errors.message}</p>}
         </div>
 
-        {/* Anti-spam ("pot de miel") : champ invisible pour les visiteurs, hors du parcours clavier
-            et ignoré par les lecteurs d'écran ; seuls les robots le remplissent */}
+        {/* Pot de miel anti-spam : invisible, hors clavier et lecteurs d'écran ; seuls les robots le remplissent */}
         <div className="visually-hidden" aria-hidden="true">
           <label htmlFor="website">Ne pas remplir</label>
           <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off"

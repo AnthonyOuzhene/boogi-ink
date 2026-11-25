@@ -1,10 +1,8 @@
-// Bandeau pleine largeur, fond clair + liseré cyan : coupure nette avec la section précédente
 .faq-band {
   position: relative;
   overflow: hidden;
   // Pas de marge au-dessus : collé à la section précédente (voir .section dans styles/_layout.scss)
   padding-block: var(--band-padding);
-  // Dégradé vertical + halo cyan sous le liseré du haut
   background:
     radial-gradient(ellipse 70% 60% at 50% 0%, var(--glow), transparent 70%),
     var(--band-gradient);
@@ -12,7 +10,7 @@
   border-bottom: 1px solid var(--line);
   box-shadow: inset 0 1px 40px -20px rgba(34, 211, 238, 0.35);
 
-  // Grand "?" en filigrane, décoratif
+  // Grand "?" en filigrane
   &__mark {
     position: absolute;
     right: -2vw;

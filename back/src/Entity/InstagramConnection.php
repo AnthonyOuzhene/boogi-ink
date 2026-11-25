@@ -6,9 +6,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Connexion au compte Instagram du salon (une seule fiche) : la clé d'accès (jeton) et l'état
- * de la dernière synchronisation, affiché sur le tableau de bord du backoffice.
- * Jamais exposée par l'API. Le jeton se renseigne avec : app:instagram:token "<jeton>".
+ * Une seule fiche : jeton Instagram + état de la dernière synchro (tableau de bord du backoffice).
+ * Jamais exposée par l'API. Jeton à renseigner avec la commande app:instagram:token (saisie masquée).
  */
 #[ORM\Entity]
 class InstagramConnection
@@ -18,7 +17,7 @@ class InstagramConnection
     #[ORM\Column]
     private ?int $id = null;
 
-    /** Jeton "longue durée" d'Instagram : valable 60 jours, renouvelé automatiquement avant */
+    /** Valable 60 jours, renouvelé automatiquement 10 jours avant expiration */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $accessToken = null;
 
@@ -28,7 +27,7 @@ class InstagramConnection
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $lastSyncAt = null;
 
-    /** Message de la dernière erreur (null si la dernière synchronisation a réussi) */
+    /** Null si la dernière synchronisation a réussi */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $lastError = null;
 
@@ -90,7 +89,7 @@ class InstagramConnection
         return null !== $this->accessToken;
     }
 
-    /** Jeton expiré ou qui expire dans moins de 7 jours (le renouvellement automatique a échoué) */
+    /** Moins de 7 jours alors que le renouvellement est prévu à 10 : il a échoué (alerte du tableau de bord) */
     public function isTokenExpiringSoon(): bool
     {
         return null !== $this->tokenExpiresAt && $this->tokenExpiresAt < new \DateTimeImmutable('+7 days');

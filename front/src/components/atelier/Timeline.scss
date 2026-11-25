@@ -1,5 +1,3 @@
-// Frises de L'atelier : histoire du salon et parcours de l'artiste
-
 .timeline {
   list-style: none;
   padding: 0;
@@ -27,7 +25,6 @@
     white-space: pre-line;
   }
 
-  // Verticale : une ligne cyan qui s'estompe, un point lumineux par date
   &--vertical {
     position: relative;
     display: flex;
@@ -67,7 +64,6 @@
     }
   }
 
-  // Horizontale : colonnes séparées par un trait, sous une ligne cyan
   &--horizontal {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
@@ -91,7 +87,7 @@
       font-size: 15px;
     }
 
-    // Une colonne par ligne sur mobile : on retire les traits verticaux
+    // Une seule colonne sur mobile : plus de traits verticaux
     @media (max-width: 700px) {
       .timeline__item {
         padding-left: 0;

@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
         new GetCollection(
             order: ['realisedAt' => 'DESC'],
-            // GET /api/galleries?category=fine-line (slug de la catégorie, lisible dans l'URL du site)
+            // GET /api/galleries?category=fine-line (slug de la catégorie, lisible dans l'URL)
             parameters: ['category' => new QueryParameter(filter: new ExactFilter(), property: 'category.slug')],
         ),
     ],
@@ -52,11 +52,7 @@ class Gallery
     #[Assert\NotBlank]
     private ?string $name = null;
 
-    /**
-     * Titre adapté aux adresses web ("Manchette graphique" → "manchette-graphique") : la page
-     * Réalisations l'affiche dans l'URL (?realisation=manchette-graphique) au lieu de l'id.
-     * Calculé automatiquement dans setName() : rien à saisir dans le backoffice.
-     */
+    /** Dans l'URL du site à la place de l'id (?realisation=manchette-graphique) ; calculé dans setName() */
     #[Groups(['gallery:read'])]
     #[ORM\Column(length: 170, unique: true)]
     private ?string $slug = null;
@@ -65,7 +61,6 @@ class Gallery
     #[Assert\NotBlank]
     private ?string $mainPicture = null;
 
-    /** Lien vers le post Instagram de la réalisation (photo, carrousel ou reel) : facultatif */
     #[Groups(['gallery:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Url(requireTld: true)]
@@ -91,26 +86,20 @@ class Gallery
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $pictures;
 
-    /** Texte affiché à côté de la photo dans la visionneuse (facultatif) */
+    /** Affiché à côté de la photo dans la visionneuse */
     #[Groups(['gallery:read'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    /**
-     * Dessin préparatoire (nom du fichier, même dossier que les photos) : facultatif.
-     * Renseigné, la visionneuse propose un curseur "du dessin à la peau" (voir getSketchUrl()).
-     */
+    /** Dessin préparatoire : renseigné, la visionneuse propose un curseur "du dessin à la peau" */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sketch = null;
 
-    /**
-     * Vidéo timelapse de la séance (nom du fichier MP4, même dossier que les photos) : facultative.
-     * Sur le site : badge "Timelapse" sur la vignette, et une diapositive vidéo dans la visionneuse.
-     */
+    /** Fichier MP4 ; sur le site : badge "Timelapse" sur la vignette + diapositive vidéo dans la visionneuse */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $timelapse = null;
 
-    /** Coup de cœur de l'artiste : annotation "coup de cœur ♥" écrite au feutre sur le site */
+    /** Sur le site : annotation "coup de cœur ♥" écrite au feutre */
     #[ORM\Column(options: ['default' => false])]
     private bool $isFavorite = false;
 
@@ -213,7 +202,6 @@ class Gallery
     public function removePicture(Picture $picture): static
     {
         if ($this->pictures->removeElement($picture)) {
-            // set the owning side to null (unless already changed)
             if ($picture->getGallery() === $this) {
                 $picture->setGallery(null);
             }
@@ -233,14 +221,14 @@ class Gallery
         return $this->mainPicture ? '/'.self::UPLOAD_PATH.'/'.$this->mainPicture : null;
     }
 
-    /** Adresse du dessin préparatoire pour l'API (null s'il n'y en a pas : pas de curseur) */
+    /** null s'il n'y en a pas : pas de curseur sur le site */
     #[Groups(['gallery:read'])]
     public function getSketchUrl(): ?string
     {
         return $this->sketch ? '/'.self::UPLOAD_PATH.'/'.$this->sketch : null;
     }
 
-    /** Adresse du timelapse pour l'API (null s'il n'y en a pas : ni badge, ni vidéo) */
+    /** null s'il n'y en a pas : ni badge ni vidéo sur le site */
     #[Groups(['gallery:read'])]
     public function getTimelapseUrl(): ?string
     {

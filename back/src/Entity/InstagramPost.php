@@ -9,11 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 /**
- * Un des derniers posts Instagram du salon, affiché en bas de l'accueil.
- *
- * Ces fiches ne se saisissent pas dans le backoffice : elles sont remplies par la commande
- * app:instagram:sync (tâche planifiée), qui interroge Instagram et copie les images ici,
- * en WebP (le visiteur ne contacte jamais Instagram : pas de cookie, chargement rapide).
+ * Post Instagram affiché en bas de l'accueil. Rempli par app:instagram:sync (tâche planifiée),
+ * pas saisi dans le backoffice ; images copiées en WebP : le visiteur ne contacte jamais Instagram.
  */
 #[ApiResource(
     operations: [new GetCollection(order: ['postedAt' => 'DESC'], paginationEnabled: false)],
@@ -22,7 +19,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity]
 class InstagramPost
 {
-    /** Images copiées depuis Instagram, relatif à public/ */
+    /** Relatif à public/ */
     public const UPLOAD_PATH = 'uploads/instagram';
 
     #[Groups(['instagram:read'])]
@@ -31,11 +28,10 @@ class InstagramPost
     #[ORM\Column]
     private ?int $id = null;
 
-    /** Identifiant du post chez Instagram : évite de copier deux fois le même post */
+    /** Unique : évite de copier deux fois le même post */
     #[ORM\Column(length: 64, unique: true)]
     private ?string $instagramId = null;
 
-    /** Adresse du post sur Instagram (ouverte au clic) */
     #[Groups(['instagram:read'])]
     #[ORM\Column(length: 255)]
     private ?string $permalink = null;
@@ -49,7 +45,7 @@ class InstagramPost
     #[ORM\Column(length: 20)]
     private ?string $mediaType = null;
 
-    /** Nom du fichier image (converti en WebP par ImageWebpListener) */
+    /** Converti en WebP par ImageWebpListener */
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 

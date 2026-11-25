@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 
-/**
- * Indique si une media query CSS correspond à l'écran, et se met à jour quand ça change
- * (fenêtre redimensionnée, téléphone tourné).
- * Usage : const isMobile = useMediaQuery('(max-width: 700px)');
- */
+/** Usage : const isMobile = useMediaQuery('(max-width: 700px)'); — suit le redimensionnement */
 export default function useMediaQuery(query) {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
 

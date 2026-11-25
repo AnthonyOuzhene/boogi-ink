@@ -1,5 +1,4 @@
-// Barre de rendez-vous en bas de l'écran : seulement quand le menu est en burger (≤ 1 240 px,
-// même seuil que Header.scss), et glisse depuis le bas une fois qu'on a un peu défilé
+// 1 240 px : même seuil que le menu burger dans Header.scss
 .booking-bar {
   display: none;
 }
@@ -25,7 +24,7 @@
     }
   }
 
-  // Le bas du pied de page n'est jamais caché derrière la barre
+  // Pour que la barre ne cache pas le bas du pied de page
   .site-footer {
     padding-bottom: 80px;
   }

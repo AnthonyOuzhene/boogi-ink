@@ -1,6 +1,4 @@
-// En-tête des pages intérieures (toutes sauf l'accueil) : titre, surtitre, texte d'intro
-
-// --- En-tête de page (toutes les pages sauf l'accueil) ---------------------------
+// En-tête des pages intérieures (toutes sauf l'accueil)
 .page-hero {
   padding-block: 96px 72px;
   border-bottom: 1px solid var(--line);
@@ -8,8 +6,8 @@
   flex-direction: column;
   gap: 20px;
 
-  // Même style que .display (styles/_typography.scss), recopié ici : @extend ne fonctionne
-  // qu'à l'intérieur d'un même fichier compilé, et ce fichier est compilé à part
+  // Copie de .display (styles/_typography.scss) : @extend ne marche pas entre fichiers
+  // compilés séparément. À garder synchronisé.
   &__title {
     font-family: var(--font-display);
     font-weight: 400;

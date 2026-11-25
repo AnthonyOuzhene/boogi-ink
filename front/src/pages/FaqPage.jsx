@@ -5,7 +5,6 @@ import PageHero from '@/components/ui/PageHero';
 import FaqList from '@/components/faq/FaqList';
 import './FaqPage.scss';
 
-/** Page /faq : toutes les questions fréquentes, gérées dans le backoffice (menu "FAQ") */
 const FaqPage = () => {
   usePageTitle('Questions fréquentes');
   const { data: faqs, loading, error } = useApi('/faqs');
@@ -18,7 +17,6 @@ const FaqPage = () => {
         lead="Tarifs, douleur, cicatrisation, prise de rendez-vous : les réponses aux questions qu'on me pose le plus souvent."
       />
 
-      {/* Les réponses sur papier : plus confortable à lire */}
       <section className="band band--flush paper">
         <div className="container faq-page">
           {loading && <p className="muted">Chargement…</p>}

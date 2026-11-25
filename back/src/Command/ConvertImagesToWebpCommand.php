@@ -10,9 +10,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Usage : ddev console app:images:convert-webp
- * À lancer une fois (en local, puis en production) pour convertir les photos envoyées AVANT
- * la conversion automatique. Les nouvelles photos sont converties à l'envoi (ImageWebpListener).
- * Sans risque à relancer : les photos déjà en WebP sont ignorées.
+ * À lancer une fois (en local, puis en production) pour les photos envoyées avant la conversion
+ * automatique (ImageWebpListener). Sans risque à relancer : les WebP sont ignorés.
  */
 #[AsCommand(
     name: 'app:images:convert-webp',
@@ -45,8 +44,7 @@ class ConvertImagesToWebpCommand
             $io->writeln(sprintf('%s : %d fiche(s) mise(s) à jour', $metadata->getReflectionClass()->getShortName(), $converted));
         }
 
-        // Les noms de fichiers ont déjà été corrigés dans les fiches : on enregistre
-        // (l'écouteur ImageWebpListener les voit déjà en .webp et n'y touche plus)
+        // ImageWebpListener voit déjà des .webp et n'y touche plus
         $this->entityManager->flush();
 
         $io->success(sprintf('Terminé : %s gagnés.', $this->formatBytes($savedTotal)));

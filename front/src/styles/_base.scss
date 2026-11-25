@@ -1,7 +1,3 @@
-// Base : réinitialisation, focus, lien « Aller au contenu », structure de l'application
-// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
-
-// --- Base -------------------------------------------------------------------
 *,
 *::before,
 *::after {
@@ -10,14 +6,12 @@
 
 html {
   scroll-behavior: smooth;
-  // Sur une page courte, le dégradé du body couvre quand même tout l'écran (sinon il se répète)
+  // Sinon, sur une page courte, le dégradé du body se répète
   min-height: 100%;
 }
 
 body {
   margin: 0;
-  // Fond en dégradé sur toute la hauteur de la page : bleu nuit en haut (avec un halo cyan
-  // derrière le titre des pages), noir profond en bas. Le dégradé suit le défilement.
   background-color: var(--bg);
   background-image:
     radial-gradient(ellipse 70% 600px at 50% 0%, var(--glow), transparent 70%),
@@ -55,14 +49,13 @@ ul {
   outline-offset: 3px;
 }
 
-// Focus posé par le code (titre de la page après un changement de page, voir App.jsx) :
-// pas de contour au clic de souris ; il reste visible au clavier (:focus-visible)
+// Focus posé par le code sur le titre après un changement de page (voir App.jsx) :
+// pas de contour à la souris, mais il reste visible au clavier
 [tabindex='-1']:focus:not(:focus-visible) {
   outline: none;
 }
 
-// Lien "Aller au contenu" (accessibilité, WCAG 2.4.1) : caché hors de l'écran,
-// il apparaît en haut à gauche au premier appui sur Tab
+// WCAG 2.4.1 : apparaît au premier appui sur Tab
 .skip-link {
   position: fixed;
   top: 12px;
@@ -82,7 +75,7 @@ ul {
   }
 }
 
-// Champ de formulaire refusé (aria-invalid, voir CommentForm) : bordure rose
+// Posé par CommentForm
 [aria-invalid='true'] {
   border-color: var(--pink) !important;
 }
@@ -96,7 +89,7 @@ ul {
 .site-main {
   flex: 1;
 
-  // Pages autres que l'accueil : on laisse la place au menu fixe
+  // Pages autres que l'accueil : place pour le menu fixe
   &--offset {
     padding-top: var(--header-height);
   }

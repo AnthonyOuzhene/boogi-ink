@@ -9,7 +9,7 @@ import { instagramMessageUrl, messengerUrl } from '@/utils/social';
 import PageHero from '@/components/ui/PageHero';
 import './ContactPage.scss';
 
-// Ce que l'artiste a besoin de savoir pour répondre (affiché en liste, et repris dans le modèle)
+// À garder cohérent avec MESSAGE_TEMPLATE ci-dessous
 const CHECKLIST = [
   'Ton idée ou le style qui te plaît',
   "L'emplacement sur le corps",
@@ -18,7 +18,7 @@ const CHECKLIST = [
   'Tes disponibilités',
 ];
 
-// Modèle à coller dans la messagerie (Instagram et Messenger ne permettent pas de pré-remplir un message)
+// À copier-coller : Instagram et Messenger ne permettent pas de pré-remplir un message
 const MESSAGE_TEMPLATE = `Salut ! J'ai un projet de tatouage :
 - Mon idée / le style :
 - L'emplacement :
@@ -26,19 +26,14 @@ const MESSAGE_TEMPLATE = `Salut ! J'ai un projet de tatouage :
 - Mes références : (photos jointes)
 - Mes disponibilités : `;
 
-/**
- * Page Contact : pas de formulaire, l'artiste répond lui-même sur Instagram et Messenger.
- * La page explique quoi envoyer avant d'ouvrir la messagerie (moins d'allers-retours).
- * Coordonnées, horaires et réseaux : backoffice, menu "Salon".
- */
+// Pas de formulaire : l'artiste répond lui-même sur Instagram et Messenger
 const ContactPage = () => {
   usePageTitle('Contact');
   const { salon } = useSalon();
   const fullAddress = salon ? `${salon.address}, ${salon.zipCode} ${salon.city}` : null;
   const instagram = instagramMessageUrl(salon?.instagramUrl);
   const messenger = messengerUrl(salon?.facebookUrl);
-  // Carte Google chargée seulement au clic : Google peut déposer des cookies, il faut donc
-  // l'accord du visiteur (CNIL). Son clic sur "Afficher la carte" vaut consentement.
+  // CNIL : Google Maps dépose des cookies, la carte ne se charge qu'au clic (= consentement)
   const [showMap, setShowMap] = useState(false);
 
   const copyTemplate = async () => {
@@ -78,8 +73,7 @@ const ContactPage = () => {
               </div>
             </>
           ) : (
-            // Aucun réseau renseigné dans le backoffice : on renvoie vers le téléphone
-            // (pas de contact par e-mail : l'artiste répond sur les messageries)
+            // Aucun réseau renseigné : téléphone (volontairement pas d'e-mail)
             <h2 className="contact__title">Appelle le salon</h2>
           )}
 
@@ -89,7 +83,6 @@ const ContactPage = () => {
               {CHECKLIST.map((item) => <li key={item}>{item}</li>)}
             </ul>
             <p className="muted">Pour un flash, donne-moi simplement son numéro (N°01, N°02…).</p>
-            {/* Le bouton copie un texte à trous : il faut dire ce qu'on en fait ensuite */}
             <p className="contact__copy-hint">
               Pour gagner du temps : copie ce message tout prêt, colle-le dans ta conversation
               Instagram ou Messenger, puis complète-le.
@@ -122,7 +115,7 @@ const ContactPage = () => {
               </p>
             </div>
           )}
-          {/* La FAQ n'est plus dans le menu : on la rappelle ici, là où l'on se pose des questions */}
+          {/* La FAQ n'est plus dans le menu : rappel ici */}
           <div>
             <h2 className="contact__label">Une question ?</h2>
             <p>La réponse est peut-être dans la <Link to="/faq">FAQ</Link>.</p>
@@ -139,7 +132,6 @@ const ContactPage = () => {
               src={`https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`}
             />
           ) : (
-            // Avant le clic : rien n'est chargé depuis Google
             <div className="contact__map-placeholder">
               <FaMapMarkerAlt className="contact__map-pin" aria-hidden="true" />
               <p className="contact__map-address">{fullAddress}</p>
@@ -147,7 +139,6 @@ const ContactPage = () => {
                 <button type="button" className="btn btn--primary" onClick={() => setShowMap(true)}>
                   Afficher la carte
                 </button>
-                {/* L'itinéraire s'ouvre directement dans Google Maps (nouvel onglet) */}
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`}
                   target="_blank"

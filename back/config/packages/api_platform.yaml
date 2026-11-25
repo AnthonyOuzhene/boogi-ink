@@ -1,9 +1,8 @@
 api_platform:
     title: "Boogi'ink API"
     version: 1.0.0
-    # Formats de réponse acceptés (choisi via l'en-tête Accept de la requête) :
-    # - jsonld : JSON enrichi (@id, @type, pagination hydra) — format par défaut d'API Platform
-    # - json   : JSON simple, le plus pratique pour le front React
+    # Choisi via l'en-tête Accept : jsonld (défaut d'API Platform, avec hydra),
+    # json simple pour le front React
     formats:
         jsonld: ['application/ld+json']
         json: ['application/json']
@@ -11,4 +10,4 @@ api_platform:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Origin']
-    # API publique, sans connexion : plus de bouton "Authorize" (jeton JWT) dans Swagger (/api/docs)
+    # API publique : pas de bouton "Authorize" (JWT) dans Swagger

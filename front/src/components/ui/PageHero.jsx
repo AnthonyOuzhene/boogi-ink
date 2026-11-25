@@ -1,6 +1,5 @@
 import './PageHero.scss';
 
-/** En-tête des pages intérieures : surtitre cyan, grand titre, chapeau facultatif */
 const PageHero = ({ eyebrow, title, lead, children }) => (
   <section className="container">
     <div className="page-hero">

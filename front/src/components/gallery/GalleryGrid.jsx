@@ -9,17 +9,10 @@ import './GalleryGrid.scss';
 /** Lien par défaut (accueil) : la page Réalisations, visionneuse ouverte sur ce tatouage */
 const defaultLink = (gallery) => `/realisations?realisation=${gallery.slug}`;
 
-// Aperçu du timelapse au survol : seulement avec une souris (pas de survol sur écran tactile)
-// et si le réglage "réduire les animations" n'est pas activé
+// Aperçu du timelapse : souris seulement (pas de survol au tactile), sauf si "réduire les animations"
 const PREVIEW_QUERY = '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)';
 
-/**
- * Mosaïque de réalisations : la première est mise en avant (2 × 2 cases).
- * Survol : la légende apparaît et l'image est entourée de cyan.
- * Timelapse (backoffice) : badge "Timelapse" sur la vignette ; à la souris, la vidéo
- * se lance en aperçu au survol, à la place de la photo.
- * getLink : adresse ouverte au clic (la page Réalisations y garde son filtre de catégorie).
- */
+/** getLink : adresse ouverte au clic (la page Réalisations y garde son filtre de catégorie). */
 const GalleryGrid = ({ galleries, getLink = defaultLink }) => {
   const canPreview = useMediaQuery(PREVIEW_QUERY);
   // Une seule vidéo chargée à la fois : celle de la vignette survolée
@@ -55,7 +48,6 @@ const GalleryGrid = ({ galleries, getLink = defaultLink }) => {
               />
             )}
 
-            {/* Coup de cœur de l'artiste (case à cocher du backoffice) : annotation au feutre */}
             {gallery.isFavorite && (
               <Scribble decorative={false} className="gallery-grid__favorite">coup de cœur ♥</Scribble>
             )}

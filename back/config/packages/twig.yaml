@@ -1,6 +1,5 @@
 twig:
     file_name_pattern: '*.twig'
-    # Variables disponibles dans tous les templates Twig
     globals:
         front_url: '%env(FRONT_URL)%'
 

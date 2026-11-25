@@ -1,10 +1,7 @@
 import { toParagraphs } from '@/utils/format';
 import './FaqList.scss';
 
-/**
- * Accordéon des questions fréquentes (cartes numérotées).
- * Utilisé par la page /faq et par l'aperçu de l'accueil.
- */
+/** Utilisé par la page /faq et par l'aperçu de l'accueil (FaqSection) */
 const FaqList = ({ faqs }) => (
   <div className="faq">
     {faqs.map((faq, index) => (

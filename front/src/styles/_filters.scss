@@ -1,13 +1,10 @@
-// Filtres en pastilles (styles de tatouage, disponibilité des flashs) : Réalisations, accueil, Flashs
-// (partie de styles/global.scss, importée par lui)
-
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 16px;
 
-  // Boutons (page Réalisations) ou liens (accueil) : même pastille
+  // Boutons (page Réalisations) ou liens (accueil)
   button,
   a {
     display: inline-flex;

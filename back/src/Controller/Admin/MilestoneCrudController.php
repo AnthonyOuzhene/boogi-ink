@@ -13,8 +13,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 /**
- * Dates des deux frises de L'atelier : l'histoire du salon et le parcours de l'artiste.
- *
  * @extends AbstractCrudController<Milestone>
  */
 class MilestoneCrudController extends AbstractCrudController

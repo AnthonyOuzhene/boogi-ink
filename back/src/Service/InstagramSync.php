@@ -35,7 +35,6 @@ final class InstagramSync
     ) {
     }
 
-    /** La fiche de connexion (créée au premier appel) */
     public function getConnection(): InstagramConnection
     {
         $connection = $this->entityManager->getRepository(InstagramConnection::class)->findOneBy([]);
@@ -48,9 +47,8 @@ final class InstagramSync
     }
 
     /**
-     * Enregistre un nouveau jeton longue durée (généré depuis l'application Meta).
-     * Il est valable 60 jours : on compte 59 jours par prudence, le renouvellement
-     * automatique commencera 10 jours avant.
+     * Jeton longue durée généré depuis l'application Meta : valable 60 jours,
+     * on compte 59 par prudence.
      */
     public function saveToken(string $token): void
     {
@@ -62,7 +60,7 @@ final class InstagramSync
     }
 
     /**
-     * Synchronise les posts. Renvoie le nombre de posts affichés.
+     * @return int nombre de posts affichés
      *
      * @throws \RuntimeException si aucun jeton n'est enregistré ou si Instagram répond une erreur
      */
@@ -104,7 +102,7 @@ final class InstagramSync
 
             return $count;
         } catch (\Throwable $e) {
-            // Les posts déjà enregistrés restent affichés ; l'erreur s'affiche dans le backoffice
+            // Les posts déjà enregistrés restent affichés
             $message = $this->describeError($e, $connection->getAccessToken());
             $connection->setLastError($message);
             $this->entityManager->flush();
@@ -123,7 +121,7 @@ final class InstagramSync
 
         if ($e instanceof HttpExceptionInterface) {
             $response = $e->getResponse();
-            // Instagram explique l'erreur dans le JSON de sa réponse (ex. jeton invalide ou expiré)
+            // Instagram détaille l'erreur dans le JSON (ex. jeton expiré)
             $message = sprintf('Instagram a répondu %d : %s', $response->getStatusCode(), $response->toArray(false)['error']['message'] ?? 'erreur inconnue');
         }
 
@@ -131,8 +129,8 @@ final class InstagramSync
     }
 
     /**
-     * Posts d'exemple (photos des fixtures), pour voir la bande sur l'accueil avant d'avoir
-     * le jeton. Ils seront remplacés par les vrais posts à la première synchronisation.
+     * Posts d'exemple (photos des fixtures) pour voir la bande sur l'accueil avant d'avoir
+     * le jeton ; remplacés à la première synchronisation.
      */
     public function loadDemo(): int
     {
@@ -165,7 +163,7 @@ final class InstagramSync
         return $count;
     }
 
-    /** Jeton expirant dans moins de 10 jours : on demande un nouveau jeton de 60 jours */
+    /** Moins de 10 jours avant expiration : on obtient un nouveau jeton de 60 jours */
     private function refreshTokenIfNeeded(InstagramConnection $connection): void
     {
         $expiresAt = $connection->getTokenExpiresAt();
@@ -183,8 +181,7 @@ final class InstagramSync
     }
 
     /**
-     * Remplace les posts enregistrés par ceux-ci : les nouveaux sont ajoutés (image copiée),
-     * ceux qui ne font plus partie des derniers sont supprimés (avec leur image).
+     * Les nouveaux posts sont ajoutés (image copiée), les autres supprimés avec leur image.
      *
      * @param list<array{id: string, permalink: string, caption: ?string, mediaType: string, imageUrl: ?string, postedAt: \DateTimeImmutable}> $posts
      * @param callable(string): string $download lit le contenu de l'image (adresse web ou fichier local)
@@ -205,14 +202,14 @@ final class InstagramSync
 
             $post = $repository->findOneBy(['instagramId' => $data['id']]);
             if (null === $post) {
-                // Nouveau post : on copie son image (convertie en WebP à l'enregistrement)
+                // Image convertie en WebP à l'enregistrement
                 $filename = preg_replace('/[^A-Za-z0-9_-]/', '', $data['id']).'.img';
                 $filesystem->dumpFile($directory.'/'.$filename, $download($data['imageUrl']));
                 $post = (new InstagramPost())->setInstagramId($data['id'])->setImage($filename);
                 $this->entityManager->persist($post);
             }
 
-            // La légende ou le lien ont pu changer sur Instagram : on les met à jour
+            // La légende ou le lien ont pu changer sur Instagram
             $post
                 ->setPermalink($data['permalink'])
                 ->setCaption($data['caption'])
@@ -220,7 +217,6 @@ final class InstagramSync
                 ->setPostedAt($data['postedAt']);
         }
 
-        // Les posts plus anciens disparaissent de l'accueil
         foreach ($repository->findAll() as $post) {
             if (!in_array($post->getInstagramId(), $keptIds, true)) {
                 $filesystem->remove($directory.'/'.$post->getImage());

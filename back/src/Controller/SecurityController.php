@@ -10,11 +10,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * Affiche le formulaire de connexion.
-     * La vérification email / mot de passe n'est PAS faite ici : c'est le
-     * pare-feu (form_login dans security.yaml) qui intercepte le POST sur cette même URL.
-     * Rangée sous le préfixe du backoffice : /login n'indique pas qu'il y a un backoffice.
-     * Elle reste accessible sans être connecté grâce à la règle PUBLIC_ACCESS de security.yaml.
+     * Le POST est intercepté par le pare-feu (form_login, security.yaml), pas traité ici.
+     * Sous le préfixe du backoffice pour ne pas le signaler par /login ; accessible
+     * sans connexion grâce à PUBLIC_ACCESS dans security.yaml.
      */
     #[Route('/boogi-0806/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -35,10 +33,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * Cette méthode n'est jamais exécutée : le pare-feu intercepte cette URL
-     * (clé "logout" dans security.yaml). La route doit juste exister.
-     */
+    // Jamais exécutée : le pare-feu intercepte l'URL (clé "logout" de security.yaml)
     #[Route('/boogi-0806/logout', name: 'app_logout')]
     public function logout(): never
     {

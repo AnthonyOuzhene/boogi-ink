@@ -45,9 +45,6 @@ final class ImageOptimizer
     }
 
     /**
-     * Convertit toutes les photos de l'entité qui ne sont pas encore en WebP,
-     * et met à jour les noms de fichiers dans l'entité.
-     *
      * @return int nombre d'octets gagnés (0 si rien n'a changé)
      */
     public function optimizeEntity(object $entity, ClassMetadata $metadata): int
@@ -85,7 +82,7 @@ final class ImageOptimizer
         $target = $directory.'/'.$webpName;
 
         if (!is_file($source)) {
-            // Déjà converti via une autre fiche qui partageait le même fichier : on pointe sur le WebP
+            // Déjà converti via une autre fiche qui partageait le même fichier
             return is_file($target) ? ['filename' => $webpName, 'saved' => 0] : null;
         }
 

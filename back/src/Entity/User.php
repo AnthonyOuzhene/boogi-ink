@@ -9,10 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Compte administrateur du backoffice (connexion par session sur /boogi-0806/login).
- * Le site public n'a plus d'espace client : il n'y a plus de comptes "client".
- */
+/** Compte administrateur du backoffice (session sur /boogi-0806/login) : pas de comptes clients */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'Un compte existe déjà avec cet email.')]
@@ -30,7 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * @var list<string>
      */
     #[ORM\Column]
     private array $roles = [];
@@ -41,11 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    /**
-     * Mot de passe en clair saisi dans le backoffice.
-     * Pas de #[ORM\Column] : cette propriété n'est JAMAIS enregistrée en base,
-     * elle sert seulement à transporter la saisie jusqu'au hachage.
-     */
+    /** Saisie en clair du backoffice : pas de #[ORM\Column], JAMAIS enregistrée en base, sert jusqu'au hachage */
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 100)]
@@ -53,7 +46,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 100)]
     private ?string $name = null;
 
-    /** Date de création du compte, remplie automatiquement à la création (voir le constructeur) */
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -80,8 +72,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
      * @see UserInterface
      */
     public function getUserIdentifier(): string
@@ -95,7 +85,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -126,9 +115,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
+    /** La session ne contient qu'un CRC32C du hash, jamais le vrai hash du mot de passe (Symfony 7.3+) */
     public function __serialize(): array
     {
         $data = (array) $this;

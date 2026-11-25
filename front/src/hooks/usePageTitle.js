@@ -3,10 +3,8 @@ import { useEffect } from 'react';
 const SITE_NAME = "Boogi'ink";
 
 /**
- * Titre de l'onglet du navigateur pour la page affichée : "Livre d'or — Boogi'ink".
- * Accessibilité (WCAG 2.4.2) : c'est la première chose qu'annonce un lecteur d'écran
- * en arrivant sur une page ; c'est aussi le titre affiché par les moteurs de recherche.
- * Sans titre (accueil, ou page encore en chargement) : "Boogi'ink — Salon de tatouage".
+ * WCAG 2.4.2 : le titre est la première chose qu'annonce un lecteur d'écran sur une page
+ * (et celui qu'affichent les moteurs de recherche).
  */
 export default function usePageTitle(title) {
   useEffect(() => {

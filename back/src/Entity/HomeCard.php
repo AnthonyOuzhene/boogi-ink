@@ -9,10 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Carte "à jouer" de l'accueil, sous la grande photo : un point fort du salon
- * (titre + phrase courte + symbole de tatouage dans les coins).
- */
+/** Carte "à jouer" de l'accueil, sous la grande photo (symbole de tatouage dans les coins). */
 #[ApiResource(
     operations: [new GetCollection(order: ['position' => 'ASC', 'id' => 'ASC'])],
     normalizationContext: ['groups' => ['home_card:read']],
@@ -21,10 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: HomeCardRepository::class)]
 class HomeCard
 {
-    /**
-     * Symboles disponibles : libellé du backoffice => clé enregistrée en base.
-     * Le front associe chaque clé à son dessin (front/src/components/SalonCards.jsx).
-     */
+    /** Libellé backoffice => clé en base. Clés à garder synchronisées avec ICONS dans front/src/components/salon/SalonCards.jsx */
     public const ICONS = [
         'Plume et encre' => 'quill',
         'Hirondelle' => 'swallow',
@@ -48,7 +42,7 @@ class HomeCard
     #[Assert\Length(max: 60)]
     private ?string $title = null;
 
-    /** Phrase courte : la carte est petite (environ 120 caractères conseillés) */
+    /** Environ 120 caractères conseillés : la carte est petite */
     #[Groups(['home_card:read'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -61,7 +55,6 @@ class HomeCard
     #[Assert\Choice(choices: self::ICONS)]
     private ?string $icon = null;
 
-    /** Ordre d'affichage : la plus petite valeur en premier */
     #[ORM\Column]
     private int $position = 0;
 

@@ -1,7 +1,7 @@
 import { assetUrl } from '@/api/client';
 import './StudioGallery.scss';
 
-/** "Le lieu en images" : la première photo en grand, les suivantes autour (backoffice : "Photos du salon") */
+/** Backoffice : "Photos du salon" */
 const StudioGallery = ({ photos }) => (
   <ul className="studio-gallery">
     {photos.map((photo, index) => (

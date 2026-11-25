@@ -1,6 +1,5 @@
-// Section pleine largeur, sur un fond légèrement plus clair pour la détacher du reste
 .artist-section {
-  // Dégradé vertical + halo cyan côté droit (derrière la photo de l'artiste)
+  // Halo cyan derrière la photo de l'artiste
   background:
     radial-gradient(ellipse 50% 80% at 85% 50%, var(--glow), transparent 70%),
     var(--band-gradient);
@@ -8,9 +7,8 @@
   padding-block: var(--band-padding);
   overflow: hidden;
 
-  // Grille à 2 colonnes (photo | texte) jusqu'à 900 px, puis empilée (voir le @media plus bas).
-  // Pas de flex-wrap : il faisait passer le texte sous la photo dès ~1100 px, laissant un grand vide à droite.
-  // La colonne photo ne dépasse jamais 42 % de la largeur : le texte garde toujours de la place.
+  // Grille plutôt que flex-wrap : celui-ci passait le texte sous la photo dès ~1100 px.
+  // Photo limitée à 42 % : le texte garde toujours de la place.
   &__inner {
     display: grid;
     grid-template-columns: minmax(0, min(460px, 42%)) minmax(0, 1fr);
@@ -18,7 +16,6 @@
     gap: clamp(56px, 8vw, 120px);
   }
 
-  // --- Photo : proportions d'origine + cadre cyan décalé derrière ---
   &__photo {
     min-width: 0;
     position: relative;
@@ -42,7 +39,6 @@
     }
   }
 
-  // --- Texte ---
   &__text {
     min-width: 0;
     display: flex;
@@ -91,21 +87,20 @@
     text-transform: uppercase;
   }
 
-  // Frise du parcours (L'atelier), sous la photo et le texte
+  // Frise du parcours (L'atelier)
   &__extra {
     margin-top: 96px;
   }
 
-  // Accueil : photo un peu plus petite, c'est un aperçu
+  // Version accueil (aperçu)
   &--short &__inner {
     grid-template-columns: minmax(0, min(380px, 42%)) minmax(0, 1fr);
   }
 
-  // "c'est moi !" au feutre, au-dessus du coin haut droit de la photo, flèche vers le portrait
   &__scribble {
     position: absolute;
     z-index: 1;
-    top: -72px; // assez haut pour laisser de l'air entre l'annotation et la photo
+    top: -72px;
     right: -64px;
     font-size: 24px;
   }
@@ -118,7 +113,6 @@
   }
 
   @media (max-width: 900px) {
-    // Photo au-dessus du texte, centrée (plus de colonne vide à côté)
     &__inner,
     &--short &__inner {
       grid-template-columns: minmax(0, 1fr);
@@ -131,7 +125,7 @@
       justify-self: center;
     }
 
-    // Petit écran : l'annotation reste au-dessus de la photo, sans dépasser de l'écran
+    // L'annotation ne doit pas dépasser de l'écran
     &__scribble {
       right: 8px;
       font-size: 20px;

@@ -1,5 +1,4 @@
-// Annotation "au feutre" : police Permanent Marker (--font-marker), en rose
-// (rose vif sur fond sombre, rose plus foncé sur les zones papier), légèrement de travers
+// Annotation "au feutre" (--pink est plus foncé dans les zones .paper)
 .scribble {
   display: inline-flex;
   align-items: center;
@@ -12,8 +11,8 @@
   transform: rotate(-4deg);
   pointer-events: none;
 
-  // Texte pivoté = bords en escalier sur certains écrans : on force un lissage propre,
-  // et backface-visibility fait dessiner l'annotation sur son propre calque (rendu plus net)
+  // Texte pivoté = bords en escalier sur certains écrans ; backface-visibility le
+  // fait dessiner sur son propre calque (rendu plus net)
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   backface-visibility: hidden;
@@ -29,7 +28,7 @@
     stroke-linejoin: round;
   }
 
-  // La flèche est dessinée vers la droite : on la retourne / pivote selon la direction
+  // Le SVG de la flèche pointe vers la droite
   &--left &__arrow {
     transform: scaleX(-1);
   }

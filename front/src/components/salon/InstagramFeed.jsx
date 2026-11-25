@@ -14,19 +14,13 @@ import './InstagramFeed.scss';
 const handleFromUrl = (url) => url?.match(/instagram\.com\/([^/?#]+)/)?.[1] ?? null;
 
 /**
- * Bande "Sur Instagram" de l'accueil : un téléphone (dessiné en CSS) affiche le profil
- * du salon et ses 6 derniers posts ; à côté (ou au-dessus sur petit écran), le texte et le bouton "Suivre".
- *
- * Les posts sont récupérés par le back (commande app:instagram:sync, toutes les 3 heures)
- * et les images sont servies par notre serveur : le visiteur ne contacte jamais Instagram
- * (pas de cookie, pas de bandeau de consentement). Au clic, le post s'ouvre sur Instagram.
- * Aucun post (pas encore connecté, panne…) : la bande ne s'affiche pas.
+ * Posts récupérés par le back (app:instagram:sync, toutes les 3 h), images servies par notre
+ * serveur : le visiteur ne contacte jamais Instagram (pas de cookie ni de bandeau de consentement).
  */
 const InstagramFeed = () => {
   const { data: posts } = useApi('/instagram_posts');
   const { salon } = useSalon();
-  // Jusqu'à 1 100 px : téléphone sous le texte (même seuil que InstagramFeed.scss) ;
-  // sert à orienter la flèche de l'annotation vers le téléphone
+  // Même seuil que InstagramFeed.scss (téléphone sous le texte) : oriente la flèche de l'annotation
   const isStacked = useMediaQuery('(max-width: 1100px)');
 
   if (!posts?.length) return null;
@@ -37,7 +31,6 @@ const InstagramFeed = () => {
   return (
     <section className="instagram-feed" aria-labelledby="instagram-title">
       <div className="container instagram-feed__inner">
-        {/* --- Texte --- */}
         <div className="instagram-feed__text">
           <p className="eyebrow">Les dernières nouvelles de l'atelier</p>
           <h2 id="instagram-title" className="section-title">Sur <span className="text-cyan">Instagram</span></h2>
@@ -49,14 +42,10 @@ const InstagramFeed = () => {
           </a>
         </div>
 
-        {/* --- Téléphone : profil + grille des 6 derniers posts ---
-            L'annotation au feutre est accrochée au téléphone : juste à sa gauche sur grand écran
-            (flèche vers lui), au-dessus quand il passe sous le texte (flèche vers le bas) */}
         <div className="instagram-feed__device">
         <Scribble arrow={isStacked ? 'down' : 'right'} className="instagram-feed__scribble">fraîchement encré !</Scribble>
         <div className="device">
           <div className="device__screen">
-            {/* Barre d'état (décorative) */}
             <div className="device__status" aria-hidden="true">
               <span>9:41</span>
               <span className="device__notch" />
@@ -64,13 +53,12 @@ const InstagramFeed = () => {
             </div>
 
             <div className="device__body">
-              {/* Barre de navigation (décorative), affichée sous la grille */}
+              {/* Avant la grille dans le DOM, mais affichée en dessous */}
               <div className="device__nav" aria-hidden="true">
                 <FaHome /><FaSearch /><FaRegPlusSquare /><FaRegHeart /><FaUserCircle />
               </div>
 
               <div className="device__main">
-                {/* En-tête du profil */}
                 <div className="device__profile">
                   <img src={logo} alt="" className="device__avatar" />
                   <div className="device__identity">
@@ -84,7 +72,6 @@ const InstagramFeed = () => {
 
                 <div className="device__tabs" aria-hidden="true"><FaTh /></div>
 
-                {/* Les 6 posts, en grille 3 × 2 comme sur Instagram */}
                 <ul className="device__grid">
                   {posts.map((post) => (
                     <li key={post.id}>
@@ -97,7 +84,6 @@ const InstagramFeed = () => {
                         aria-label={`Voir sur Instagram : ${post.caption ? post.caption.slice(0, 80) : 'post du salon'}`}
                       >
                         <img src={assetUrl(post.imageUrl)} alt="" loading="lazy" />
-                        {/* Reel (▶) ou plusieurs photos : petit symbole en haut à droite, comme sur Instagram */}
                         {post.mediaType === 'VIDEO' && <FaPlay className="device__type" aria-hidden="true" />}
                         {post.mediaType === 'CAROUSEL_ALBUM' && <FaRegClone className="device__type" aria-hidden="true" />}
                       </a>

@@ -11,12 +11,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Usage : ddev console app:pages:install
- * Crée les pages légales (mentions légales, confidentialité, règles sanitaires) qui n'existent
- * pas encore, avec leur texte de départ (App\Content\LegalPages). À lancer une fois en production.
- *
- * Les pages déjà présentes ne sont PAS modifiées (elles ont pu être complétées dans le backoffice).
- * --force : remplace aussi le texte des pages existantes (⚠ efface les modifications faites dans le backoffice).
+ * Usage : ddev console app:pages:install [--force]
+ * À lancer une fois en production ; texte de départ dans App\Content\LegalPages.
+ * Sans --force, les pages existantes ne sont pas touchées (elles ont pu être complétées dans le backoffice).
  */
 #[AsCommand(
     name: 'app:pages:install',

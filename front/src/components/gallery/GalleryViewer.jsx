@@ -9,25 +9,16 @@ import Scribble from '@/components/ui/Scribble';
 import './GalleryViewer.scss';
 
 /**
- * Visionneuse d'une réalisation, en plein écran par-dessus la galerie.
- * - à gauche : la photo en grand, flèches et miniatures s'il y en a plusieurs ;
- * - à droite : catégorie, date, titre et description (backoffice, menu "Réalisations").
- *
- * Navigation : flèches ← → du clavier (ou glisser du doigt sur mobile) pour passer d'une photo
- * à l'autre, puis à la réalisation suivante/précédente arrivé au bout. Échap ferme.
- * Timelapse (backoffice) : diapositive vidéo juste après la photo principale.
- *
- * <dialog> + showModal() : le navigateur gère seul Échap, le fond assombri, et garde le focus
- * clavier à l'intérieur de la fenêtre tant qu'elle est ouverte.
+ * ← → (ou glisser du doigt) : photo suivante, puis réalisation voisine arrivé au bout.
+ * <dialog> + showModal() : le navigateur gère Échap, le fond assombri, et garde le focus à l'intérieur.
  */
 const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }) => {
   const dialogRef = useRef(null);
   const [photoIndex, setPhotoIndex] = useState(0);
 
-  // Réglage système "réduire les animations" : le timelapse ne démarre pas tout seul
+  // "Réduire les animations" : le timelapse ne démarre pas tout seul
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
-  // Diapositives : photo principale, puis le timelapse s'il y en a un, puis les autres photos
   const slides = [
     { type: 'image', url: gallery.mainPictureUrl },
     ...(gallery.timelapseUrl ? [{ type: 'video', url: gallery.timelapseUrl }] : []),
@@ -38,15 +29,12 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
   const hasPrevious = position > 1;
   const hasNext = position < total;
 
-  // Ouverture au montage.
-  // Pas de dialog.close() au démontage : close() déclenche l'événement "close", donc onClose,
-  // qui retire la réalisation de l'URL. En développement, <StrictMode> monte / démonte / remonte
-  // chaque composant : la visionneuse se refermait aussitôt ouverte. Un <dialog> retiré de la page
-  // disparaît de toute façon. Le test "!dialog.open" évite une erreur au second montage.
+  // Pas de dialog.close() au démontage : close() déclenche onClose, qui retire la réalisation de
+  // l'URL, et <StrictMode> (dev) démonte/remonte : la visionneuse se refermait aussitôt ouverte.
+  // "!dialog.open" évite une erreur au second montage.
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog.open) dialog.showModal();
-    // La page derrière ne défile plus pendant que la visionneuse est ouverte
     document.documentElement.style.overflow = 'hidden';
     return () => {
       document.documentElement.style.overflow = '';
@@ -79,7 +67,7 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
     if (Math.abs(delta) > 50) (delta < 0 ? showNext : showPrevious)();
   };
 
-  // Clic sur le fond (en dehors de la photo et du texte) : fermeture
+  // Clic sur le fond (hors photo et texte) : fermeture
   const handleClick = (e) => {
     if (e.target === e.currentTarget || e.target.classList.contains('viewer__stage')) dialogRef.current.close();
   };
@@ -99,7 +87,6 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
       </button>
 
       <div className="viewer__stage" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-        {/* Photo principale + dessin préparatoire envoyé : curseur "du dessin à la peau" */}
         {photoIndex === 0 && gallery.sketchUrl ? (
           <SketchCompare
             key={gallery.id}
@@ -108,8 +95,7 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
             name={gallery.name}
           />
         ) : slide.type === 'video' ? (
-          // Timelapse : muet (lecture automatique autorisée), en boucle, avec les commandes
-          // (pause, plein écran) ; la photo principale s'affiche le temps du chargement
+          // muted : sinon le navigateur bloque la lecture automatique
           <video
             key={slide.url}
             src={assetUrl(slide.url)}
@@ -154,7 +140,6 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
                 aria-current={index === photoIndex}
                 onClick={() => setPhotoIndex(index)}
               >
-                {/* Miniature du timelapse : la photo principale, avec un symbole ▶ */}
                 <img src={assetUrl(item.type === 'video' ? gallery.mainPictureUrl : item.url)} alt="" />
                 {item.type === 'video' && (
                   <span className="viewer__thumb-play" aria-hidden="true"><FaPlay size={14} /></span>
@@ -181,7 +166,6 @@ const GalleryViewer = ({ gallery, position, total, onPrevious, onNext, onClose }
         ))}
 
         <div className="viewer__actions">
-          {/* Post Instagram de la réalisation (backoffice) : s'ouvre dans un nouvel onglet */}
           {gallery.instagramUrl && (
             <a href={gallery.instagramUrl} target="_blank" rel="noreferrer" className="btn btn--ghost btn--instagram">
               <FaInstagram size={20} aria-hidden="true" /> Voir sur Instagram

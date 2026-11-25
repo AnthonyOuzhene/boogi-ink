@@ -9,11 +9,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Usage : ddev console app:instagram:sync
- * Récupère les 6 derniers posts Instagram du salon pour l'accueil.
- * En production : tâche planifiée (cron) toutes les 3 heures, voir DEPLOIEMENT.md.
- *
- * ddev console app:instagram:sync --demo : posts d'exemple, en attendant le jeton.
+ * Usage : ddev console app:instagram:sync [--demo]
+ * En production : cron toutes les 3 heures, voir DEPLOIEMENT.md.
  */
 #[AsCommand(
     name: 'app:instagram:sync',

@@ -2,15 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import api from '@/api/client';
 
 /**
- * Hook maison pour charger des données en GET.
  * Usage : const { data, loading, error, reload } = useApi('/flashes');
- * - Quand "url" change (ex. filtre de catégorie), la requête est relancée.
- * - reload() relance la même requête (ex. après une modification).
+ * La requête est relancée quand "url" change (ex. filtre) ou via reload().
  */
 export default function useApi(url) {
   // On mémorise POUR QUELLE url on a reçu une réponse
   const [result, setResult] = useState({ url: null, data: null, error: null });
-  // Compteur incrémenté par reload() : le changer relance l'effet ci-dessous
+  // reload() incrémente ce compteur, ce qui relance l'effet
   const [reloadCount, setReloadCount] = useState(0);
 
   useEffect(() => {

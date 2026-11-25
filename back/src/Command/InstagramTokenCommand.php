@@ -9,9 +9,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Usage : ddev console app:instagram:token
- * Enregistre le jeton Instagram longue durée (généré une fois depuis l'application Meta),
- * puis lance une première synchronisation. Ensuite, il se renouvelle tout seul.
- * Le jeton est demandé en saisie masquée : il n'apparaît pas dans l'historique du terminal.
+ * À lancer une fois avec le jeton généré depuis l'application Meta ; il se renouvelle ensuite tout seul.
+ * Saisie masquée, pour qu'il n'apparaisse pas dans l'historique du terminal.
  */
 #[AsCommand(
     name: 'app:instagram:token',

@@ -1,10 +1,8 @@
 import './SessionSteps.scss';
 
-/** 1 → "01" */
 const stepNumber = (index) => String(index + 1).padStart(2, '0');
 
 /**
- * Déroulé d'une séance (backoffice : "Déroulé d'une séance").
  * - variant="preview" (accueil) : cartes côte à côte avec le titre et le résumé
  * - variant="full" (L'atelier) : liste numérotée avec la description complète
  */

@@ -11,24 +11,17 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * Livre d'or : dépôt d'un avis par le formulaire PUBLIC du site, sans compte.
- * La lecture des avis publiés reste assurée par API Platform (GET /api/comments).
+ * Dépôt public d'un avis, sans compte. La lecture reste assurée par API Platform (GET /api/comments).
  */
 final class GuestbookController extends AbstractController
 {
     /**
-     * POST /api/comments : déposer un avis.
-     *
-     * - #[MapRequestPayload] lit le JSON dans CommentInput et le valide (422 si nom ou message vide…) ;
-     * - l'avis est TOUJOURS créé "en attente" : il n'apparaît dans le livre d'or qu'une fois
-     *   publié dans le backoffice (le salon modère chaque avis) ;
-     * - la date de dépôt est fixée par le constructeur de Comment.
+     * Avis toujours créé en attente : visible seulement une fois publié dans le backoffice.
      */
     #[Route('/api/comments', name: 'api_create_comment', methods: ['POST'])]
     public function create(#[MapRequestPayload] CommentInput $input, EntityManagerInterface $entityManager): Response
     {
-        // Champ "pot de miel" rempli : c'est un robot. On répond comme si tout allait bien
-        // (pour ne pas lui apprendre à contourner le piège), mais rien n'est enregistré.
+        // Pot de miel rempli = robot : fausse réponse de succès pour ne pas lui révéler le piège
         if ('' !== trim((string) $input->website)) {
             return new Response(null, Response::HTTP_ACCEPTED);
         }
@@ -43,7 +36,6 @@ final class GuestbookController extends AbstractController
         $entityManager->persist($comment);
         $entityManager->flush();
 
-        // 202 Accepted : reçu, mais pas encore visible (en attente de validation)
         return new Response(null, Response::HTTP_ACCEPTED);
     }
 }

@@ -2,11 +2,7 @@ import axios from 'axios';
 
 export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-/**
- * Instance axios partagée par toute l'application :
- * - l'URL de base évite de répéter "https://.../api" partout ;
- * - "Accept: application/json" demande du JSON simple (et pas du JSON-LD) à API Platform.
- */
+// "Accept: application/json" : API Platform renvoie alors du JSON simple au lieu du JSON-LD
 const api = axios.create({
   baseURL: `${BACKEND_URL}/api`,
   headers: { Accept: 'application/json' },
@@ -18,12 +14,8 @@ export default api;
 export const assetUrl = (path) => (path ? `${BACKEND_URL}${path}` : null);
 
 /**
- * Transforme une erreur de validation (HTTP 422) en objet
- * { authorName: "Indique ton prénom…", message: "…" } facile à afficher sous chaque champ.
- *
- * Deux formats possibles selon qui répond :
- * - API Platform : le texte est dans "message" ;
- * - contrôleur Symfony avec #[MapRequestPayload] (ex. POST /api/comments) : le texte est dans "title".
+ * Erreur 422 → { authorName: "Indique ton prénom…", … } à afficher sous chaque champ.
+ * Le texte est dans "message" (API Platform) ou "title" (contrôleur avec #[MapRequestPayload], ex. POST /api/comments).
  */
 export function getViolations(error) {
   const violations = error?.response?.data?.violations ?? [];

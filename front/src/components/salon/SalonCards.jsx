@@ -2,10 +2,7 @@ import { GiAnchor, GiCompass, GiDrop, GiHeartInside, GiQuillInk, GiRose, GiSewin
 import useApi from '@/hooks/useApi';
 import './SalonCards.scss';
 
-/**
- * Symbole enregistré dans le backoffice → dessin.
- * Les clés doivent correspondre à HomeCard::ICONS (back/src/Entity/HomeCard.php).
- */
+/** Clés = HomeCard::ICONS (back/src/Entity/HomeCard.php), à garder synchronisées. */
 const ICONS = {
   quill: GiQuillInk,
   swallow: GiSwallow,
@@ -17,12 +14,7 @@ const ICONS = {
   drop: GiDrop,
 };
 
-/**
- * Les points forts du salon, en "cartes à jouer" posées en éventail sous la grande photo
- * de l'accueil. Les symboles des coins remplacent pique / cœur / carreau / trèfle par des
- * motifs du tatouage traditionnel.
- * Contenu : backoffice, menu "Cartes de l'accueil" (GET /api/home_cards).
- */
+/** Contenu : backoffice, menu "Cartes de l'accueil". */
 const SalonCards = () => {
   const { data: cards } = useApi('/home_cards');
   if (!cards?.length) return null;

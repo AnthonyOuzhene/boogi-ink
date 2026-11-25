@@ -25,15 +25,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-// Cet attribut crée la route /boogi-0806 (nommée "admin") et toutes les routes des CRUD :
-// admin_flash_index, admin_flash_edit, etc. (voir `ddev console debug:router`)
-// URL volontairement peu devinable (pas /admin, testé par les robots) : le code utilise
-// toujours le NOM de la route ("admin"), il n'y a donc que le chemin à changer ici.
-// Penser à garder le même préfixe dans access_control (security.yaml) !
+// URL volontairement peu devinable (pas /admin, testé par les robots) ; le code n'utilise que
+// le nom de route "admin". Garder le même préfixe dans access_control (security.yaml).
 #[AdminDashboard(routePath: '/boogi-0806', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
-    // Injection de dépendances : Symfony fournit automatiquement les repositories et services
     public function __construct(
         private readonly CommentRepository $commentRepository,
         private readonly GalleryRepository $galleryRepository,
@@ -42,7 +38,6 @@ class DashboardController extends AbstractDashboardController
         private readonly HomeRepository $homeRepository,
         private readonly ContentChecklist $contentChecklist,
         private readonly EntityManagerInterface $entityManager,
-        // Valeur lue dans .env (FRONT_URL) grâce à l'attribut Autowire
         #[Autowire('%env(FRONT_URL)%')]
         private readonly string $frontUrl,
     ) {
@@ -50,7 +45,7 @@ class DashboardController extends AbstractDashboardController
 
     public function index(): Response
     {
-        // "Vendredi 13 novembre" : IntlDateFormatter formate les dates dans la langue voulue
+        // "Vendredi 13 novembre"
         $today = (new \IntlDateFormatter('fr_FR', pattern: 'EEEE d MMMM'))->format(new \DateTimeImmutable());
 
         return $this->render('admin/dashboard.html.twig', [
@@ -61,18 +56,16 @@ class DashboardController extends AbstractDashboardController
             'flashes' => $this->flashRepository->findBy([], ['isAvailable' => 'DESC', 'position' => 'ASC', 'id' => 'ASC'], 5),
             'availableFlashCount' => $this->flashRepository->count(['isAvailable' => true]),
             'reservedFlashCount' => $this->flashRepository->count(['isAvailable' => false]),
-            'unpricedFlashCount' => $this->flashRepository->count(['price' => null]),
             'galleryCount' => $this->galleryRepository->count(),
             'checklist' => $this->contentChecklist->check(),
-            // État du flux Instagram de l'accueil (null tant que le jeton n'a jamais été enregistré)
+            // null tant que le jeton Instagram n'a jamais été enregistré
             'instagram' => $this->entityManager->getRepository(InstagramConnection::class)->findOneBy([]),
         ]);
     }
 
     /**
-     * Bouton "Publier" du bloc "Avis à valider".
-     * Une route Symfony classique (pas un CRUD EasyAdmin) : /boogi-0806/… est déjà réservé aux admins
-     * par access_control, et le jeton CSRF prouve que le clic vient bien du tableau de bord.
+     * Route classique hors CRUD : /boogi-0806/… est réservé aux admins par access_control,
+     * et le jeton CSRF prouve que le clic vient du tableau de bord.
      */
     #[Route('/boogi-0806/dashboard/comments/{id}/publish', name: 'admin_dashboard_publish_comment', methods: ['POST'])]
     public function publishComment(Comment $comment, Request $request, EntityManagerInterface $entityManager): Response
@@ -93,9 +86,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            // Le titre accepte du HTML : logo + nom aux couleurs du site.
-            // Contour du logo = cercle SVG qui se dessine (tracé d'aiguille, comme sur le site) :
-            // voir admin.css (.bo-logo-mark) et admin-assets/logo.js (une fois par session)
+            // Cercle SVG animé autour du logo : voir admin.css (.bo-logo-mark) et admin-assets/logo.js
             ->setTitle(
                 '<span class="bo-logo-mark">'
                 .'<img src="/admin-assets/logo.webp" alt="" class="bo-logo">'
@@ -108,10 +99,10 @@ class DashboardController extends AbstractDashboardController
 
     public function configureAssets(): Assets
     {
-        // Feuille de style ajoutée à toutes les pages du backoffice (fichier dans public/admin-assets/ : pas public/admin/, qui masquerait la route /admin)
+        // Dossier public/admin-assets/ et non public/admin/, qui masquerait la route /admin
         return Assets::new()
             ->addCssFile('admin-assets/admin.css')
-            // Déclenche le tracé du logo une seule fois par session (pas à chaque page du backoffice)
+            // Tracé du logo une seule fois par session
             ->addJsFile('admin-assets/logo.js');
     }
 
@@ -128,7 +119,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
 
         yield MenuItem::section('Le salon');
-        // Fiches uniques (salon, artiste) : le menu ouvre directement le formulaire
         yield $this->singleRecordMenuItem(HomeCrudController::class, 'Salon', 'fa fa-store', $this->homeRepository->findOneBy([]));
         yield $this->singleRecordMenuItem(ArtistCrudController::class, "L'artiste", 'fa fa-user-pen', $this->artistRepository->findOneBy([]));
         yield MenuItem::linkTo(CategoryCrudController::class, 'Catégories', 'fa fa-tags');
@@ -139,33 +129,26 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(MilestoneCrudController::class, 'Frises (histoire & parcours)', 'fa fa-timeline');
         yield MenuItem::linkTo(StudioPhotoCrudController::class, 'Photos du salon', 'fa fa-camera');
         yield MenuItem::linkTo(SessionStepCrudController::class, "Déroulé d'une séance", 'fa fa-list-ol');
-        // Réservé au super admin, comme les cartes de l'accueil (voir security.yaml)
+        // Réservé au super admin, voir aussi security.yaml
         yield MenuItem::linkTo(HygieneCommitmentCrudController::class, 'Hygiène & sécurité', 'fa fa-shield-halved')
             ->setPermission('ROLE_SUPER_ADMIN');
 
         yield MenuItem::section('Site');
-        // Réservé au super admin (développeur) : masqué dans le menu de l'admin du salon,
-        // et ses adresses sont bloquées dans security.yaml (access_control)
+        // Réservé au super admin, adresses bloquées aussi dans access_control (security.yaml)
         yield MenuItem::linkTo(HomeCardCrudController::class, "Cartes de l'accueil", 'fa fa-layer-group')
             ->setPermission('ROLE_SUPER_ADMIN');
         yield MenuItem::linkTo(FaqCrudController::class, 'FAQ', 'fa fa-circle-question');
         yield MenuItem::linkTo(PageCrudController::class, 'Pages', 'fa fa-file-lines');
 
         yield MenuItem::section('Avis & accès');
-        // Pastille orange avec le nombre d'avis en attente (rien quand il n'y en a pas)
         $pending = $this->commentRepository->count(['isPublished' => false]);
         $guestbook = MenuItem::linkTo(CommentCrudController::class, "Livre d'or", 'fa fa-comments');
         yield $pending > 0 ? $guestbook->setBadge($pending, 'warning') : $guestbook;
         yield MenuItem::linkTo(UserCrudController::class, 'Administrateurs', 'fa fa-user-shield');
 
-        // PictureCrudController n'est pas dans le menu : les photos se gèrent
-        // directement dans le formulaire d'une réalisation (Gallery).
+        // Pas de PictureCrudController : les photos se gèrent dans le formulaire d'une réalisation
     }
 
-    /**
-     * Lien de menu vers une fiche unique : son formulaire d'édition si elle existe,
-     * sinon le formulaire de création.
-     */
     private function singleRecordMenuItem(string $crudController, string $label, string $icon, ?object $record): ControllerMenuItem
     {
         $item = MenuItem::linkTo($crudController, $label, $icon);

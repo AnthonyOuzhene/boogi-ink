@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
 /**
- * Fait défiler la page jusqu'à l'élément visé par le hash de l'URL (/atelier#seance → id="seance").
- * Le navigateur le fait tout seul pour une page statique, mais ici les sections n'existent
- * qu'une fois les données de l'API reçues : on attend donc que "ready" passe à true.
+ * /atelier#seance → défile jusqu'à id="seance". Le navigateur ne peut pas le faire seul :
+ * les sections n'existent qu'une fois les données de l'API reçues, d'où "ready".
  */
 export default function useScrollToHash(ready) {
   const { hash } = useLocation();

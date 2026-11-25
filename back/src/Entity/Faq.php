@@ -10,10 +10,7 @@ use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Question fréquente, affichée sur la page "L'atelier".
- * Seule la liste est exposée (GET /api/faqs), triée par position.
- */
+/** Question fréquente, affichée sur L'atelier. */
 #[ApiResource(
     operations: [new GetCollection(order: ['position' => 'ASC', 'id' => 'ASC'])],
     normalizationContext: ['groups' => ['faq:read']],
@@ -39,7 +36,6 @@ class Faq
     #[Assert\NotBlank]
     private ?string $answer = null;
 
-    /** Ordre d'affichage : la plus petite valeur en premier */
     #[ORM\Column]
     private int $position = 0;
 

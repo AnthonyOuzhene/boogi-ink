@@ -1,6 +1,3 @@
-// Page L'atelier : deux colonnes, sommaire, appel final
-
-// --- Deux colonnes : intro (titre, texte, bouton) + liste ---
 .split {
   display: flex;
   flex-wrap: wrap;
@@ -15,7 +12,6 @@
     align-items: flex-start;
     gap: 28px;
 
-    // L'intro reste visible pendant qu'on fait défiler une longue liste (ordinateur)
     @media (min-width: 901px) {
       position: sticky;
       top: calc(var(--header-height) + 40px);
@@ -35,12 +31,10 @@
   line-height: 1.7;
 }
 
-// --- L'atelier : sommaire sous le titre ---
 .atelier-toc {
   margin-top: 16px;
 }
 
-// --- Appel final (bas de L'atelier) ---
 .cta-band {
   display: flex;
   flex-wrap: wrap;

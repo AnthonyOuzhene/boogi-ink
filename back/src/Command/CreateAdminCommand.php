@@ -15,10 +15,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Usage : ddev console app:create-admin admin@exemple.fr "Prénom Nom"
  *         ddev console app:create-admin dev@exemple.fr "Prénom Nom" --super   (super admin : le développeur)
- * Le mot de passe est demandé de façon masquée (il n'apparaît pas dans l'historique du terminal).
- *
- * Super admin : tous les droits, plus l'accroche de l'accueil et les comptes super admin,
- * que l'admin du salon ne voit pas (voir role_hierarchy dans security.yaml).
+ * Mot de passe en saisie masquée, pour qu'il n'apparaisse pas dans l'historique du terminal.
+ * Super admin : en plus, l'accroche de l'accueil et les comptes super admin (role_hierarchy dans security.yaml).
  */
 #[AsCommand(
     name: 'app:create-admin',
@@ -26,7 +24,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 )]
 class CreateAdminCommand
 {
-    // Les services sont injectés par le constructeur (autowiring)
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
@@ -63,8 +60,8 @@ class CreateAdminCommand
             return Command::FAILURE;
         }
 
-        $this->entityManager->persist($user); // "à enregistrer"
-        $this->entityManager->flush();        // exécute réellement l'INSERT
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         $io->success(sprintf('%s %s créé. Connexion : https://boogi-ink.ddev.site/boogi-0806/login', $super ? 'Super admin' : 'Administrateur', $email));
 

@@ -38,17 +38,17 @@ class UserCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Administrateur')
             ->setEntityLabelInPlural('Administrateurs')
             ->setSearchFields(['name', 'email'])
-            // Fiche, modification, suppression : un admin ne peut pas toucher au compte du super admin
+            // Un admin ne peut ni voir, ni modifier, ni supprimer le compte du super admin
             ->setEntityPermission(AdminUserVoter::MANAGE);
     }
 
-    // Liste : un admin ne voit pas le compte du super admin (filtré dès la requête SQL)
+    // Le compte du super admin est aussi masqué de la liste, dès la requête SQL
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
-            // Les rôles sont stockés en JSON : on exclut les comptes qui contiennent ROLE_SUPER_ADMIN
+            // Rôles stockés en JSON, d'où le LIKE
             $queryBuilder
                 ->andWhere('entity.roles NOT LIKE :superAdmin')
                 ->setParameter('superAdmin', '%ROLE_SUPER_ADMIN%');
@@ -61,9 +61,7 @@ class UserCrudController extends AbstractCrudController
     {
         yield TextField::new('name', 'Nom');
         yield EmailField::new('email', 'Email');
-        // Pas de choix de rôle : sans espace client, un compte ne sert qu'à se connecter
-        // au backoffice, il est donc toujours administrateur (voir persistEntity())
-        // Champ "virtuel" : jamais affiché, jamais stocké en clair
+        // Pas de champ rôle : tout compte est admin (voir persistEntity())
         yield TextField::new('plainPassword', 'Mot de passe')
             ->setFormType(PasswordType::class)
             ->onlyOnForms()
@@ -71,17 +69,14 @@ class UserCrudController extends AbstractCrudController
             ->setHelp(Crud::PAGE_EDIT === $pageName ? 'Laisser vide pour conserver le mot de passe actuel.' : '');
     }
 
-    // Appelé par EasyAdmin juste avant l'INSERT
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        // Tout compte créé ici est admin (jamais super admin : celui-ci se crée en ligne de commande,
-        // app:create-admin --super). La modification d'un compte ne touche pas à ses rôles.
+        // Jamais super admin ici : il se crée avec app:create-admin --super
         $entityInstance->setRoles(['ROLE_ADMIN']);
         $this->hashPassword($entityInstance);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
-    // Appelé par EasyAdmin juste avant l'UPDATE
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         $this->hashPassword($entityInstance);

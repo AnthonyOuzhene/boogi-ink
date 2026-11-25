@@ -1,48 +1,39 @@
-// Zone « papier » (fond clair) et punaises du livre d'or
-// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
-
-// --- Zone "papier" : fond blanc cassé, comme le papier de dessin du tatoueur ---------------
-// S'ajoute à une section (souvent avec .band) pour apporter de la lumière par endroits.
-// Les couleurs du site sont des variables CSS : on les redéfinit ici, et tout ce qui est dans
-// la zone (titres, cartes, badges, boutons, formulaires) passe en version claire tout seul.
+// Zone « papier » : fond clair à ajouter à une section (souvent avec .band).
+// Les variables de couleur sont redéfinies ici : tout le contenu de la zone
+// (titres, cartes, boutons, formulaires) passe en version claire tout seul.
 .paper {
-  --bg: #f3efe6;          // papier
-  --surface: #fffdf8;     // cartes posées sur le papier
-  --text: #14191b;        // encre
-  --muted: #4c5a5f;       // texte secondaire (contraste AA sur le papier)
+  --bg: #f3efe6;
+  --surface: #fffdf8;
+  --text: #14191b;
+  --muted: #4c5a5f;       // contraste AA sur le papier
   --line: #ddd5c4;
   --line-strong: #c3b9a5;
   --cyan: #0e7490;        // cyan foncé : le cyan vif est illisible sur du clair
   --cyan-light: #155e75;
   --pink: #c2126b;        // rose plus foncé : le rose vif manque de contraste sur le papier
-  --ink: #ffffff;         // texte posé sur le cyan foncé (boutons)
+  --ink: #ffffff;
 
   color: var(--text);
   border-block: 0;
-  // Grain très léger (bruit SVG) pour l'effet papier, au-dessus de la couleur unie
+  // Grain papier (bruit SVG)
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
     var(--bg);
 
-  // Cartes (étapes, questions) : blanches, détachées du papier par une ombre douce.
-  // Sur fond sombre elles utilisent --bg ; ici --bg = le papier, elles ne se verraient plus.
-  // (Les flashs sont dessinés à même la "planche" et les avis sont des notes punaisées :
-  // ils ont leur propre style, voir FlashGallery.scss, VisitorBookPage.scss et GuestbookCarousel.scss)
+  // Ces cartes utilisent --bg sur fond sombre ; ici --bg = le papier, elles ne se verraient plus.
+  // (Flashs et avis ont leur propre style : FlashGallery, VisitorBookPage, GuestbookCarousel)
   .steps-preview__item,
   .faq__item {
     background: var(--surface);
     box-shadow: 0 10px 30px -18px rgba(20, 25, 27, 0.35);
   }
 
-  // Le halo néon des titres n'a pas de sens sur du papier
   .glow {
     text-shadow: none;
   }
 }
 
-// --- Punaise (avis du livre d'or "épinglés au mur") ---------------------------------------
-// À placer dans un élément en position: relative ; quatre couleurs qui alternent
-// (rouge par défaut, puis rose, bleu pétrole et jaune via .pin--pink / .pin--blue / .pin--yellow).
+// Punaise des avis du livre d'or : à placer dans un parent en position: relative
 .pin {
   position: absolute;
   top: -11px;
@@ -52,12 +43,11 @@
   height: 22px;
   margin-left: -11px;
   border-radius: 50%;
-  // Tête bombée : reflet en haut à gauche, plus sombre en bas à droite
   background: radial-gradient(circle at 35% 30%, #ff9b8f 0%, #c7372b 45%, #7a1a12 100%);
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.35);
   pointer-events: none;
 
-  // Ombre portée de la punaise sur le papier
+  // Ombre portée sur le papier
   &::after {
     content: '';
     position: absolute;

@@ -14,8 +14,7 @@ import SessionSteps from '@/components/salon/SessionSteps';
 import { FlashGrid } from '@/components/flash/FlashGallery';
 import GuestbookCarousel from '@/components/guestbook/GuestbookCarousel';
 import InstagramFeed from '@/components/salon/InstagramFeed';
-// Vidéo du hero (fichier fixe, sans son) + photo extraite de la vidéo : affichée pendant
-// le chargement, et à la place de la vidéo si "réduire les animations" est activé
+// Poster = image extraite de la vidéo : pendant le chargement et si "réduire les animations"
 import heroVideo from '@/assets/videos/hero-tattoo.mp4';
 import heroPoster from '@/assets/images/hero-tattoo-poster.jpg';
 import './HomePage.scss';
@@ -23,11 +22,9 @@ import './HomePage.scss';
 const HomePage = () => {
   usePageTitle(null); // "Boogi'ink — Salon de tatouage"
   const { salon, loading: salonLoading } = useSalon();
-  // Réglage système (accessibilité) : pas de vidéo qui bouge, la photo fixe à la place
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
-  // Bouton pause de la vidéo (accessibilité, WCAG 2.2.2 : un contenu qui bouge plus de
-  // 5 secondes et démarre tout seul doit pouvoir être arrêté)
+  // WCAG 2.2.2 : un contenu animé > 5 s qui démarre seul doit pouvoir être mis en pause
   const videoRef = useRef(null);
   const [videoPaused, setVideoPaused] = useState(false);
   const toggleVideo = () => {
@@ -42,24 +39,19 @@ const HomePage = () => {
   const { data: flashes } = useApi('/flashes');
   const { data: steps } = useApi('/session_steps');
   const { data: categories } = useApi('/categories');
-  // Styles affichés au-dessus des réalisations : seulement ceux qui ont au moins une réalisation
   const styles = categories?.filter((category) => category.galleryCount > 0) ?? [];
 
-  // Aperçu de 4 flashs. L'API liste les disponibles en premier : s'il y en a moins de 4,
-  // les réservés complètent la planche (avec leur tampon), ils montrent quand même le style.
-  // On prend le début de la liste : chaque flash garde son numéro de la planche complète.
+  // L'API liste les disponibles d'abord : des réservés complètent si besoin.
+  // slice depuis le début : chaque flash garde son numéro de la planche complète.
   const previewFlashes = flashes?.slice(0, 4) ?? [];
 
   return (
     <>
-      {/* --- Vidéo d'accueil (décorative : ignorée par les lecteurs d'écran) --- */}
       <section className="hero">
         {reduceMotion ? (
           <img src={heroPoster} alt="" className="hero__img" />
         ) : (
-          // Lecture automatique autorisée par les navigateurs seulement si la vidéo est muette (muted) ;
-          // playsInline : sur iPhone, reste dans la page au lieu de passer en plein écran.
-          // poster : photo affichée le temps que la vidéo se charge
+          // muted : condition pour la lecture automatique ; playsInline : sur iPhone, reste dans la page
           <video
             ref={videoRef}
             className="hero__img"
@@ -76,10 +68,8 @@ const HomePage = () => {
         <div className="hero__tint" aria-hidden="true" />
         <div className="container hero__content">
           <p className="eyebrow">Salon de tatouage{salon?.city && ` — ${salon.city}`}</p>
-          {/* Accroche : backoffice, menu "Salon" ; textes par défaut si les champs sont vides.
-              Animation "tracé d'aiguille" : chaque ligne est dessinée de gauche à droite par une
-              aiguille lumineuse (CSS dans HomePage.scss). Elle démarre quand le titre apparaît,
-              c'est-à-dire une fois la fiche du salon chargée. */}
+          {/* Accroche éditable (backoffice, menu "Salon"). Rendue après le chargement du salon
+              pour que l'animation "tracé d'aiguille" (HomePage.scss) parte au bon moment. */}
           <h1 className="hero__title display">
             {!salonLoading && (
               <>
@@ -87,7 +77,7 @@ const HomePage = () => {
                   <span className="hero__ink">{salon?.heroTitle ?? "L'encre qui"}</span>
                   <span className="hero__needle" aria-hidden="true" />
                 </span>
-                {/* Espace entre les deux lignes pour les lecteurs d'écran (invisible : lignes empilées) */}
+                {/* Espace lu par les lecteurs d'écran (invisible : lignes empilées) */}
                 {' '}
                 <span className="hero__line hero__line--highlight">
                   <span className="hero__ink glow">{salon?.heroHighlight ?? 'te ressemble'}</span>
@@ -100,9 +90,7 @@ const HomePage = () => {
           <div className="hero__actions">
             <Link to="/contact" className="btn btn--primary">Parle-moi de ton projet</Link>
             <Link to="/realisations" className="btn btn--ghost">Voir les réalisations</Link>
-            {/* Annotation au feutre (masquée sur téléphone, où les boutons sont empilés) */}
             <Scribble arrow="left" className="hero__scribble">c'est par ici !</Scribble>
-            {/* Pause / lecture de la vidéo : sur la ligne des boutons, calé à droite du contenu */}
             {!reduceMotion && (
               <button
                 type="button"
@@ -118,23 +106,19 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Cartes à jouer + artiste sur un même fond bleuté (pas de bandeau noir sous les cartes).
-          Le fond commence au bas de la vidéo : le haut des cartes reste posé dessus. */}
+      {/* Wrapper commun : un seul fond bleuté sous cartes + artiste, sans bandeau noir entre les deux */}
       <div className="home-intro">
         <SalonCards />
 
-        {/* --- L'artiste : version courte, son parcours complet est sur L'atelier --- */}
         <ArtistSection artist={artists?.[0]} />
       </div>
 
-      {/* --- Dernières réalisations --- */}
       {galleries?.length > 0 && (
         <section className="container section">
           <div className="section-head">
             <h2 className="section-title">Réali<span className="text-cyan">sations</span></h2>
             <Link to="/realisations" className="link-arrow">Toute la galerie →</Link>
           </div>
-          {/* Les styles du tatoueur, juste au-dessus des photos : chacun ouvre la galerie filtrée */}
           {styles.length > 0 && (
             <nav aria-label="Styles de tatouage" className="filters home-styles">
               {styles.map((category) => (
@@ -146,8 +130,7 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* --- Flashs disponibles : aperçu, la liste complète est sur /flashs ---
-          Bandeau "papier" (fond clair) : les dessins sont sur papier blanc, ils s'y fondent */}
+      {/* Fond papier : les dessins (fond blanc) s'y fondent */}
       {previewFlashes.length > 0 && (
         <section className="band paper">
           <div className="container">
@@ -165,7 +148,6 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* --- Comment ça se passe : aperçu du déroulé, le détail est sur L'atelier --- */}
       {steps?.length > 0 && (
         <section className="band">
           <div className="container">
@@ -181,13 +163,11 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* --- Questions fréquentes --- */}
       <FaqSection />
 
-      {/* --- Derniers posts Instagram (récupérés par le back) : rien si aucun post --- */}
+      {/* Posts récupérés par le back ; ne rend rien si aucun post */}
       <InstagramFeed />
 
-      {/* --- Livre d'or : carrousel des avis publiés, sur papier --- */}
       <GuestbookCarousel className="paper" />
     </>
   );

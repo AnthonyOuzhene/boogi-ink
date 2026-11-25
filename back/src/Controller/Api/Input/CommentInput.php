@@ -5,10 +5,7 @@ namespace App\Controller\Api\Input;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Formulaire PUBLIC du livre d'or (GuestbookController::create()), sans compte.
- *
- * Il ne contient QUE ce que le visiteur peut écrire : envoyer "isPublished" dans le JSON
- * n'a donc aucun effet, le statut "en attente" est fixé par le contrôleur.
+ * Uniquement les champs que le visiteur peut écrire : envoyer "isPublished" n'a aucun effet.
  */
 final class CommentInput
 {
@@ -28,9 +25,8 @@ final class CommentInput
     public ?string $projectName = null;
 
     /**
-     * Anti-spam ("pot de miel") : champ caché sur le site, un humain le laisse vide.
-     * Les robots remplissent tous les champs : s'il contient quelque chose, l'avis est ignoré
-     * (voir GuestbookController). Le nom "website" est volontairement tentant pour un robot.
+     * Pot de miel anti-robots : champ caché sur le site, doit rester vide (voir GuestbookController).
+     * Le nom "website" est volontairement tentant pour un robot.
      */
     public ?string $website = null;
 }

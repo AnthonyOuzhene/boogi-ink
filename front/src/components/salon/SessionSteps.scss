@@ -11,7 +11,7 @@
   }
 }
 
-// --- Aperçu (accueil) : cartes ---
+// --- Aperçu (accueil) ---
 .steps-preview {
   list-style: none;
   padding: 0;
@@ -35,8 +35,7 @@
     font-size: 19px;
   }
 
-  // Téléphone : les étapes défilent à l'horizontale (comme une frise) au lieu de s'empiler ;
-  // on voit le bord de l'étape suivante, ce qui invite à faire glisser
+  // Frise horizontale : 74 % laisse voir l'étape suivante, ce qui invite à faire glisser
   @media (max-width: 600px) {
     grid-template-columns: none;
     grid-auto-flow: column;
@@ -60,7 +59,7 @@
   }
 }
 
-// --- Version complète (L'atelier) : liste numérotée ---
+// --- Version complète (L'atelier) ---
 .steps {
   list-style: none;
   padding: 0;

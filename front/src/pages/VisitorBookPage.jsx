@@ -8,27 +8,25 @@ import PageHero from '@/components/ui/PageHero';
 import CommentForm from '@/components/guestbook/CommentForm';
 import './VisitorBookPage.scss';
 
-// Couleurs des punaises, en alternance (voir .pin dans styles/_paper.scss)
+// Modificateurs de .pin (styles/_paper.scss)
 const PIN_COLORS = ['', 'pin--pink', 'pin--blue', 'pin--yellow'];
 
-// Avis par page : 3 colonnes × 2 lignes sur grand écran ; sur mobile et tablette
-// (1 ou 2 colonnes) on en montre moins pour ne pas faire défiler trop loin
+// Desktop : 3 colonnes × 2 ; mobile/tablette (1-2 colonnes) : moins, pour limiter le défilement
 const PER_PAGE_DESKTOP = 6;
 const PER_PAGE_MOBILE = 4;
 const MOBILE_QUERY = '(max-width: 1024px)'; // couvre les tablettes, y compris en paysage
 
-// Respecte le réglage système "réduire les animations" : remontée instantanée, sans glissement
+// "Réduire les animations" : remontée instantanée, sans glissement
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const VisitorBookPage = () => {
   usePageTitle("Livre d'or");
-  // L'API ne renvoie que les avis validés dans le backoffice, du plus récent au plus ancien
+  // Avis validés seulement, triés par l'API (plus récent d'abord)
   const { data: comments, loading, error } = useApi('/comments');
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const perPage = isMobile ? PER_PAGE_MOBILE : PER_PAGE_DESKTOP;
 
-  // On retient le PREMIER AVIS affiché plutôt qu'un numéro de page : si l'écran passe
-  // de 6 à 4 avis par page (ou l'inverse), on reste sur la page qui contient cet avis
+  // Index du premier avis plutôt qu'un n° de page : si perPage change (6 ↔ 4), on reste sur cet avis
   const [firstIndex, setFirstIndex] = useState(0);
   const listRef = useRef(null);
 
@@ -40,8 +38,7 @@ const VisitorBookPage = () => {
 
   const goToPage = (newPage) => {
     setFirstIndex(newPage * perPage);
-    // Les boutons sont sous la grille : on remonte au début des avis de la nouvelle page
-    // (scroll-margin-top dans le SCSS évite qu'ils passent sous le header fixe)
+    // Boutons sous la grille : on remonte en haut des avis (scroll-margin-top évite le header fixe)
     listRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
   };
 
@@ -52,18 +49,17 @@ const VisitorBookPage = () => {
         title={<>Livre <span className="text-cyan">d'or</span></>}
       />
 
-      {/* Les avis sur papier ; le formulaire reste sur fond sombre en dessous */}
       <section className="band band--flush paper">
         <div className="container">
           {loading && <p className="muted">Chargement…</p>}
           {error && <p className="muted">Impossible de charger les avis.</p>}
           {comments?.length === 0 && <p className="muted">Aucun avis pour le moment. Sois le premier !</p>}
 
-          {/* key={page} : la grille est recréée à chaque page, ce qui rejoue l'animation d'apparition */}
+          {/* key={page} : remonte la grille à chaque page pour rejouer l'animation d'apparition */}
           <div className="comments" key={page} ref={listRef}>
             {visibleComments.map((comment, index) => (
               <article key={comment.id} className="comment">
-                {/* Punaise décorative, couleur en alternance (sur la position dans TOUTE la liste) */}
+                {/* start + index : alternance sur toute la liste, pas sur la page */}
                 <span className={`pin ${PIN_COLORS[(start + index) % PIN_COLORS.length]}`} aria-hidden="true" />
                 <span className="comment__mark" aria-hidden="true">“</span>
                 <h2 className="comment__title">{comment.title}</h2>

@@ -1,7 +1,3 @@
-// Mise en page : conteneur, sections, en-têtes de section
-// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
-
-// --- Mise en page --------------------------------------------------------------
 .container {
   max-width: calc(var(--container) + 2 * var(--gutter));
   margin: 0 auto;
@@ -11,9 +7,8 @@
 .section {
   padding-top: var(--section);
 
-  // Les bandeaux (.band, FAQ, livre d'or sur papier) sont collés à la section précédente,
-  // sans grande bande noire entre les deux. Une section classique juste avant un bandeau
-  // garde donc une marge en bas, pour que son contenu ne touche pas le bandeau.
+  // Les bandeaux sont collés à la section précédente : celle-ci garde donc une marge
+  // en bas pour que son contenu ne touche pas le bandeau.
   // (:has(+ X) = "qui est immédiatement suivie de X")
   &:has(+ .band, + .faq-band, + .guestbook.paper) {
     padding-bottom: 120px;
@@ -42,8 +37,6 @@
   }
 }
 
-// --- Ajouts communs à plusieurs pages (anciennement dans pages/pages.scss) ---
-
 .section--tight {
   padding-top: 96px;
 
@@ -52,12 +45,11 @@
   }
 }
 
-// Cible d'un lien #ancre : on s'arrête sous le menu fixe, pas derrière
+// Cible d'un lien #ancre : s'arrête sous le menu fixe, pas derrière
 .anchor {
   scroll-margin-top: calc(var(--header-height) + 24px);
 }
 
-// Surtitre + titre (+ texte) empilés
 .stack {
   display: flex;
   flex-direction: column;
@@ -71,12 +63,9 @@
   white-space: pre-line;
 }
 
-// --- Bandeau pleine largeur sur fond clair (Comment ça se passe, Hygiène) ---
 .band {
-  // Pas de marge au-dessus : les bandeaux s'enchaînent avec les sections voisines
-  // (voir .section dans styles/_layout.scss), sans bande noire entre les deux
+  // Pas de marge au-dessus : collé aux sections voisines (voir .section plus haut)
   padding-block: var(--band-padding);
-  // Dégradé vertical + halo cyan en haut à gauche, au lieu d'un aplat
   background:
     radial-gradient(ellipse 60% 70% at 15% 0%, var(--glow), transparent 70%),
     var(--band-gradient);
@@ -96,7 +85,7 @@
     text-align: center;
   }
 
-  // Bandeau placé juste sous le titre d'une page (PageHero) : collé au titre, marges réduites
+  // Juste sous le PageHero
   &--flush {
     padding-block: 96px;
 

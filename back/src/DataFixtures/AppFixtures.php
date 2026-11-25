@@ -25,14 +25,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
- * Données de démonstration pour le développement.
- *
- *   ddev console doctrine:fixtures:load
- *
- * ⚠ Cette commande VIDE la base avant de la remplir.
- *
- * Compte créé (le seul : le site n'a pas d'espace client) :
- *   - admin@boogi-ink.local / admin1234  (administrateur, accès au backoffice)
+ * Usage : ddev console doctrine:fixtures:load (⚠ VIDE la base avant de la remplir)
+ * Comptes : admin@boogi-ink.local / admin1234, dev@boogi-ink.local / dev12345 (super admin)
  */
 class AppFixtures extends Fixture
 {
@@ -68,7 +62,7 @@ class AppFixtures extends Fixture
             ->setFirstName('Julien')
             ->setLastName('Bourgarit')
             ->setPicture($this->copyImage('artist.jpg', Artist::UPLOAD_PATH))
-            // Photo de Julien dans l'atelier (page L'atelier)
+            // Photo de la page L'atelier
             ->setAtelierPicture($this->copyImage('artist-atelier.jpg', Artist::UPLOAD_PATH))
             ->setQuote('[Une phrase du tatoueur qui résume sa vision du tatouage.]')
             ->setShortBio("[Deux lignes d'accroche sur Julien : son style, ce qui le distingue.]")
@@ -115,7 +109,7 @@ class AppFixtures extends Fixture
                 ->setText($text));
         }
 
-        // --- Réalisations (photos copiées dans public/uploads/galleries) ---
+        // --- Réalisations ---
         $galleries = [
             ['Portrait sketch', 'tattoo1.jpg', 'Sketch', '-10 days', ['tattoo3.jpg', 'tattoo4.jpg']],
             ['Hirondelle dotwork', 'tattoo2.png', 'Dotwork', '-25 days', []],
@@ -227,12 +221,11 @@ class AppFixtures extends Fixture
                 ->setPosition(($position + 1) * 10));
         }
 
-        // --- Comptes du backoffice (le site n'a pas d'espace client) ---
-        // Admin : le salon. Super admin : le développeur (tous les droits, voir security.yaml)
+        // --- Comptes du backoffice : admin = le salon, super admin = le développeur ---
         $manager->persist($this->createUser('admin@boogi-ink.local', 'Admin', 'admin1234', ['ROLE_ADMIN']));
         $manager->persist($this->createUser('dev@boogi-ink.local', 'Développeur', 'dev12345', ['ROLE_SUPER_ADMIN']));
 
-        // --- Livre d'or (avis déposés par le formulaire public : un simple nom, pas de compte) ---
+        // --- Livre d'or (formulaire public : un simple nom, pas de compte) ---
         $comments = [
             ['Julie', 'Une super expérience', "Accueil chaleureux, de très bons conseils et un résultat au-delà de mes attentes. Je reviendrai !", 'Rose sur l\'avant-bras', true],
             ['Paul', 'Très pro', 'Salon impeccable, respect strict de l\'hygiène, et un dessin vraiment personnalisé.', 'Ancre old school', true],
@@ -258,7 +251,6 @@ class AppFixtures extends Fixture
         return $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
     }
 
-    /** Copie une image de fixtures/images vers public/<dossier d'upload> et renvoie son nom */
     private function copyImage(string $file, string $uploadPath = Gallery::UPLOAD_PATH): string
     {
         $target = 'fixture-'.$file;

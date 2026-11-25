@@ -1,7 +1,6 @@
-// Bande "Sur Instagram" de l'accueil : texte à gauche, appareil incliné à droite
 .instagram-feed {
   position: relative;
-  // Même espacement qu'une .section suivie du livre d'or sur papier (voir .section dans styles/_layout.scss)
+  // Même espacement qu'une .section (styles/_layout.scss) suivie du livre d'or sur papier
   padding-block: var(--section) 120px;
   overflow: hidden; // le halo et l'appareil incliné ne créent pas de défilement horizontal
 
@@ -9,7 +8,7 @@
     padding-bottom: 72px;
   }
 
-  // Halo rose / cyan derrière le téléphone
+  // Halo derrière le téléphone
   &::before {
     content: '';
     position: absolute;
@@ -25,7 +24,6 @@
     pointer-events: none;
   }
 
-  // Texte calé à gauche (aligné sur les autres sections), téléphone à droite : de l'air entre les deux
   &__inner {
     position: relative;
     display: grid;
@@ -46,23 +44,20 @@
     margin-top: 8px;
   }
 
-  // Le téléphone et son annotation
   &__device {
     position: relative;
   }
 
-  // "fraîchement encré !" au feutre, accroché juste à gauche du bas du téléphone,
-  // flèche pointée vers lui (sous la hauteur du bouton "Suivre" : ne chevauche pas le texte)
+  // bottom: 14% : sous la hauteur du bouton "Suivre", l'annotation ne chevauche pas le texte
   &__scribble {
     position: absolute;
-    right: calc(100% + 32px); // un peu d'air entre la flèche et le téléphone (incliné)
+    right: calc(100% + 32px);
     bottom: 14%;
     z-index: 1;
     font-size: 22px;
   }
 
-  // Jusqu'à 1 100 px : texte au-dessus, téléphone centré dessous
-  // (même seuil que isStacked dans InstagramFeed.jsx)
+  // Même seuil que isStacked dans InstagramFeed.jsx
   @media (max-width: 1100px) {
     &::before {
       right: 50%;
@@ -77,12 +72,11 @@
       gap: 56px;
     }
 
-    // Annotation centrée au-dessus du téléphone, flèche vers le bas
     &__device {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 36px; // de l'air entre l'annotation et le téléphone
+      gap: 36px;
     }
 
     &__scribble {
@@ -91,9 +85,7 @@
   }
 }
 
-// =============================================================================
-// Le téléphone (dessiné en CSS)
-// =============================================================================
+// --- Téléphone dessiné en CSS ---
 .device {
   padding: 12px;
   background: linear-gradient(145deg, #2a3338, #0c1114);
@@ -103,7 +95,6 @@
     0 0 60px rgba(255, 20, 147, 0.12);
   transition: transform 0.5s ease;
 
-  // Survol : l'appareil se redresse, comme pris en main
   &:hover {
     transform: rotate(0deg) translateY(-6px);
   }
@@ -151,7 +142,7 @@
     gap: 14px;
   }
 
-  // Photo de profil avec l'anneau dégradé d'Instagram
+  // Anneau dégradé d'Instagram
   &__avatar {
     flex-shrink: 0;
     width: 58px;
@@ -180,7 +171,6 @@
     }
   }
 
-  // Bouton "Suivre" bleu, comme dans l'application
   &__follow {
     padding: 7px 18px;
     border-radius: 8px;
@@ -241,7 +231,6 @@
     }
   }
 
-  // Symbole reel / carrousel
   &__type {
     position: absolute;
     top: 6px;
@@ -252,7 +241,7 @@
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
   }
 
-  // --- Le téléphone : 320 px, la taille d'un vrai téléphone à l'écran ---
+  // 320 px : la taille d'un vrai téléphone à l'écran
   width: min(320px, 86vw);
   border-radius: 46px;
   transform: rotate(4deg);
@@ -265,7 +254,6 @@
     border-radius: 36px;
   }
 
-  // Encoche de l'écran
   &__notch {
     width: 86px;
     height: 22px;
@@ -284,7 +272,7 @@
     border-top: 1px solid #dbdbdb;
   }
 
-  // Bouton "Suivre" sur toute la largeur, sous le nom
+  // flex-wrap : "Suivre" (flex-basis: 100%) passe sous le nom
   &__profile {
     flex-wrap: wrap;
     padding: 12px 16px;

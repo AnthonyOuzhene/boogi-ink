@@ -40,10 +40,8 @@ class GalleryCrudController extends AbstractCrudController
             ->setBasePath(Gallery::UPLOAD_PATH)
             ->setUploadDir('public/'.Gallery::UPLOAD_PATH)
             ->setUploadedFileNamePattern('[randomhash].[extension]')
-            // obligatoire à la création, facultatif en modification (on garde l'ancienne)
+            // facultatif en modification : l'ancienne photo est conservée
             ->setRequired(Crud::PAGE_NEW === $pageName);
-        // Facultatif : s'il est envoyé, la visionneuse du site propose un curseur
-        // pour passer du dessin au tatouage terminé (sur la photo principale)
         yield ImageField::new('sketch', 'Dessin préparatoire')
             ->setBasePath(Gallery::UPLOAD_PATH)
             ->setUploadDir('public/'.Gallery::UPLOAD_PATH)
@@ -54,15 +52,14 @@ class GalleryCrudController extends AbstractCrudController
         yield TextField::new('name', 'Titre');
         yield AssociationField::new('category', 'Catégorie');
         yield BooleanField::new('isFavorite', 'Coup de cœur')
-            ->renderAsSwitch(false) // dans la liste : simple pastille oui / non
+            ->renderAsSwitch(false)
             ->setHelp('Ajoute l\'annotation « coup de cœur ♥ », écrite au feutre, sur la photo. À réserver à 1 ou 2 réalisations pour garder l\'effet.');
         yield DateField::new('realisedAt', 'Date de réalisation');
         yield TextareaField::new('description', 'Description')
             ->setHelp('Affichée à côté de la photo quand on l\'ouvre sur le site : le projet, la zone, le nombre de séances… (facultatif). Sautez une ligne pour faire un nouveau paragraphe.')
             ->setNumOfRows(5)
             ->hideOnIndex();
-        // Vidéo envoyée sur le site (pas un lien) : lue directement dans la visionneuse.
-        // Pas de compression côté serveur : la vidéo doit être exportée déjà légère.
+        // Pas de compression côté serveur : la vidéo doit être exportée déjà légère
         yield FileField::new('timelapse', 'Vidéo timelapse')
             ->setBasePath(Gallery::UPLOAD_PATH)
             ->setUploadDir('public/'.Gallery::UPLOAD_PATH)
@@ -73,12 +70,10 @@ class GalleryCrudController extends AbstractCrudController
             ->setHelp('Facultatif. Fichier MP4, 20 Mo maximum (export 720p ou 1080p, de préférence sans son : la vidéo est lue en muet). Sur le site, la vignette affiche « Timelapse » et la vidéo s\'ajoute aux photos de la réalisation.')
             ->hideOnIndex();
         yield UrlField::new('instagramUrl', '<i class="fa-brands fa-instagram"></i> Lien Instagram')
-            ->setFormTypeOption('label_html', true) // libellé avec le logo Instagram (comme dans la fiche Salon)
+            ->setFormTypeOption('label_html', true)
             ->setHelp('Facultatif. Le post Instagram de cette réalisation (photo, carrousel ou reel) : bouton « Voir sur Instagram » sur le site.')
             ->hideOnIndex();
-        // Chaque photo supplémentaire est éditée avec le formulaire de PictureCrudController.
-        // by_reference=false : Symfony appelle addPicture()/removePicture(),
-        // qui renseignent picture.gallery (sans ça, la clé étrangère resterait vide).
+        // by_reference=false : sinon addPicture()/removePicture() ne sont pas appelés et la clé étrangère reste vide
         yield CollectionField::new('pictures', 'Photos supplémentaires')
             ->useEntryCrudForm(PictureCrudController::class)
             ->setFormTypeOption('by_reference', false);

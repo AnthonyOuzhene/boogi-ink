@@ -7,28 +7,22 @@ import './GuestbookCarousel.scss';
 
 const AUTOPLAY_DELAY = 5500; // ms entre deux avis : le temps de lire, sans traîner
 const POSITIONS = [-2, -1, 0, 1, 2]; // 0 = avis courant, ±1 = voisins visibles, ±2 = hors champ
-const PIN_COLORS = ['', 'pin--pink', 'pin--blue', 'pin--yellow']; // punaises en alternance (voir .pin dans styles/_paper.scss)
+const PIN_COLORS = ['', 'pin--pink', 'pin--blue', 'pin--yellow']; // voir .pin dans styles/_paper.scss
 
-// Respecte le réglage système "réduire les animations" : pas de défilement automatique
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** Reste positif de la division (JavaScript renvoie -1 % 3 === -1) */
 const mod = (value, length) => ((value % length) + length) % length;
 
-/**
- * Carrousel du livre d'or : l'avis courant au centre, le précédent et le suivant
- * dépassent de chaque côté. Défilement automatique, en pause au survol ou au clavier.
- * className : classe ajoutée à la section (ex. "paper" pour le fond clair).
- */
+/** className : ex. "paper" pour le fond clair. */
 const GuestbookCarousel = ({ className = '' }) => {
   const { data: comments } = useApi('/comments');
 
-  // "current" n'est jamais ramené entre 0 et n-1 : il sert aussi de clé stable aux cartes,
-  // ce qui permet à React de les faire GLISSER d'une position à l'autre au lieu de les recréer
+  // "current" n'est jamais ramené entre 0 et n-1 : clé stable des cartes, React les fait
+  // glisser d'une position à l'autre au lieu de les recréer
   const [current, setCurrent] = useState(0);
 
-  // Trois raisons de mettre en pause, chacune avec son propre état :
   const [hovered, setHovered] = useState(false);             // souris sur l'avis central (on le lit)
   const [keyboardFocus, setKeyboardFocus] = useState(false); // navigation au clavier dans le carrousel
   const [paused, setPaused] = useState(false);               // bouton pause (accessibilité, WCAG 2.2.2)
@@ -37,7 +31,7 @@ const GuestbookCarousel = ({ className = '' }) => {
   const canAutoplay = count > 1 && !prefersReducedMotion();
   const autoplay = canAutoplay && !hovered && !keyboardFocus && !paused;
 
-  // Défilement automatique : relancé après chaque changement d'avis
+  // "current" en dépendance : le minuteur repart à zéro à chaque changement d'avis
   useEffect(() => {
     if (!autoplay) return undefined;
     const timer = setTimeout(() => setCurrent((index) => index + 1), AUTOPLAY_DELAY);
@@ -60,7 +54,7 @@ const GuestbookCarousel = ({ className = '' }) => {
       // Pause seulement pour le focus CLAVIER (:focus-visible) : un clic de souris sur une flèche
       // laisse le focus sur le bouton, et ne doit pas bloquer le défilement
       onFocus={(e) => setKeyboardFocus(e.target.matches(':focus-visible'))}
-      // Le focus quitte vraiment le carrousel (et pas juste un bouton pour un autre bouton du carrousel)
+      // Seulement si le focus sort du carrousel (pas d'un bouton à un autre)
       onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setKeyboardFocus(false); }}
     >
       <div className="container guestbook__head">
@@ -84,13 +78,10 @@ const GuestbookCarousel = ({ className = '' }) => {
               data-position={position}
               aria-hidden={!isCurrent}
               aria-roledescription="avis"
-              // Clic sur un avis voisin : il passe au centre
               onClick={isCurrent ? undefined : () => goTo(index)}
-              // Pause uniquement quand la souris est sur l'avis central (le temps de le lire)
               onMouseEnter={isCurrent ? () => setHovered(true) : undefined}
               onMouseLeave={isCurrent ? () => setHovered(false) : undefined}
             >
-              {/* Punaise décorative : l'avis est "épinglé", couleur en alternance */}
               <span className={`pin ${PIN_COLORS[mod(index, count) % PIN_COLORS.length]}`} aria-hidden="true" />
               <span className="guestbook__mark" aria-hidden="true">“</span>
               <h3 className="guestbook__title">{comment.title}</h3>
@@ -118,7 +109,7 @@ const GuestbookCarousel = ({ className = '' }) => {
                 className="guestbook__dot"
                 aria-label={`Avis ${index + 1} sur ${count}`}
                 aria-current={index === activeIndex}
-                // On avance (ou recule) du bon nombre de crans pour garder des clés cohérentes
+                // Déplacement relatif (et non goTo(index)) pour garder des clés cohérentes
                 onClick={() => goTo(current + (index - activeIndex))}
               />
             ))}
@@ -126,7 +117,6 @@ const GuestbookCarousel = ({ className = '' }) => {
           <button type="button" className="guestbook__arrow" aria-label="Avis suivant" onClick={() => goTo(current + 1)}>
             <FaArrowRight aria-hidden="true" />
           </button>
-          {/* Arrêt / reprise du défilement automatique (pas de bouton si le défilement est déjà coupé) */}
           {canAutoplay && (
             <button
               type="button"

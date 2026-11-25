@@ -39,7 +39,7 @@ class FlashCrudController extends AbstractCrudController
             ->setUploadDir('public/'.Flash::UPLOAD_PATH)
             ->setUploadedFileNamePattern('[randomhash].[extension]')
             ->setFileConstraints(new Image(maxSize: '8M'))
-            // Obligatoire à la création seulement : en modification, on garde l'image existante
+            // facultatif en modification : l'image existante est conservée
             ->setRequired(Crud::PAGE_NEW === $pageName)
             ->setHelp('Le dessin sur fond clair, cadré au plus près. Il est affiché en entier, sans recadrage.');
         yield TextField::new('name', 'Nom du motif');

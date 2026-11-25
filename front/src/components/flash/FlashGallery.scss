@@ -1,7 +1,4 @@
-// --- Planche de flashs ---
-// Comme au salon : les dessins posés à même le papier (zone .paper), numérotés,
-// le prix écrit au feutre, et un tampon "Réservé" sur ceux qui sont pris.
-// ⚠ Prévu pour une zone papier (accueil, L'atelier, page Flashs) : sur fond sombre,
+// ⚠ Prévu pour une zone papier (.paper) : sur fond sombre,
 // "multiply" ferait disparaître les dessins dans le noir.
 .flash-grid {
   display: grid;
@@ -14,8 +11,7 @@
   flex-direction: column;
   gap: 16px;
 
-  // Le dessin : fond blanc fondu dans le papier grâce à "multiply"
-  // (le blanc disparaît, seuls les traits restent), sans cadre ni carte
+  // multiply : le fond blanc du dessin disparaît, seuls les traits restent sur le papier
   &__img {
     position: relative;
     height: 240px;
@@ -34,7 +30,6 @@
     transform: scale(1.04) rotate(-1deg);
   }
 
-  // Légende sous le dessin, séparée par un trait fin comme sur une planche
   &__body {
     display: flex;
     flex-direction: column;
@@ -60,7 +55,6 @@
     font-size: 14px;
   }
 
-  // Prix "écrit au feutre", légèrement de travers
   &__price {
     align-self: flex-start;
     margin-top: 6px;
@@ -71,7 +65,6 @@
     transform-origin: left center;
   }
 
-  // Réservé : dessin estompé + tampon rouge de travers
   &--reserved {
     .flash-card__img img {
       opacity: 0.45;
@@ -97,15 +90,13 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     white-space: nowrap;
-    // Encre de tampon : un peu transparente, se mélange au papier
     opacity: 0.85;
     mix-blend-mode: multiply;
     pointer-events: none;
   }
 }
 
-// Téléphone : planche sur 2 colonnes, dessins et légendes plus compacts
-// (en une colonne, chaque flash prenait presque un écran entier)
+// 2 colonnes : en une seule, chaque flash prenait presque un écran entier
 @media (max-width: 600px) {
   .flash-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -129,7 +120,7 @@
     }
 
     &__number {
-      display: block; // le numéro sur sa propre ligne, au-dessus du nom
+      display: block; // numéro au-dessus du nom
       margin: 0 0 2px;
     }
 
