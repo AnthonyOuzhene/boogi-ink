@@ -1,0 +1,31 @@
+// Typographie : grands titres, titres de section, texte cyan lumineux
+// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
+
+// --- Typographie -----------------------------------------------------------------
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+}
+
+.section-title {
+  @extend .display;
+  font-size: clamp(52px, 7vw, 88px);
+
+  // Titre secondaire : le grand format est réservé aux sections phares
+  // (Réalisations, Flashs, Livre d'or), pour que la page ait des temps forts
+  &--small {
+    font-size: clamp(38px, 4.6vw, 58px);
+  }
+}
+
+.text-cyan {
+  color: var(--cyan);
+}
+
+.glow {
+  color: var(--cyan);
+  text-shadow: 0 0 40px rgba(34, 211, 238, 0.55);
+}

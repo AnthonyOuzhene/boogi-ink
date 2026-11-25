@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import SocialLinks from '../SocialLinks';
-import logo from '../../assets/images/logo.png';
+import SocialLinks from '@/components/ui/SocialLinks';
+import logo from '@/assets/images/logo.png';
 import './Header.scss';
 
 // Menu volontairement court. Les autres pages restent accessibles ailleurs :
@@ -24,7 +24,7 @@ const Header = () => {
 
   // Logo : depuis une autre page, le lien mène à l'accueil (et App.jsx remonte en haut).
   // Déjà sur l'accueil, l'adresse ne change pas : on remonte nous-mêmes, en douceur
-  // (scroll-behavior: smooth dans global.scss)
+  // (scroll-behavior: smooth dans styles/_base.scss)
   const handleBrandClick = () => {
     closeMenu();
     if (pathname === '/') window.scrollTo({ top: 0 });

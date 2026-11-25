@@ -1,7 +1,7 @@
 // Bande "Sur Instagram" de l'accueil : texte à gauche, appareil incliné à droite
 .instagram-feed {
   position: relative;
-  // Même espacement qu'une .section suivie du livre d'or sur papier (voir global.scss)
+  // Même espacement qu'une .section suivie du livre d'or sur papier (voir .section dans styles/_layout.scss)
   padding-block: var(--section) 120px;
   overflow: hidden; // le halo et l'appareil incliné ne créent pas de défilement horizontal
 

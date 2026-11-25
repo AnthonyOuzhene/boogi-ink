@@ -1,10 +1,10 @@
 import { useParams } from 'react-router';
-import useApi from '../hooks/useApi';
-import usePageTitle from '../hooks/usePageTitle';
-import { formatDate, toBlocks } from '../utils/format';
-import PageHero from '../components/PageHero';
+import useApi from '@/hooks/useApi';
+import usePageTitle from '@/hooks/usePageTitle';
+import { formatDate, toBlocks } from '@/utils/format';
+import PageHero from '@/components/ui/PageHero';
 import NotFoundPage from './NotFoundPage';
-import './pages.scss';
+import './ContentPage.scss';
 
 /** Page de contenu gérée dans le backoffice (menu "Pages") : /pages/mentions-legales */
 const ContentPage = () => {

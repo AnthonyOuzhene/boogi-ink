@@ -1,8 +1,8 @@
 import { Link } from 'react-router';
-import useApi from '../../hooks/useApi';
-import { useSalon } from '../../context/SalonContext';
-import { toLines } from '../../utils/format';
-import SocialLinks from '../SocialLinks';
+import useApi from '@/hooks/useApi';
+import { useSalon } from '@/context/SalonContext';
+import { toLines } from '@/utils/format';
+import SocialLinks from '@/components/ui/SocialLinks';
 import './Footer.scss';
 
 const Footer = () => {

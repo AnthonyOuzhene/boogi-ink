@@ -2,7 +2,7 @@
 .faq-band {
   position: relative;
   overflow: hidden;
-  // Pas de marge au-dessus : collé à la section précédente (voir .section dans global.scss)
+  // Pas de marge au-dessus : collé à la section précédente (voir .section dans styles/_layout.scss)
   padding-block: var(--band-padding);
   // Dégradé vertical + halo cyan sous le liseré du haut
   background:

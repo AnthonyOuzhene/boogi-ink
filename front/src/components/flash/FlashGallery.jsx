@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { assetUrl } from '../api/client';
-import { formatPrice } from '../utils/format';
+import { assetUrl } from '@/api/client';
+import { formatPrice } from '@/utils/format';
 import './FlashGallery.scss';
 
 /**

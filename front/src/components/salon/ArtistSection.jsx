@@ -1,11 +1,11 @@
 import { Link } from 'react-router';
 import { FaInstagram } from 'react-icons/fa';
-import { useSalon } from '../context/SalonContext';
-import { assetUrl } from '../api/client';
-import { toParagraphs } from '../utils/format';
-import Scribble from './Scribble';
+import { useSalon } from '@/context/SalonContext';
+import { assetUrl } from '@/api/client';
+import { toParagraphs } from '@/utils/format';
+import Scribble from '@/components/ui/Scribble';
 // Photo de secours, utilisée tant qu'aucune photo n'est envoyée depuis le backoffice
-import defaultPhoto from '../assets/images/artist.jpg';
+import defaultPhoto from '@/assets/images/artist.jpg';
 import './ArtistSection.scss';
 
 /**

@@ -1,5 +1,5 @@
 import { FaFacebookF, FaInstagram } from 'react-icons/fa';
-import { useSalon } from '../context/SalonContext';
+import { useSalon } from '@/context/SalonContext';
 import './SocialLinks.scss';
 
 /**

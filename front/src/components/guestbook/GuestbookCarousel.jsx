@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { FaArrowLeft, FaArrowRight, FaPause, FaPlay } from 'react-icons/fa';
-import useApi from '../hooks/useApi';
-import { formatDate } from '../utils/format';
+import useApi from '@/hooks/useApi';
+import { formatDate } from '@/utils/format';
 import './GuestbookCarousel.scss';
 
 const AUTOPLAY_DELAY = 5500; // ms entre deux avis : le temps de lire, sans traîner
 const POSITIONS = [-2, -1, 0, 1, 2]; // 0 = avis courant, ±1 = voisins visibles, ±2 = hors champ
-const PIN_COLORS = ['', 'pin--pink', 'pin--blue', 'pin--yellow']; // punaises en alternance (voir .pin dans global.scss)
+const PIN_COLORS = ['', 'pin--pink', 'pin--blue', 'pin--yellow']; // punaises en alternance (voir .pin dans styles/_paper.scss)
 
 // Respecte le réglage système "réduire les animations" : pas de défilement automatique
 const prefersReducedMotion = () =>

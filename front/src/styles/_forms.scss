@@ -1,0 +1,99 @@
+// Formulaires et carte néon
+// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
+
+// --- Formulaires ----------------------------------------------------------------
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    font: 400 17px/1.5 var(--font-body);
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    // Texte d'exemple : assez contrasté pour être lu (≈ 6:1 sur le fond du champ ; #6f8187 était limite)
+    &::placeholder {
+      color: #8b9da3;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+    }
+  }
+
+  input[type='date'] {
+    color-scheme: dark;
+  }
+
+  textarea {
+    min-height: 180px;
+    resize: vertical;
+  }
+
+  &__error {
+    color: var(--danger);
+    font-size: 15px;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+
+  @media (max-width: 700px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Carte encadrée de cyan (formulaires, livre d'or…)
+.neon-card {
+  border: 1px solid var(--cyan);
+  border-radius: 16px;
+  padding: 72px;
+  box-shadow: 0 0 60px rgba(34, 211, 238, 0.12);
+
+  @media (max-width: 900px) {
+    padding: 40px 24px;
+  }
+}
+
+// Carte d'appel à l'action (merci du livre d'or, FAQ) : utilisée par plusieurs pages
+.cta-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}

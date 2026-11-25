@@ -2,19 +2,19 @@ import { useEffect, useRef } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
-import MobileBookingBar from './components/layout/MobileBookingBar';
-import HomePage from './pages/HomePage';
-import RealisationsPage from './pages/RealisationsPage';
-import GalleryDetailPage from './pages/GalleryDetailPage';
-import AtelierPage from './pages/AtelierPage';
-import FlashsPage from './pages/FlashsPage';
-import FaqPage from './pages/FaqPage';
-import ContentPage from './pages/ContentPage';
-import VisitorBookPage from './pages/VisitorBookPage';
-import ContactPage from './pages/ContactPage';
-import NotFoundPage from './pages/NotFoundPage';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import MobileBookingBar from '@/components/layout/MobileBookingBar';
+import HomePage from '@/pages/HomePage';
+import RealisationsPage from '@/pages/RealisationsPage';
+import GalleryDetailPage from '@/pages/GalleryDetailPage';
+import AtelierPage from '@/pages/AtelierPage';
+import FlashsPage from '@/pages/FlashsPage';
+import FaqPage from '@/pages/FaqPage';
+import ContentPage from '@/pages/ContentPage';
+import VisitorBookPage from '@/pages/VisitorBookPage';
+import ContactPage from '@/pages/ContactPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 const App = () => {
   const { pathname, hash } = useLocation();

@@ -1,4 +1,4 @@
-import { toParagraphs } from '../utils/format';
+import { toParagraphs } from '@/utils/format';
 import './FaqList.scss';
 
 /**

@@ -1,14 +1,14 @@
 import { useRef, useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import useApi from '../hooks/useApi';
-import useMediaQuery from '../hooks/useMediaQuery';
-import usePageTitle from '../hooks/usePageTitle';
-import { formatDate } from '../utils/format';
-import PageHero from '../components/PageHero';
-import CommentForm from '../components/CommentForm';
-import './pages.scss';
+import useApi from '@/hooks/useApi';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import usePageTitle from '@/hooks/usePageTitle';
+import { formatDate } from '@/utils/format';
+import PageHero from '@/components/ui/PageHero';
+import CommentForm from '@/components/guestbook/CommentForm';
+import './VisitorBookPage.scss';
 
-// Couleurs des punaises, en alternance (voir .pin dans global.scss)
+// Couleurs des punaises, en alternance (voir .pin dans styles/_paper.scss)
 const PIN_COLORS = ['', 'pin--pink', 'pin--blue', 'pin--yellow'];
 
 // Avis par page : 3 colonnes × 2 lignes sur grand écran ; sur mobile et tablette

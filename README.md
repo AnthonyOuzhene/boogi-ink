@@ -53,6 +53,29 @@ npm run dev        # http://localhost:5180 (port fixé dans front/vite.config.js
 
 L'adresse du back est dans `front/.env` (`VITE_BACKEND_URL`).
 
+### Organisation du front (`front/src/`)
+
+```
+main.jsx, App.jsx
+api/  context/  hooks/  utils/  assets/
+styles/        styles communs à tout le site : global.scss importe _variables, _base, _layout,
+               _typography, _paper, _utilities, _filters, _buttons, _forms, _toastify
+components/    rangés par sujet, chaque composant = son .jsx + son .scss côte à côte
+  layout/      Header, Footer, MobileBookingBar
+  ui/          PageHero, Scribble, SocialLinks (petites briques réutilisables)
+  gallery/     GalleryGrid, GalleryViewer, SketchCompare
+  flash/       FlashGallery
+  guestbook/   GuestbookCarousel, CommentForm
+  faq/         FaqList, FaqSection
+  salon/       SalonCards, ArtistSection, SessionSteps, InstagramFeed
+  atelier/     Timeline, StudioGallery, HygieneCards
+pages/         une page = son .jsx + son .scss (HomePage, ContactPage, VisitorBookPage…)
+```
+
+- **Où ranger un style ?** Commun à tout le site → un fichier de `styles/` ; propre à un composant ou à une page → son `.scss`, à côté de son `.jsx`.
+- **Imports** : `@/` = `src/` (`import GalleryGrid from '@/components/gallery/GalleryGrid'`), réglé dans `vite.config.js` et `jsconfig.json`. Un fichier du même dossier s'importe en `./`.
+- Les couleurs et tailles sont des variables CSS (`--cyan`…, dans `styles/_variables.scss`) : utilisables dans tous les `.scss` sans import. Pas de `@extend` entre fichiers (chaque `.scss` est compilé à part).
+
 ## L'API
 
 Toutes les routes commencent par `/api`. Elles sont déclarées à **deux endroits**, selon une règle simple :

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { FaPlay } from 'react-icons/fa';
-import { assetUrl } from '../api/client';
-import useMediaQuery from '../hooks/useMediaQuery';
-import Scribble from './Scribble';
+import { assetUrl } from '@/api/client';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import Scribble from '@/components/ui/Scribble';
 import './GalleryGrid.scss';
 
 /** Lien par défaut (accueil) : la page Réalisations, visionneuse ouverte sur ce tatouage */

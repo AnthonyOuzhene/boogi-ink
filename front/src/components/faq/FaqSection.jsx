@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import useApi from '../hooks/useApi';
+import useApi from '@/hooks/useApi';
 import FaqList from './FaqList';
 import './FaqSection.scss';
 

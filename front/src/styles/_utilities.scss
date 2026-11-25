@@ -1,0 +1,69 @@
+// Petites classes utilitaires : masqué à l'écran, surtitre, texte secondaire, lien fléché, pastilles
+// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
+
+// Texte masqué à l'écran mais lu par les lecteurs d'écran (ex. "Disponible" sur un flash)
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.eyebrow {
+  color: var(--cyan);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+
+  // Touche de rose : surtitres numérotés de L'atelier (01 — Le salon, 02 — L'artiste…)
+  &--pink {
+    color: var(--pink);
+  }
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.link-arrow {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+// Pastilles : influences de l'artiste, sommaire de L'atelier
+.chips {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+a.chip:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.placeholder {
+  color: var(--muted);
+  font-style: italic;
+}

@@ -1,0 +1,49 @@
+// Variables du site : couleurs, polices, tailles (variables CSS, utilisables partout sans import)
+// (partie de styles/global.scss, importée par lui — ordre des imports = ordre d'application)
+
+:root {
+  // Échelle de fonds bleu nuit, du plus profond au plus clair
+  --bg-deep: #060a0c;     // bas de page, pied de page
+  --bg: #0b1215;          // fond général
+  --surface: #131d22;     // bandeaux, cartes, champs
+  --surface-2: #1a272d;   // survols, éléments posés sur --surface
+  --line: #23323a;        // séparateurs
+  --line-strong: #3e5058;
+
+  // Dégradés d'ambiance (voir body et les bandeaux .band, .artist-section, .faq-band)
+  --glow: rgba(34, 211, 238, 0.07);  // halo cyan très discret
+  --band-gradient: linear-gradient(180deg, #17232a 0%, #111a1f 100%);
+  --text: #e6f4f6;
+  --muted: #a9bcc1;       // texte secondaire (contraste AA sur --bg)
+  --cyan: #22d3ee;        // couleur de marque
+  --cyan-light: #67e8f9;
+  // Rose vif (deep pink) : accent SECONDAIRE, par petites touches seulement
+  // (annotations au feutre, cœur des favoris, une punaise) ; le cyan reste la couleur de marque
+  --pink: #ff1493;
+  --ink: #041014;         // texte posé sur du cyan
+  --danger: #fda4af;
+
+  --font-display: 'Anton', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-marker: 'Permanent Marker', 'Comic Sans MS', cursive; // "écrit au feutre" : prix des flashs uniquement
+
+  --container: 1280px;
+  --gutter: 48px;         // marges latérales
+  --section: 200px;       // espace entre les grandes sections
+  --band-padding: 160px;  // marge intérieure des bandeaux sur fond clair (artiste, FAQ)
+  --radius: 8px;
+  --header-height: 124px;
+
+  @media (max-width: 900px) {
+    --gutter: 24px;
+    --section: 120px;
+    --band-padding: 96px;
+    --header-height: 88px;
+  }
+
+  // Téléphone : espaces entre sections resserrés (la page d'accueil restait très longue)
+  @media (max-width: 600px) {
+    --section: 88px;
+    --band-padding: 72px;
+  }
+}

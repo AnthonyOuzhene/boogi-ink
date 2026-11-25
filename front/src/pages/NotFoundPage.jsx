@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
-import usePageTitle from '../hooks/usePageTitle';
-import badTattoo from '../assets/images/bad-tattoo.jpg';
-import './pages.scss';
+import usePageTitle from '@/hooks/usePageTitle';
+import badTattoo from '@/assets/images/bad-tattoo.jpg';
+import './NotFoundPage.scss';
 
 const NotFoundPage = () => {
   usePageTitle('Page introuvable');

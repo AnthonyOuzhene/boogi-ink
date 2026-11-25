@@ -1,4 +1,4 @@
-import './atelier.scss';
+import './Timeline.scss';
 
 /**
  * Frise de dates (backoffice : "Frises").

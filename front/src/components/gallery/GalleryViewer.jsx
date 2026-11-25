@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { FaChevronLeft, FaChevronRight, FaInstagram, FaPlay, FaTimes } from 'react-icons/fa';
-import { assetUrl } from '../api/client';
-import useMediaQuery from '../hooks/useMediaQuery';
-import { formatDate, toParagraphs } from '../utils/format';
+import { assetUrl } from '@/api/client';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import { formatDate, toParagraphs } from '@/utils/format';
 import SketchCompare from './SketchCompare';
-import Scribble from './Scribble';
+import Scribble from '@/components/ui/Scribble';
 import './GalleryViewer.scss';
 
 /**

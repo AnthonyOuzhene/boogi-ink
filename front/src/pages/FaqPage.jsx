@@ -1,9 +1,9 @@
 import { Link } from 'react-router';
-import useApi from '../hooks/useApi';
-import usePageTitle from '../hooks/usePageTitle';
-import PageHero from '../components/PageHero';
-import FaqList from '../components/FaqList';
-import './pages.scss';
+import useApi from '@/hooks/useApi';
+import usePageTitle from '@/hooks/usePageTitle';
+import PageHero from '@/components/ui/PageHero';
+import FaqList from '@/components/faq/FaqList';
+import './FaqPage.scss';
 
 /** Page /faq : toutes les questions fréquentes, gérées dans le backoffice (menu "FAQ") */
 const FaqPage = () => {

@@ -2,12 +2,12 @@ import {
   FaBatteryFull, FaHome, FaInstagram, FaPlay, FaRegClone, FaRegHeart, FaRegPlusSquare,
   FaSearch, FaSignal, FaTh, FaUserCircle, FaWifi,
 } from 'react-icons/fa';
-import useApi from '../hooks/useApi';
-import useMediaQuery from '../hooks/useMediaQuery';
-import { useSalon } from '../context/SalonContext';
-import { assetUrl } from '../api/client';
-import Scribble from './Scribble';
-import logo from '../assets/images/logo.png';
+import useApi from '@/hooks/useApi';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import { useSalon } from '@/context/SalonContext';
+import { assetUrl } from '@/api/client';
+import Scribble from '@/components/ui/Scribble';
+import logo from '@/assets/images/logo.png';
 import './InstagramFeed.scss';
 
 /** "https://www.instagram.com/boogi_ink/" → "boogi_ink" */

@@ -1,5 +1,5 @@
 import { GiAnchor, GiCompass, GiDrop, GiHeartInside, GiQuillInk, GiRose, GiSewingNeedle, GiSwallow } from 'react-icons/gi';
-import useApi from '../hooks/useApi';
+import useApi from '@/hooks/useApi';
 import './SalonCards.scss';
 
 /**
@@ -33,7 +33,7 @@ const SalonCards = () => {
         {cards.map(({ id, icon, title, text }) => {
           const Icon = ICONS[icon] ?? GiQuillInk; // symbole inconnu : la plume par défaut
           return (
-            // .paper : fond papier et couleurs "encre" (voir global.scss)
+            // .paper : fond papier et couleurs "encre" (voir styles/_paper.scss)
             <li key={id} className="playing-card paper">
               <Icon className="playing-card__corner" aria-hidden="true" />
               <Icon className="playing-card__corner playing-card__corner--bottom" aria-hidden="true" />

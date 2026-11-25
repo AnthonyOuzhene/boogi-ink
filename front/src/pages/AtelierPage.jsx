@@ -1,17 +1,17 @@
 import { Link } from 'react-router';
-import useApi from '../hooks/useApi';
-import useScrollToHash from '../hooks/useScrollToHash';
-import usePageTitle from '../hooks/usePageTitle';
-import { useSalon } from '../context/SalonContext';
-import { toParagraphs } from '../utils/format';
-import PageHero from '../components/PageHero';
-import ArtistSection from '../components/ArtistSection';
-import SessionSteps from '../components/SessionSteps';
-import FlashGallery from '../components/FlashGallery';
-import Timeline from '../components/atelier/Timeline';
-import StudioGallery from '../components/atelier/StudioGallery';
-import HygieneCards from '../components/atelier/HygieneCards';
-import './pages.scss';
+import useApi from '@/hooks/useApi';
+import useScrollToHash from '@/hooks/useScrollToHash';
+import usePageTitle from '@/hooks/usePageTitle';
+import { useSalon } from '@/context/SalonContext';
+import { toParagraphs } from '@/utils/format';
+import PageHero from '@/components/ui/PageHero';
+import ArtistSection from '@/components/salon/ArtistSection';
+import SessionSteps from '@/components/salon/SessionSteps';
+import FlashGallery from '@/components/flash/FlashGallery';
+import Timeline from '@/components/atelier/Timeline';
+import StudioGallery from '@/components/atelier/StudioGallery';
+import HygieneCards from '@/components/atelier/HygieneCards';
+import './AtelierPage.scss';
 
 /**
  * L'atelier : le récit complet du salon. L'accueil n'en montre que des aperçus

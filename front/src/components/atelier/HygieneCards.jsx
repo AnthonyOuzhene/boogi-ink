@@ -1,4 +1,4 @@
-import './atelier.scss';
+import './HygieneCards.scss';
 
 // Pictogrammes au trait : la clé correspond au champ "icon" choisi dans le backoffice
 // (liste HygieneCommitment::ICONS côté Symfony)

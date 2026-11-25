@@ -1,8 +1,7 @@
-import useApi from '../hooks/useApi';
-import usePageTitle from '../hooks/usePageTitle';
-import PageHero from '../components/PageHero';
-import FlashGallery from '../components/FlashGallery';
-import './pages.scss';
+import useApi from '@/hooks/useApi';
+import usePageTitle from '@/hooks/usePageTitle';
+import PageHero from '@/components/ui/PageHero';
+import FlashGallery from '@/components/flash/FlashGallery';
 
 /** Tous les flashs (backoffice : "Flashs"), disponibles d'abord */
 const FlashsPage = () => {

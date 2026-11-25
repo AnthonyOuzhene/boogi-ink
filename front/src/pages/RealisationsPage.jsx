@@ -1,10 +1,9 @@
 import { useSearchParams } from 'react-router';
-import useApi from '../hooks/useApi';
-import usePageTitle from '../hooks/usePageTitle';
-import PageHero from '../components/PageHero';
-import GalleryGrid from '../components/GalleryGrid';
-import GalleryViewer from '../components/GalleryViewer';
-import './pages.scss';
+import useApi from '@/hooks/useApi';
+import usePageTitle from '@/hooks/usePageTitle';
+import PageHero from '@/components/ui/PageHero';
+import GalleryGrid from '@/components/gallery/GalleryGrid';
+import GalleryViewer from '@/components/gallery/GalleryViewer';
 
 const RealisationsPage = () => {
   // Tout l'état de la page est dans l'URL, elle peut donc être partagée telle quelle :

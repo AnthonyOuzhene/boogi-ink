@@ -1,24 +1,23 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { FaPause, FaPlay } from 'react-icons/fa';
-import useApi from '../hooks/useApi';
-import useMediaQuery from '../hooks/useMediaQuery';
-import usePageTitle from '../hooks/usePageTitle';
-import { useSalon } from '../context/SalonContext';
-import SalonCards from '../components/SalonCards';
-import GalleryGrid from '../components/GalleryGrid';
-import ArtistSection from '../components/ArtistSection';
-import Scribble from '../components/Scribble';
-import FaqSection from '../components/FaqSection';
-import SessionSteps from '../components/SessionSteps';
-import { FlashGrid } from '../components/FlashGallery';
-import GuestbookCarousel from '../components/GuestbookCarousel';
-import InstagramFeed from '../components/InstagramFeed';
+import useApi from '@/hooks/useApi';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import usePageTitle from '@/hooks/usePageTitle';
+import { useSalon } from '@/context/SalonContext';
+import SalonCards from '@/components/salon/SalonCards';
+import GalleryGrid from '@/components/gallery/GalleryGrid';
+import ArtistSection from '@/components/salon/ArtistSection';
+import Scribble from '@/components/ui/Scribble';
+import FaqSection from '@/components/faq/FaqSection';
+import SessionSteps from '@/components/salon/SessionSteps';
+import { FlashGrid } from '@/components/flash/FlashGallery';
+import GuestbookCarousel from '@/components/guestbook/GuestbookCarousel';
+import InstagramFeed from '@/components/salon/InstagramFeed';
 // Vidéo du hero (fichier fixe, sans son) + photo extraite de la vidéo : affichée pendant
 // le chargement, et à la place de la vidéo si "réduire les animations" est activé
-import heroVideo from '../assets/videos/hero-tattoo.mp4';
-import heroPoster from '../assets/images/hero-tattoo-poster.jpg';
-import './pages.scss';
+import heroVideo from '@/assets/videos/hero-tattoo.mp4';
+import heroPoster from '@/assets/images/hero-tattoo-poster.jpg';
 import './HomePage.scss';
 
 const HomePage = () => {

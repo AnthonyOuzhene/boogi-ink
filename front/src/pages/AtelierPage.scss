@@ -1,0 +1,60 @@
+// Page L'atelier : deux colonnes, sommaire, appel final
+
+// --- Deux colonnes : intro (titre, texte, bouton) + liste ---
+.split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 48px 120px;
+
+  &__intro {
+    flex: 1 1 340px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+
+    // L'intro reste visible pendant qu'on fait défiler une longue liste (ordinateur)
+    @media (min-width: 901px) {
+      position: sticky;
+      top: calc(var(--header-height) + 40px);
+    }
+  }
+
+  &__list {
+    flex: 2 1 560px;
+    min-width: 0;
+  }
+}
+
+
+.section-head__aside {
+  max-width: 420px;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+// --- L'atelier : sommaire sous le titre ---
+.atelier-toc {
+  margin-top: 16px;
+}
+
+// --- Appel final (bas de L'atelier) ---
+.cta-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: clamp(40px, 6vw, 88px) clamp(28px, 5vw, 72px);
+  border: 1px solid var(--cyan);
+  border-radius: 16px;
+  box-shadow: 0 0 60px rgba(34, 211, 238, 0.15);
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}

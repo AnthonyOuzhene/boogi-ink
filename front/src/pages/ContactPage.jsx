@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { toast } from 'react-toastify';
 import { FaDirections, FaFacebookMessenger, FaInstagram, FaMapMarkerAlt, FaRegCopy } from 'react-icons/fa';
-import { useSalon } from '../context/SalonContext';
-import usePageTitle from '../hooks/usePageTitle';
-import { toLines } from '../utils/format';
-import { instagramMessageUrl, messengerUrl } from '../utils/social';
-import PageHero from '../components/PageHero';
-import './pages.scss';
+import { useSalon } from '@/context/SalonContext';
+import usePageTitle from '@/hooks/usePageTitle';
+import { toLines } from '@/utils/format';
+import { instagramMessageUrl, messengerUrl } from '@/utils/social';
+import PageHero from '@/components/ui/PageHero';
+import './ContactPage.scss';
 
 // Ce que l'artiste a besoin de savoir pour répondre (affiché en liste, et repris dans le modèle)
 const CHECKLIST = [

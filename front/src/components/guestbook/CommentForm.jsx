@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import api, { getViolations } from '../api/client';
+import api, { getViolations } from '@/api/client';
+import './CommentForm.scss';
 
 const EMPTY_FORM = { authorName: '', title: '', projectName: '', message: '', website: '' };
 // Ordre des champs dans le formulaire : après un envoi refusé, le focus va au premier en erreur

@@ -1,5 +1,5 @@
-import { assetUrl } from '../../api/client';
-import './atelier.scss';
+import { assetUrl } from '@/api/client';
+import './StudioGallery.scss';
 
 /** "Le lieu en images" : la première photo en grand, les suivantes autour (backoffice : "Photos du salon") */
 const StudioGallery = ({ photos }) => (
