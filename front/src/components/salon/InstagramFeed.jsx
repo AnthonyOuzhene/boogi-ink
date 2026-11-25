@@ -7,7 +7,7 @@ import useMediaQuery from '@/hooks/useMediaQuery';
 import { useSalon } from '@/context/SalonContext';
 import { assetUrl } from '@/api/client';
 import Scribble from '@/components/ui/Scribble';
-import logo from '@/assets/images/logo.png';
+import logo from '@/assets/images/logo.webp';
 import './InstagramFeed.scss';
 
 /** "https://www.instagram.com/boogi_ink/" → "boogi_ink" */

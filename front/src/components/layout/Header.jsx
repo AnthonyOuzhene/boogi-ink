@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import SocialLinks from '@/components/ui/SocialLinks';
-import logo from '@/assets/images/logo.png';
+import logo from '@/assets/images/logo.webp';
 import './Header.scss';
 
 // Menu volontairement court. Les autres pages restent accessibles ailleurs :

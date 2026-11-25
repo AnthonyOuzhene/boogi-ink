@@ -98,7 +98,7 @@ class DashboardController extends AbstractDashboardController
             // voir admin.css (.bo-logo-mark) et admin-assets/logo.js (une fois par session)
             ->setTitle(
                 '<span class="bo-logo-mark">'
-                .'<img src="/admin-assets/logo.png" alt="" class="bo-logo">'
+                .'<img src="/admin-assets/logo.webp" alt="" class="bo-logo">'
                 .'<svg class="bo-logo-ring" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="25" pathLength="100"/></svg>'
                 .'</span> Boogi\'<span class="bo-cyan">ink</span>'
             )
