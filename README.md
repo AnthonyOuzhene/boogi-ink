@@ -22,12 +22,7 @@ ddev console doctrine:migrations:migrate # crée / met à jour les tables
 ddev console doctrine:fixtures:load      # données de démo (⚠ vide la base)
 ```
 
-Comptes de démo créés par les fixtures (seulement des comptes du backoffice : le site n'a pas d'espace client) :
-
-| Email | Mot de passe | Rôle |
-|---|---|---|
-| `admin@boogi-ink.local` | `admin1234` | administrateur : le salon |
-| `dev@boogi-ink.local` | `dev12345` | super administrateur : le développeur |
+Les fixtures créent un compte de démo par rôle (identifiants dans `back/src/DataFixtures/AppFixtures.php`, à n'utiliser qu'en local). Le site n'a pas d'espace client : seuls existent des comptes du backoffice.
 
 **Deux rôles** (`role_hierarchy` dans `back/config/packages/security.yaml`) :
 
@@ -40,7 +35,7 @@ Pour un vrai compte : `ddev console app:create-admin vous@exemple.fr "Votre nom"
 
 Le bouton « Voir le site » du backoffice pointe vers `FRONT_URL` (`back/.env`, par défaut `http://localhost:5180`, le port du front fixé dans `front/vite.config.js`). Pour une autre adresse, surchargez-la dans `back/.env.local`.
 
-- Backoffice : https://boogi-ink.ddev.site/boogi-0806 (connexion : `/boogi-0806/login`). Volontairement pas `/admin`, l'adresse testée par les robots ; le préfixe est défini dans `DashboardController` et doit rester identique dans `access_control` (`back/config/packages/security.yaml`).
+- Backoffice : adresse volontairement peu devinable (pas `/admin`, testée par les robots), définie par le `routePath` de `DashboardController` ; le même préfixe doit figurer dans `access_control` (`back/config/packages/security.yaml`).
 - Documentation de l'API (partie API Platform) : https://boogi-ink.ddev.site/api/docs
 
 ## Démarrer le front
@@ -119,7 +114,7 @@ Fonctionnement :
 - **Modération** : chaque avis est créé **en attente** ; il n'apparaît dans `GET /api/comments` qu'une fois publié dans le backoffice. Envoyer `isPublished` dans le JSON n'a aucun effet.
 - **Anti-spam** : le champ caché `website` (« pot de miel ») est invisible pour les visiteurs ; s'il est rempli, c'est un robot : la réponse est la même (`202`), mais rien n'est enregistré.
 - **Validation** : `#[MapRequestPayload]` transforme le JSON en DTO et le valide avant d'entrer dans la méthode.
-- **Sécurité** : l'API est entièrement publique (pare-feu `api` sans authentification dans `back/config/packages/security.yaml`). Seul le backoffice demande une connexion (session, page `/boogi-0806/login`, tentatives limitées par `login_throttling`). Le backoffice est sur `/boogi-0806` (et non `/admin`, testé par les robots).
+- **Sécurité** : l'API est entièrement publique (pare-feu `api` sans authentification dans `back/config/packages/security.yaml`). Seul le backoffice demande une connexion (session, tentatives limitées par `login_throttling`).
 
 ### Codes de réponse
 
@@ -169,12 +164,12 @@ Bande « Sur Instagram » en bas de l'accueil (`front/src/components/InstagramFe
 
 - **Récupération côté serveur** : `back/src/Service/InstagramSync.php` interroge l'API Instagram (« Instagram API with Instagram Login »), copie les images dans `public/uploads/instagram/` (converties en WebP) et les enregistre (`InstagramPost`). Le visiteur ne contacte jamais Instagram : pas de cookie, pas de bandeau de consentement.
 - **Mise à jour** : `ddev console app:instagram:sync`, lancée toutes les 3 heures par une tâche planifiée en production. En cas de panne, les derniers posts restent affichés et le tableau de bord du backoffice affiche une alerte.
-- **Jeton d'accès** : enregistré une fois avec `ddev console app:instagram:token` (saisie masquée), puis renouvelé automatiquement avant ses 60 jours. Comment l'obtenir : [DEPLOIEMENT.md](DEPLOIEMENT.md), « Brancher Instagram ».
+- **Jeton d'accès** : enregistré une fois avec `ddev console app:instagram:token` (saisie masquée), puis renouvelé automatiquement avant ses 60 jours. Il s'obtient depuis une application Meta (« Instagram API with Instagram Login »), avec un compte Instagram professionnel.
 - **Sans jeton (développement)** : `ddev console app:instagram:sync --demo` affiche 6 posts d'exemple (photos des fixtures), remplacés par les vrais à la première synchronisation.
 
 ## Mise en production
 
-Procédure complète, étape par étape : **[DEPLOIEMENT.md](DEPLOIEMENT.md)**. En résumé, à vérifier sur l'hébergement :
+À vérifier sur l'hébergement :
 
 - **PHP** : extension GD avec WebP (`php -r 'var_dump(gd_info()["WebP Support"]);'` doit afficher `true`), `memory_limit` d'au moins 256M (conversion des grandes photos).
 - **Envoi de fichiers** : `upload_max_filesize` et `post_max_size` d'au moins 25M (timelapses de 20 Mo), et la limite du serveur web (`client_max_body_size` sous nginx).

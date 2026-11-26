@@ -2,3 +2,6 @@
 /.idea/
 
 .DS_Store
+
+# Notes personnelles de mise en ligne (non partagées)
+/DEPLOIEMENT.md
