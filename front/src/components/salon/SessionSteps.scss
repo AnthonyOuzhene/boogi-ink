@@ -1,0 +1,105 @@
+.step-number {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1;
+  color: var(--cyan);
+
+  &--large {
+    min-width: 80px;
+    font-size: 56px;
+    line-height: 0.9;
+  }
+}
+
+// --- Aperçu (accueil) ---
+.steps-preview {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 16px;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px 24px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  &__title {
+    font-size: 19px;
+  }
+
+  // Frise horizontale : 74 % laisse voir l'étape suivante, ce qui invite à faire glisser
+  @media (max-width: 600px) {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 74%;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    // Le défilement va jusqu'au bord de l'écran (au-delà de la marge du .container)
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &__item {
+      scroll-snap-align: start;
+    }
+  }
+}
+
+// --- Version complète (L'atelier) ---
+.steps {
+  list-style: none;
+  padding: 0;
+  border-top: 1px solid var(--line);
+
+  &__item {
+    display: flex;
+    gap: 32px;
+    padding-block: 36px;
+    border-bottom: 1px solid var(--line);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 17px;
+    line-height: 1.7;
+
+    p {
+      white-space: pre-line;
+    }
+  }
+
+  &__title {
+    font-size: 22px;
+  }
+
+  @media (max-width: 600px) {
+    &__item {
+      gap: 20px;
+    }
+
+    .step-number--large {
+      min-width: 56px;
+      font-size: 40px;
+    }
+  }
+}

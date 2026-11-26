@@ -1,0 +1,9 @@
+{# Surcharge (templates/bundles/<NomDuBundle>/) : "@!EasyAdmin" désigne l'original, qu'on étend #}
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block header_custom_menu_wrapper %}
+    <a href="{{ front_url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm bo-site-link">
+        <i class="fa fa-arrow-up-right-from-square"></i> Voir le site
+    </a>
+    {{ parent() }}
+{% endblock header_custom_menu_wrapper %}

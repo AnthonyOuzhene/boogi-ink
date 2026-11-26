@@ -1,0 +1,49 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 16px 30px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font: 600 16px/1.2 var(--font-body);
+  text-align: center; // un libellé long sur deux lignes reste centré
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+  &--primary {
+    background: var(--cyan);
+    color: var(--ink);
+    &:hover {
+      background: var(--cyan-light);
+      color: var(--ink);
+      box-shadow: 0 0 30px rgba(34, 211, 238, 0.45);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: rgba(230, 244, 246, 0.5);
+    &:hover {
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+  }
+
+  // À ajouter à btn--ghost ; même dégradé que dans SocialLinks.scss
+  &--instagram:hover,
+  &--instagram:focus-visible {
+    color: #fff;
+    border-color: transparent;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+    box-shadow: 0 0 20px rgba(214, 36, 159, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+}

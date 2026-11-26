@@ -1,0 +1,74 @@
+// Zone « papier » : fond clair à ajouter à une section (souvent avec .band).
+// Les variables de couleur sont redéfinies ici : tout le contenu de la zone
+// (titres, cartes, boutons, formulaires) passe en version claire tout seul.
+.paper {
+  --bg: #f3efe6;
+  --surface: #fffdf8;
+  --text: #14191b;
+  --muted: #4c5a5f;       // contraste AA sur le papier
+  --line: #ddd5c4;
+  --line-strong: #c3b9a5;
+  --cyan: #0e7490;        // cyan foncé : le cyan vif est illisible sur du clair
+  --cyan-light: #155e75;
+  --pink: #c2126b;        // rose plus foncé : le rose vif manque de contraste sur le papier
+  --ink: #ffffff;
+
+  color: var(--text);
+  border-block: 0;
+  // Grain papier (bruit SVG)
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
+    var(--bg);
+
+  // Ces cartes utilisent --bg sur fond sombre ; ici --bg = le papier, elles ne se verraient plus.
+  // (Flashs et avis ont leur propre style : FlashGallery, VisitorBookPage, GuestbookCarousel)
+  .steps-preview__item,
+  .faq__item {
+    background: var(--surface);
+    box-shadow: 0 10px 30px -18px rgba(20, 25, 27, 0.35);
+  }
+
+  .glow {
+    text-shadow: none;
+  }
+}
+
+// Punaise des avis du livre d'or : à placer dans un parent en position: relative
+.pin {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff9b8f 0%, #c7372b 45%, #7a1a12 100%);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+
+  // Ombre portée sur le papier
+  &::after {
+    content: '';
+    position: absolute;
+    top: 17px;
+    left: 12px;
+    width: 12px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.18);
+    filter: blur(1.5px);
+  }
+
+  &--blue {
+    background: radial-gradient(circle at 35% 30%, #8be3f5 0%, #0e7490 45%, #0b3b4a 100%);
+  }
+
+  &--yellow {
+    background: radial-gradient(circle at 35% 30%, #fff1b8 0%, #e0a21a 45%, #8a5a06 100%);
+  }
+
+  &--pink {
+    background: radial-gradient(circle at 35% 30%, #ff9fd2 0%, #ff1493 45%, #8f0b52 100%);
+  }
+}

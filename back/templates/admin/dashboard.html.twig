@@ -1,0 +1,152 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{# Données : DashboardController::index() ; styles : public/admin-assets/admin.css (classes "bo-…") #}
+
+{% block content_title %}Tableau de bord{% endblock %}
+
+{% block main %}
+<div class="bo">
+
+    <div class="bo-head">
+        <div>
+            <p class="bo-eyebrow">{{ today|capitalize }}</p>
+            <h2 class="bo-hello">Bonjour {{ app.user.name }}</h2>
+        </div>
+        {% if salon %}
+            <div class="bo-status">
+                <span class="bo-dot {{ salon.isOpen ? 'is-open' : 'is-closed' }}"></span>
+                <span><strong>{{ salon.isOpen ? 'Salon ouvert' : 'Salon fermé' }}</strong>
+                    <span class="bo-muted">— {{ salon.isOpen ? 'affiché sur le site' : 'un message prévient les visiteurs' }}</span></span>
+                <a href="{{ path('admin_home_edit', {entityId: salon.id}) }}">Modifier</a>
+            </div>
+        {% endif %}
+    </div>
+
+    {# Instagram : alerte seulement en cas de problème (voir InstagramSync) #}
+    {% if instagram and instagram.connected %}
+        {% if instagram.lastError %}
+            <div class="alert alert-warning">
+                <i class="fa-brands fa-instagram"></i>
+                <strong>Flux Instagram de l'accueil : la mise à jour a échoué.</strong>
+                Les derniers posts récupérés restent affichés sur le site.
+                <br><span class="bo-small">Détail : {{ instagram.lastError }}</span>
+            </div>
+        {% elseif instagram.tokenExpiringSoon %}
+            <div class="alert alert-warning">
+                <i class="fa-brands fa-instagram"></i>
+                <strong>Flux Instagram : la clé d'accès expire le {{ instagram.tokenExpiresAt|date('d/m/Y') }}.</strong>
+                Le renouvellement automatique n'a pas fonctionné : générer un nouveau jeton
+                (commande <code>app:instagram:token</code>).
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <div class="bo-kpis">
+        <a class="bo-card bo-kpi {{ pendingCount > 0 ? 'is-warning' }}" href="{{ path('admin_comment_index') }}">
+            <span class="bo-kpi__label">Avis en attente</span>
+            <span class="bo-kpi__value">{{ pendingCount }}</span>
+            <span class="bo-kpi__link">{{ pendingCount > 0 ? 'Valider →' : 'Voir le livre d\'or →' }}</span>
+        </a>
+        <a class="bo-card bo-kpi" href="{{ path('admin_flash_index') }}">
+            <span class="bo-kpi__label">Flashs</span>
+            <span class="bo-kpi__value">{{ availableFlashCount }} <small>disponible{{ availableFlashCount > 1 ? 's' }} · {{ reservedFlashCount }} réservé{{ reservedFlashCount > 1 ? 's' }}</small></span>
+            <span class="bo-kpi__link">Gérer les flashs →</span>
+        </a>
+        <a class="bo-card bo-kpi" href="{{ path('admin_gallery_index') }}">
+            <span class="bo-kpi__label">Réalisations</span>
+            <span class="bo-kpi__value">{{ galleryCount }}</span>
+            <span class="bo-kpi__link">Voir la galerie →</span>
+        </a>
+    </div>
+
+    <div class="bo-shortcuts">
+        <span class="bo-muted">Raccourcis</span>
+        <a class="btn btn-primary" href="{{ path('admin_gallery_new') }}"><i class="fa fa-plus"></i> Ajouter une réalisation</a>
+        <a class="btn btn-secondary" href="{{ path('admin_flash_new') }}"><i class="fa fa-plus"></i> Ajouter un flash</a>
+        <a class="btn btn-secondary" href="{{ path('admin_faq_new') }}"><i class="fa fa-plus"></i> Ajouter une question (FAQ)</a>
+        {% if salon %}
+            <a class="btn btn-secondary" href="{{ path('admin_home_edit', {entityId: salon.id}) }}"><i class="fa fa-clock"></i> Horaires du salon</a>
+        {% endif %}
+    </div>
+
+    <div class="bo-columns">
+
+        {# Voir le service ContentChecklist #}
+        <section class="bo-card">
+            <header class="bo-card__head">
+                <div>
+                    <h3 class="bo-card__title">Contenus à compléter</h3>
+                    <p class="bo-muted bo-small">Textes encore entre crochets, comme <code class="bo-ph">[Année]</code>. À remplir avant la mise en ligne.</p>
+                </div>
+                {% if checklist.total > 0 %}
+                    <span class="badge badge-warning">{{ checklist.total }} texte{{ checklist.total > 1 ? 's' }}</span>
+                {% else %}
+                    <span class="badge badge-success">Tout est rempli</span>
+                {% endif %}
+            </header>
+            <div class="bo-progress">
+                <div class="bo-progress__bar"><span style="width: {{ checklist.progress }}%"></span></div>
+                <span class="bo-muted bo-small">Site complété à <strong>{{ checklist.progress }} %</strong></span>
+            </div>
+            {% for item in checklist.items %}
+                <div class="bo-row">
+                    <strong class="bo-row__label">{{ item.label }}</strong>
+                    <span class="bo-row__detail bo-muted">{{ item.detail }}</span>
+                    <span class="badge badge-warning">{{ item.count }}</span>
+                    <a class="btn btn-secondary btn-sm" href="{{ item.url }}">Compléter</a>
+                </div>
+            {% endfor %}
+        </section>
+
+        <div class="bo-stack">
+            <section class="bo-card">
+                <header class="bo-card__head">
+                    <h3 class="bo-card__title">Avis à valider</h3>
+                    <a class="bo-small" href="{{ path('admin_comment_index') }}">Tout le livre d'or →</a>
+                </header>
+                {% for comment in pendingComments %}
+                    <div class="bo-comment">
+                        <div class="bo-comment__top">
+                            <strong>{{ comment.title }}</strong>
+                            <span class="badge badge-warning">En attente</span>
+                        </div>
+                        <p class="bo-muted">« {{ comment.message|length > 160 ? comment.message|slice(0, 160) ~ '…' : comment.message }} »</p>
+                        <span class="bo-meta">{{ comment.authorName }} · {{ comment.createdAt|date('d/m/Y à H:i') }}</span>
+                        <div class="bo-comment__actions">
+                            {# Jeton CSRF vérifié par DashboardController::publishComment() #}
+                            <form method="post" action="{{ path('admin_dashboard_publish_comment', {id: comment.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('publish-comment-' ~ comment.id) }}">
+                                <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-check"></i> Publier</button>
+                            </form>
+                            <a class="btn btn-secondary btn-sm" href="{{ path('admin_comment_edit', {entityId: comment.id}) }}">Lire et modifier</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="bo-empty bo-muted">Aucun avis en attente. 🎉</p>
+                {% endfor %}
+            </section>
+
+            <section class="bo-card">
+                <header class="bo-card__head">
+                    <h3 class="bo-card__title">Flashs</h3>
+                    <a class="bo-small" href="{{ path('admin_flash_new') }}">+ Ajouter</a>
+                </header>
+                {% for flash in flashes %}
+                    <a class="bo-row bo-row--link" href="{{ path('admin_flash_edit', {entityId: flash.id}) }}">
+                        <img class="bo-thumb {{ flash.isAvailable ? '' : 'is-faded' }}" src="{{ asset('uploads/flashes/' ~ flash.picture) }}" alt="">
+                        <span class="bo-row__detail">{{ flash.name }}</span>
+                        {% if flash.isAvailable %}
+                            <span class="badge badge-primary">Disponible</span>
+                        {% else %}
+                            <span class="badge badge-secondary">Réservé</span>
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <p class="bo-empty bo-muted">Aucun flash pour le moment.</p>
+                {% endfor %}
+            </section>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

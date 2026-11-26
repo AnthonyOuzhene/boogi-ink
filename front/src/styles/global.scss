@@ -1,0 +1,16 @@
+// L'ordre des @use compte : à précision égale, la règle importée plus bas l'emporte.
+//
+// Où ranger un style ?
+// - commun au site → styles/ ;  - composant / page → .scss à côté de son .jsx.
+// Les variables CSS (--cyan…) de _variables.scss sont utilisables partout sans import.
+
+@use 'variables';
+@use 'base';
+@use 'layout';
+@use 'typography';
+@use 'paper';       // zone « papier » (fond clair) et punaises
+@use 'utilities';
+@use 'filters';
+@use 'buttons';
+@use 'forms';       // formulaires, carte néon, carte d'appel à l'action
+@use 'toastify';

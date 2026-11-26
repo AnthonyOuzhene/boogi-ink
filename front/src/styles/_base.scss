@@ -1,0 +1,96 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  // Sinon, sur une page courte, le dégradé du body se répète
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 600px at 50% 0%, var(--glow), transparent 70%),
+    linear-gradient(180deg, #0f191d 0%, var(--bg) 35%, var(--bg-deep) 100%);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--cyan);
+  &:hover {
+    color: var(--cyan-light);
+  }
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+ul {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+// Focus posé par le code sur le titre après un changement de page (voir App.jsx) :
+// pas de contour à la souris, mais il reste visible au clavier
+[tabindex='-1']:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// WCAG 2.4.1 : apparaît au premier appui sur Tab
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--cyan);
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.2s;
+
+  &:focus {
+    transform: none;
+  }
+}
+
+// Posé par CommentForm
+[aria-invalid='true'] {
+  border-color: var(--pink) !important;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-main {
+  flex: 1;
+
+  // Pages autres que l'accueil : place pour le menu fixe
+  &--offset {
+    padding-top: var(--header-height);
+  }
+}

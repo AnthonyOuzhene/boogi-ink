@@ -1,0 +1,12 @@
+{# Cas courant : l'admin du salon ouvre une rubrique réservée au super admin #}
+{% extends '@Twig/Exception/error.html.twig' %}
+
+{% block title %}Accès réservé{% endblock %}
+{% block heading %}Accès réservé{% endblock %}
+{% block text %}
+    {%- if app.user -%}
+        Cette rubrique est réservée au développeur du site. Pour toute modification, contactez-le directement.
+    {%- else -%}
+        Vous n'avez pas accès à cette page.
+    {%- endif -%}
+{% endblock %}

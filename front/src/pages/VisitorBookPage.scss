@@ -1,0 +1,139 @@
+.comments {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: 48px 36px; // plus d'espace vertical : place pour les punaises
+  padding-top: 12px;
+  // Cible du scroll au changement de page, sous le header fixe
+  scroll-margin-top: calc(var(--header-height) + 24px);
+  // Rejouée à chaque page grâce à key={page} dans VisitorBookPage.jsx
+  animation: comments-in 0.4s ease;
+}
+
+@keyframes comments-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.pagination {
+  padding-top: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  &__pages {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  // 44 px : cible tactile confortable
+  &__arrow,
+  &__page {
+    min-width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+
+    &:hover:not(:disabled, [aria-current='page']) {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  &__page {
+    border-color: transparent;
+
+    &[aria-current='page'] {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: var(--surface);
+      cursor: default;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .comments {
+    animation: none;
+  }
+
+  .comment {
+    transition: none;
+  }
+}
+
+// Avis = petit mot punaisé au mur
+.comment {
+  position: relative; // pour la punaise (.pin)
+  padding: 44px 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 3px;
+  background: var(--surface);
+  box-shadow:
+    0 1px 2px rgba(20, 25, 27, 0.12),
+    0 14px 24px -14px rgba(20, 25, 27, 0.45);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:nth-child(4n + 1) { --tilt: -1.5deg; }
+  &:nth-child(4n + 2) { --tilt: 1deg; }
+  &:nth-child(4n + 3) { --tilt: -0.5deg; }
+  &:nth-child(4n + 4) { --tilt: 1.8deg; }
+
+  &:hover {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow:
+      0 2px 4px rgba(20, 25, 27, 0.12),
+      0 22px 32px -16px rgba(20, 25, 27, 0.5);
+  }
+
+  &__mark {
+    font-family: var(--font-display);
+    font-size: 72px;
+    line-height: 0.5;
+    color: var(--pink);
+  }
+
+  &__title {
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  &__message {
+    flex: 1;
+    color: var(--muted);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+}

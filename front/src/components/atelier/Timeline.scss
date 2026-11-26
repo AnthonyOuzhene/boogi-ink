@@ -1,0 +1,98 @@
+.timeline {
+  list-style: none;
+  padding: 0;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__year {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 1;
+    color: var(--cyan);
+  }
+
+  &__title {
+    font-size: 22px;
+  }
+
+  &__text {
+    font-size: 17px;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+
+  &--vertical {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+    padding-left: 56px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(var(--cyan), rgba(34, 211, 238, 0.1));
+    }
+
+    .timeline__item {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -53px;
+        top: 10px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 3px solid var(--cyan);
+        box-shadow: 0 0 18px rgba(34, 211, 238, 0.7);
+      }
+
+      &:last-child .timeline__year {
+        text-shadow: 0 0 30px rgba(34, 211, 238, 0.6);
+      }
+    }
+  }
+
+  &--horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    border-top: 2px solid var(--cyan);
+
+    .timeline__item {
+      padding: 32px 28px 0;
+      border-left: 1px solid var(--line);
+
+      &:first-child {
+        padding-left: 0;
+        border-left: 0;
+      }
+    }
+
+    .timeline__title {
+      font-size: 19px;
+    }
+
+    .timeline__text {
+      font-size: 15px;
+    }
+
+    // Une seule colonne sur mobile : plus de traits verticaux
+    @media (max-width: 700px) {
+      .timeline__item {
+        padding-left: 0;
+        border-left: 0;
+      }
+    }
+  }
+}

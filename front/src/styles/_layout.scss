@@ -1,0 +1,96 @@
+.container {
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-top: var(--section);
+
+  // Les bandeaux sont collés à la section précédente : celle-ci garde donc une marge
+  // en bas pour que son contenu ne touche pas le bandeau.
+  // (:has(+ X) = "qui est immédiatement suivie de X")
+  &:has(+ .band, + .faq-band, + .guestbook.paper) {
+    padding-bottom: 120px;
+
+    @media (max-width: 900px) {
+      padding-bottom: 72px;
+    }
+  }
+}
+
+// Page qui se termine par un bandeau : le pied de page s'y colle aussi
+.site-main:has(> :last-child:is(.band, .faq-band, .guestbook.paper)) + .site-footer {
+  margin-top: 0;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 72px;
+
+  @media (max-width: 900px) {
+    margin-bottom: 40px;
+  }
+}
+
+.section--tight {
+  padding-top: 96px;
+
+  @media (max-width: 900px) {
+    padding-top: 56px;
+  }
+}
+
+// Cible d'un lien #ancre : s'arrête sous le menu fixe, pas derrière
+.anchor {
+  scroll-margin-top: calc(var(--header-height) + 24px);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lead-text {
+  max-width: 680px;
+  font-size: 18px;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.band {
+  // Pas de marge au-dessus : collé aux sections voisines (voir .section plus haut)
+  padding-block: var(--band-padding);
+  background:
+    radial-gradient(ellipse 60% 70% at 15% 0%, var(--glow), transparent 70%),
+    var(--band-gradient);
+  border-block: 1px solid var(--line);
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 64px;
+    text-align: center;
+  }
+
+  &__more {
+    margin-top: 56px;
+    text-align: center;
+  }
+
+  // Juste sous le PageHero
+  &--flush {
+    padding-block: 96px;
+
+    @media (max-width: 900px) {
+      padding-block: 56px;
+    }
+  }
+}

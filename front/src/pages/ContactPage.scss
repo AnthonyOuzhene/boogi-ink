@@ -1,0 +1,207 @@
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 120px;
+
+  &__info {
+    flex: 1 1 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    font-size: 20px;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+
+  &__hours {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__dm {
+    flex: 2 1 520px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 4vw, 48px);
+    font-weight: 400;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  &__checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      display: flex;
+      gap: 12px;
+
+      &::before {
+        content: '✓';
+        color: var(--pink);
+        font-weight: 700;
+      }
+    }
+  }
+
+  &__label--pink {
+    color: var(--pink);
+  }
+
+  &__copy-hint {
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  // "&.btn" : plus spécifique que .btn, sinon sa bordure transparente l'emporte
+  &__copy {
+    align-self: flex-start;
+
+    &.btn {
+      border: 1.5px solid var(--pink);
+      background: transparent;
+      color: var(--pink);
+
+      &:hover {
+        background: var(--pink);
+        color: #fff;
+        box-shadow: 0 0 30px color-mix(in srgb, var(--pink) 45%, transparent);
+      }
+    }
+  }
+
+  &__map {
+    width: 100%;
+    height: 480px;
+    border: 0;
+    border-radius: 16px;
+    // Faux mode sombre pour la carte Google
+    filter: grayscale(1) invert(0.92) contrast(0.9);
+  }
+
+  // Remplace la carte tant qu'on n'a pas cliqué ; même taille pour éviter un saut
+  &__map-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: 480px;
+    padding: 40px 24px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    text-align: center;
+    background:
+      radial-gradient(circle at 50% 45%, rgba(34, 211, 238, 0.12), transparent 55%),
+      repeating-linear-gradient(0deg, transparent 0 47px, rgba(230, 244, 246, 0.05) 47px 48px),
+      repeating-linear-gradient(90deg, transparent 0 47px, rgba(230, 244, 246, 0.05) 47px 48px),
+      var(--surface);
+
+    @media (max-width: 600px) {
+      min-height: 360px;
+    }
+  }
+
+  &__map-pin {
+    width: 40px;
+    height: 40px;
+    color: var(--pink);
+    filter: drop-shadow(0 0 12px rgba(255, 20, 147, 0.5));
+  }
+
+  &__map-address {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  &__map-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  &__map-note {
+    max-width: 420px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 900px) {
+    gap: 64px;
+  }
+}
+
+.dm-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 16px;
+}
+
+.dm-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 16px 24px;
+  border-radius: 14px;
+  color: #fff;
+  font: 600 17px/1.2 var(--font-body);
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+
+  &:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+
+  &--instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+
+    &:hover {
+      box-shadow: 0 10px 30px -8px rgba(214, 36, 159, 0.6);
+    }
+  }
+
+  &--messenger {
+    background: linear-gradient(135deg, #00b2ff 0%, #006aff 100%);
+
+    &:hover {
+      box-shadow: 0 10px 30px -8px rgba(0, 106, 255, 0.6);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dm-btn {
+    transition: none;
+  }
+}

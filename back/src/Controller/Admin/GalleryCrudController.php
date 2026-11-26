@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Controller\Admin;
+
+use App\Entity\Gallery;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FileField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
+
+/**
+ * @extends AbstractCrudController<Gallery>
+ */
+class GalleryCrudController extends AbstractCrudController
+{
+    public static function getEntityFqcn(): string
+    {
+        return Gallery::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('Réalisation')
+            ->setEntityLabelInPlural('Réalisations')
+            ->setDefaultSort(['realisedAt' => 'DESC']);
+    }
+
+    public function configureFields(string $pageName): iterable
+    {
+        yield ImageField::new('mainPicture', 'Photo principale')
+            ->setBasePath(Gallery::UPLOAD_PATH)
+            ->setUploadDir('public/'.Gallery::UPLOAD_PATH)
+            ->setUploadedFileNamePattern('[randomhash].[extension]')
+            // facultatif en modification : l'ancienne photo est conservée
+            ->setRequired(Crud::PAGE_NEW === $pageName);
+        yield ImageField::new('sketch', 'Dessin préparatoire')
+            ->setBasePath(Gallery::UPLOAD_PATH)
+            ->setUploadDir('public/'.Gallery::UPLOAD_PATH)
+            ->setUploadedFileNamePattern('[randomhash].[extension]')
+            ->setRequired(false)
+            ->setHelp('Facultatif. Le dessin d\'origine du tatouage (scan ou photo, idéalement sur fond blanc et cadré comme la photo principale) : sur le site, un curseur permet de passer du dessin au tatouage.')
+            ->hideOnIndex();
+        yield TextField::new('name', 'Titre');
+        yield AssociationField::new('category', 'Catégorie');
+        yield BooleanField::new('isFavorite', 'Coup de cœur')
+            ->renderAsSwitch(false)
+            ->setHelp('Ajoute l\'annotation « coup de cœur ♥ », écrite au feutre, sur la photo. À réserver à 1 ou 2 réalisations pour garder l\'effet.');
+        yield DateField::new('realisedAt', 'Date de réalisation');
+        yield TextareaField::new('description', 'Description')
+            ->setHelp('Affichée à côté de la photo quand on l\'ouvre sur le site : le projet, la zone, le nombre de séances… (facultatif). Sautez une ligne pour faire un nouveau paragraphe.')
+            ->setNumOfRows(5)
+            ->hideOnIndex();
+        // Pas de compression côté serveur : la vidéo doit être exportée déjà légère
+        yield FileField::new('timelapse', 'Vidéo timelapse')
+            ->setBasePath(Gallery::UPLOAD_PATH)
+            ->setUploadDir('public/'.Gallery::UPLOAD_PATH)
+            ->setUploadedFileNamePattern('[randomhash].[extension]')
+            ->mimeTypes('video/mp4', 'La vidéo doit être au format MP4.')
+            ->maxSize('20M', 'La vidéo est trop lourde ({{ size }} {{ suffix }}) : 20 Mo maximum. Exportez-la en 720p ou 1080p.')
+            ->setRequired(false)
+            ->setHelp('Facultatif. Fichier MP4, 20 Mo maximum (export 720p ou 1080p, de préférence sans son : la vidéo est lue en muet). Sur le site, la vignette affiche « Timelapse » et la vidéo s\'ajoute aux photos de la réalisation.')
+            ->hideOnIndex();
+        yield UrlField::new('instagramUrl', '<i class="fa-brands fa-instagram"></i> Lien Instagram')
+            ->setFormTypeOption('label_html', true)
+            ->setHelp('Facultatif. Le post Instagram de cette réalisation (photo, carrousel ou reel) : bouton « Voir sur Instagram » sur le site.')
+            ->hideOnIndex();
+        // by_reference=false : sinon addPicture()/removePicture() ne sont pas appelés et la clé étrangère reste vide
+        yield CollectionField::new('pictures', 'Photos supplémentaires')
+            ->useEntryCrudForm(PictureCrudController::class)
+            ->setFormTypeOption('by_reference', false);
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters->add('category');
+    }
+}

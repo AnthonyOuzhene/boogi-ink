@@ -1,0 +1,43 @@
+// Annotation "au feutre" (--pink est plus foncé dans les zones .paper)
+.scribble {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pink);
+  font-family: var(--font-marker);
+  font-size: 20px;
+  line-height: 1.1;
+  white-space: nowrap;
+  transform: rotate(-4deg);
+  pointer-events: none;
+
+  // Texte pivoté = bords en escalier sur certains écrans ; backface-visibility le
+  // fait dessiner sur son propre calque (rendu plus net)
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  backface-visibility: hidden;
+
+  &__arrow {
+    flex-shrink: 0;
+    width: 56px;
+    height: 36px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  // Le SVG de la flèche pointe vers la droite
+  &--left &__arrow {
+    transform: scaleX(-1);
+  }
+
+  &--down &__arrow {
+    transform: rotate(70deg);
+  }
+
+  &--down-left &__arrow {
+    transform: scaleX(-1) rotate(55deg);
+  }
+}

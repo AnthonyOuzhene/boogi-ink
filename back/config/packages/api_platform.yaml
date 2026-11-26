@@ -1,0 +1,13 @@
+api_platform:
+    title: "Boogi'ink API"
+    version: 1.0.0
+    # Choisi via l'en-tête Accept : jsonld (défaut d'API Platform, avec hydra),
+    # json simple pour le front React
+    formats:
+        jsonld: ['application/ld+json']
+        json: ['application/json']
+    defaults:
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Origin']
+    # API publique : pas de bouton "Authorize" (JWT) dans Swagger

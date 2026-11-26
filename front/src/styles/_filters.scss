@@ -1,0 +1,35 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+
+  // Boutons (page Réalisations) ou liens (accueil)
+  button,
+  a {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    min-height: 44px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text);
+    font: 500 15px var(--font-body);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    &[aria-pressed='true'] {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: var(--ink);
+    }
+  }
+}
